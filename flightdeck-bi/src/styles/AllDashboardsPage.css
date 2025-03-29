@@ -1,0 +1,33 @@
+.all-dashboards-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .all-dashboards-main {
+    flex-grow: 1;
+  }
+  
+  .page-banner {
+    background-color: var(--primary-blue);
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+  }
+  
+  .page-banner-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+  
+  .page-description {
+    color: var(--white);
+    opacity: 0.9;
+  }
