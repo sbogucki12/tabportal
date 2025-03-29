@@ -1,0 +1,53 @@
+.admin-tabs {
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.tab-buttons {
+  display: flex;
+  border-bottom: 1px solid var(--light-gray);
+  overflow-x: auto;
+}
+
+.tab-button {
+  padding: 1rem 1.5rem;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--dark-gray);
+  position: relative;
+  transition: color var(--transition-speed);
+  white-space: nowrap;
+}
+
+.tab-button:hover {
+  color: var(--primary-blue);
+}
+
+.tab-button.active {
+  color: var(--primary-blue);
+}
+
+.tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--primary-blue);
+}
+
+@media (max-width: 768px) {
+  .tab-buttons {
+    flex-wrap: nowrap;
+  }
+  
+  .tab-button {
+    padding: 1rem 1rem;
+    font-size: 0.9rem;
+  }
+}

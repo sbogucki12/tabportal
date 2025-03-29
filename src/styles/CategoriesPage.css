@@ -1,0 +1,129 @@
+.categories-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .categories-main {
+    flex-grow: 1;
+  }
+  
+  .categories-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    margin-bottom: 4rem;
+  }
+  
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .category-card {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--light-gray);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    cursor: pointer;
+  }
+  
+  .category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .category-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .category-icon-container {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+  }
+  
+  .category-icon {
+    font-size: 1.25rem;
+  }
+  
+  .category-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .category-count {
+    color: #777;
+  }
+  
+  /* Category colors */
+  .category-operations {
+    background-color: #e6f7ff;
+    color: #0066cc;
+  }
+  
+  .category-air-traffic {
+    background-color: #e6f9ff;
+    color: #0099cc;
+  }
+  
+  .category-safety {
+    background-color: #ffe6e6;
+    color: #cc0000;
+  }
+  
+  .category-maintenance {
+    background-color: #fff9e6;
+    color: #cc9900;
+  }
+  
+  .category-financial {
+    background-color: #e6ffee;
+    color: #00cc66;
+  }
+  
+  .category-compliance {
+    background-color: #f2e6ff;
+    color: #6600cc;
+  }
+  
+  .category-risk-management {
+    background-color: #fff2e6;
+    color: #cc6600;
+  }
+  
+  .category-airports {
+    background-color: #e6eeff;
+    color: #0033cc;
+  }
+  
+  .category-regulatory {
+    background-color: #f0f0f0;
+    color: #666666;
+  }
+  
+  .category-default {
+    background-color: var(--light-brown);
+    color: var(--accent-brown);
+  }
+  
+  @media (min-width: 640px) {
+    .categories-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .categories-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
