@@ -1,3 +1,7 @@
 tekton:
   build:
     tool: node
+    node_env: production
+    web_server:
+      engine: nginx
+      root: build
