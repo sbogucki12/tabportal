@@ -1,5 +1,6 @@
 /* Import Google Fonts - Updated to include Data Governance Center fonts */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Source+Sans+3&family=Inter:wght@300;400;500;600;700&display=swap');
+@import './App.css';
 
 /* CSS Variables - Updated with Data Governance Center color palette */
 :root {

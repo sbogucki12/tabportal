@@ -7,8 +7,36 @@ import AllDashboardsPage from './pages/AllDashboardsPage';
 import CategoriesPage from './pages/CategoriesPage';
 import { DashboardProvider } from './context/DashboardContext';
 import PasswordModal from './components/common/PasswordModal';
-import './styles/index.css';
-import './styles/App.css';
+//import './styles/index.css';
+//import './styles/App.css';
+
+const testStyle = `
+  .App {
+    background: white !important;
+    min-height: 100vh !important;
+    position: relative !important;
+  }
+  .App::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80vh;
+    background: #004a6b !important;
+    border-radius: 0 0 100px 100px !important;
+    clip-path: none !important;
+    z-index: 0;
+  }
+  .App > * {
+    position: relative;
+    z-index: 1;
+  }
+`;
+
+const styleSheet = document.createElement("style");
+styleSheet.innerText = testStyle;
+document.head.appendChild(styleSheet);
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -48,19 +76,21 @@ function App() {
   };
 
   return (
-    <DashboardProvider>
-      {!isAuthenticated ? (
-        <PasswordModal onAuthenticate={handleAuthentication} />
-      ) : (
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/dashboard/:id" element={<DetailPage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/all-dashboards" element={<AllDashboardsPage />} />
-          <Route path="/categories" element={<CategoriesPage />} />
-        </Routes>
-      )}
-    </DashboardProvider>
+    <div className="App">
+      <DashboardProvider>
+        {!isAuthenticated ? (
+          <PasswordModal onAuthenticate={handleAuthentication} />
+        ) : (
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/dashboard/:id" element={<DetailPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/all-dashboards" element={<AllDashboardsPage />} />
+            <Route path="/categories" element={<CategoriesPage />} />
+          </Routes>
+        )}
+      </DashboardProvider>
+    </div>
   );
 }
 
