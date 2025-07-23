@@ -1,7 +1,19 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartLine, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { 
+  faChartLine, 
+  faSignOutAlt, 
+  faSearch,
+  faPlus,
+  faTasks,
+  faQuestionCircle,
+  faUser,
+  faHome,
+  faThLarge,
+  faList,
+  faCog
+} from '@fortawesome/free-solid-svg-icons';
 import '../../styles/Header.css';
 
 const Header = () => {
@@ -21,77 +33,128 @@ const Header = () => {
     window.location.reload();
   };
   
+  // Get user initials for avatar (placeholder)
+  const getUserInitials = () => {
+    return 'SB'; // Steven Bogucki placeholder
+  };
+  
   return (
     <header className="main-header">
-      <div className="logo-container">
-        <Link to="/" className="logo-container">
-          <FontAwesomeIcon 
-            icon={faChartLine} 
-            className="logo-icon" 
-          />
-          <h1 className="logo-text">
-            Flight<span className="logo-accent">Deck</span> BI
-          </h1>
-        </Link>
+      <div className="header-toolbar">
+        {/* Left Section - Logo and Divider */}
+        <div className="logo-section">
+          <Link to="/" className="logo-container">
+            <FontAwesomeIcon 
+              icon={faChartLine} 
+              className="logo-icon" 
+            />
+            <span className="logo-text">
+              Flight<span className="logo-accent">Deck</span> BI
+            </span>
+          </Link>
+          
+          <div className="vertical-line"></div>
+          
+          {/* Applications Button */}
+          <button className="nav-icon-button" aria-label="Applications">
+            <FontAwesomeIcon icon={faThLarge} />
+          </button>
+          
+          {/* Browse Button */}
+          <button className="nav-icon-button" aria-label="Browse">
+            <FontAwesomeIcon icon={faList} />
+          </button>
+        </div>
+        
+        {/* Right Section - Navigation and User Actions */}
+        <div className="header-actions">
+          {/* Search Button */}
+          <button className="search-button-nav" aria-label="Search">
+            <FontAwesomeIcon icon={faSearch} />
+          </button>
+          
+          {/* Create Button */}
+          <Link to="/admin" className="nav-icon-button" aria-label="Create">
+            <FontAwesomeIcon icon={faPlus} />
+          </Link>
+          
+          {/* Tasks Button with Badge */}
+          <button className="nav-icon-button nav-badge" data-count="0" aria-label="Tasks">
+            <FontAwesomeIcon icon={faTasks} />
+          </button>
+          
+          {/* Activities Button with Badge */}
+          <button className="nav-icon-button nav-badge" data-count="0" aria-label="Activities">
+            <FontAwesomeIcon icon={faChartLine} />
+          </button>
+          
+          {/* Data Basket Button with Badge */}
+          <Link to="/all-dashboards" className="nav-icon-button nav-badge" data-count="0" aria-label="Data Basket">
+            <FontAwesomeIcon icon={faHome} />
+          </Link>
+          
+          {/* Help Button */}
+          <button className="nav-icon-button" aria-label="Help">
+            <FontAwesomeIcon icon={faQuestionCircle} />
+          </button>
+          
+          {/* User Avatar Button */}
+          <button className="user-avatar-button" aria-label="User menu">
+            <div className="user-avatar">
+              {getUserInitials()}
+            </div>
+          </button>
+          
+          {/* Logout Button */}
+          <button 
+            onClick={handleLogout}
+            className="logout-button"
+            aria-label="Logout"
+          >
+            <FontAwesomeIcon icon={faSignOutAlt} className="logout-icon" />
+            Logout
+          </button>
+        </div>
       </div>
       
-      <nav className="main-nav">
+      {/* Hidden navigation for compatibility (if needed) */}
+      <nav className="main-nav" style={{ display: 'none' }}>
         <ul>
           <li>
             <Link 
               to="/" 
-              className={`nav-link ${isActive('/') ? 'active' : ''}`}
+              className={`nav-link text-button ${isActive('/') ? 'active' : ''}`}
             >
-              Home
+              <FontAwesomeIcon icon={faHome} className="nav-icon" />
+              <span className="nav-text">Home</span>
             </Link>
           </li>
           <li>
             <Link 
               to="/all-dashboards" 
-              className={`nav-link ${isActive('/all-dashboards') ? 'active' : ''}`}
+              className={`nav-link text-button ${isActive('/all-dashboards') ? 'active' : ''}`}
             >
-              All Dashboards
+              <FontAwesomeIcon icon={faThLarge} className="nav-icon" />
+              <span className="nav-text">All Dashboards</span>
             </Link>
           </li>
           <li>
             <Link 
               to="/categories" 
-              className={`nav-link ${isActive('/categories') ? 'active' : ''}`}
+              className={`nav-link text-button ${isActive('/categories') ? 'active' : ''}`}
             >
-              Categories
+              <FontAwesomeIcon icon={faList} className="nav-icon" />
+              <span className="nav-text">Categories</span>
             </Link>
           </li>
           <li>
             <Link 
               to="/admin" 
-              className={`nav-link ${isActive('/admin') ? 'active' : ''}`}
+              className={`nav-link text-button ${isActive('/admin') ? 'active' : ''}`}
             >
-              Admin
+              <FontAwesomeIcon icon={faCog} className="nav-icon" />
+              <span className="nav-text">Admin</span>
             </Link>
-          </li>
-          <li>
-            <button 
-              onClick={handleLogout}
-              className="logout-button"
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                color: '#333',
-                fontFamily: 'inherit',
-                fontSize: '1rem',
-                fontWeight: '500',
-                padding: '0'
-              }}
-            >
-              <FontAwesomeIcon 
-                icon={faSignOutAlt} 
-                style={{ marginRight: '0.5rem', color: '#005ea2' }} 
-              />
-              Logout
-            </button>
           </li>
         </ul>
       </nav>

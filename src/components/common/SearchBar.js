@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import '../../styles/SearchBar.css';
+import '../../styles/SearchFilter.css';
 
 const SearchBar = ({ onSearch, initialValues = {} }) => {
   const [searchQuery, setSearchQuery] = useState(initialValues.query || '');

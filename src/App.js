@@ -8,6 +8,7 @@ import CategoriesPage from './pages/CategoriesPage';
 import { DashboardProvider } from './context/DashboardContext';
 import PasswordModal from './components/common/PasswordModal';
 import './styles/index.css';
+import './styles/App.css';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

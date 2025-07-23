@@ -1,70 +1,420 @@
+/* Header.css - Updated to Match Data Governance Center Design */
+
+/* Main Header Container - Material-UI inspired */
 .main-header {
-    background-color: var(--white);
-    border-bottom: 3px solid var(--primary-blue);
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  width: 100%;
+  background-color: var(--dgc-primary-blue);
+  color: white;
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
+  border-bottom: none;
+  min-height: 64px;
+}
+
+/* Toolbar-like container */
+.header-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 56px;
+  padding: 0 8px;
+}
+
+/* Left Section - Logo and Divider */
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* DGC Logo Styling - More Material-UI like */
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  background-color: transparent;
+  color: white;
+  border-radius: 4px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  min-width: 160px;
+  height: 40px;
+}
+
+.logo-container:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.logo-icon {
+  margin-right: 8px;
+  font-size: 20px;
+  color: var(--dgc-accent-gold);
+}
+
+.logo-text {
+  color: white;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.logo-accent {
+  color: var(--dgc-accent-gold);
+}
+
+/* Vertical Divider - DGC Style */
+.vertical-line {
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  height: 32px;
+  margin: 0 8px;
+}
+
+/* Navigation Container */
+.main-nav {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  padding-right: 0;
+}
+
+.main-nav ul {
+  display: flex;
+  list-style: none;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.main-nav li {
+  margin: 0;
+}
+
+/* Navigation Links - Material-UI IconButton Style */
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  text-decoration: none;
+  color: white;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.02857em;
+  min-width: 40px;
+  height: 40px;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: var(--dgc-accent-gold);
+}
+
+.nav-link.active:hover {
+  background-color: rgba(255, 255, 255, 0.16);
+  color: var(--dgc-accent-gold);
+}
+
+/* Text-based nav links (for compatibility) */
+.nav-link.text-button {
+  border-radius: 4px;
+  padding: 6px 16px;
+  min-width: 64px;
+  height: 36px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: none;
+}
+
+/* Icon Button Styling */
+.nav-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  color: white;
+  width: 40px;
+  height: 40px;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.nav-icon-button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.nav-icon-button svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+/* Search Button */
+.search-button-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  color: white;
+  width: 40px;
+  height: 40px;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.search-button-nav:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* User Avatar Button */
+.user-avatar-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+  color: white;
+  width: 48px;
+  height: 48px;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.user-avatar-button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--dgc-accent-gold);
+  color: var(--dgc-primary-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* Badge styling for notifications */
+.nav-badge {
+  position: relative;
+}
+
+.nav-badge::after {
+  content: attr(data-count);
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: #f44336;
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.75);
+  min-width: 16px;
+}
+
+.nav-badge[data-count="0"]::after {
+  display: none;
+}
+
+/* Logout Button - Material-UI Button Style */
+.logout-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  background-color: transparent;
+  outline: 0;
+  border: 1px solid rgba(255, 255, 255, 0.23);
+  margin: 0 0 0 8px;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  text-decoration: none;
+  color: white;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.02857em;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  gap: 8px;
+}
+
+.logout-button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.logout-icon {
+  font-size: 18px;
+}
+
+/* Navigation Text */
+.nav-text {
+  white-space: nowrap;
+  display: none; /* Hidden by default for icon-only nav */
+}
+
+/* Header Actions Container */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  padding-right: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-header {
+    padding: 4px 8px;
+    min-height: 56px;
+  }
+  
+  .logo-section {
+    gap: 8px;
   }
   
   .logo-container {
-    display: flex;
-    align-items: center;
+    min-width: 120px;
+    height: 36px;
+    font-size: 14px;
+    padding: 6px 8px;
   }
   
-  .logo-icon {
-    color: var(--primary-blue);
-    font-size: 2rem;
-    margin-right: 0.5rem;
-  }
-  
-  .logo-text {
-    font-size: 1.8rem;
-    font-weight: 600;
-  }
-  
-  .logo-accent {
-    color: var(--accent-brown);
+  .vertical-line {
+    height: 24px;
+    margin: 0 4px;
   }
   
   .main-nav ul {
-    display: flex;
-    list-style: none;
+    gap: 4px;
   }
   
-  .main-nav li {
-    margin-left: 2rem;
+  .nav-link,
+  .nav-icon-button {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
   }
   
-  .nav-link {
-    font-weight: 500;
-    color: var(--dark-gray);
-    transition: color var(--transition-speed);
+  .nav-link svg,
+  .nav-icon-button svg {
+    width: 20px;
+    height: 20px;
   }
   
-  .nav-link:hover {
-    color: var(--primary-blue);
+  .user-avatar-button {
+    width: 44px;
+    height: 44px;
+    padding: 2px;
   }
   
-  .nav-link.active {
-    color: var(--primary-blue);
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
   }
   
-  @media (max-width: 768px) {
-    .main-header {
-      flex-direction: column;
-      padding: 1rem;
-    }
-    
-    .logo-container {
-      margin-bottom: 1rem;
-    }
-    
-    .main-nav ul {
-      justify-content: center;
-    }
-    
-    .main-nav li {
-      margin: 0 1rem;
-    }
+  .logout-button {
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    min-width: 48px;
   }
+}
+
+@media (max-width: 480px) {
+  .logo-container {
+    min-width: 100px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .vertical-line {
+    display: none;
+  }
+  
+  .nav-link,
+  .nav-icon-button {
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+  }
+  
+  .nav-link svg,
+  .nav-icon-button svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .logout-button {
+    padding: 3px 8px;
+    font-size: 0.7rem;
+  }
+}

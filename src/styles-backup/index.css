@@ -1,20 +1,8 @@
-/* Import Google Fonts - Updated to include Data Governance Center fonts */
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Source+Sans+3&family=Inter:wght@300;400;500;600;700&display=swap');
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* CSS Variables - Updated with Data Governance Center color palette */
+/* CSS Variables */
 :root {
-  /* Data Governance Center Colors (Primary) */
-  --dgc-primary-blue: #002b40;
-  --dgc-secondary-blue: #004a6b;
-  --dgc-accent-gold: #d4b76a;
-  --dgc-text-primary: #002b3f;
-  --dgc-text-secondary: #525252;
-  --dgc-success-green: #72bf00;
-  --dgc-light-gray: #F7F7F7;
-  --dgc-border-gray: #eff2f3;
-  --dgc-content-text: #344054;
-  
-  /* Legacy Colors (Keep for backward compatibility) */
   --primary-blue: #005ea2;
   --secondary-blue: #73b3e7;
   --dark-gray: #454545;
@@ -25,22 +13,11 @@
   --error-red: #d83933;
   --white: #ffffff;
   --border-color: #ddd;
-  
-  /* Shadows and Effects */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-  --dgc-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  --dgc-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.4);
-  
-  /* Border Radius */
   --border-radius: 8px;
-  --dgc-border-radius: 5px;
-  --dgc-border-radius-large: 12px;
-  
-  /* Transitions */
   --transition-speed: 0.3s;
-  --dgc-transition: all 0.3s ease;
 }
 
 /* Global Reset */
@@ -50,25 +27,17 @@
   box-sizing: border-box;
 }
 
-/* Base Styles - Updated with Data Governance Center typography */
+/* Base Styles */
 body {
-  font-family: "Open Sans", sans-serif;
-  font-optical-sizing: auto;
-  color: var(--dgc-text-secondary);
+  font-family: 'Inter', sans-serif;
+  color: var(--dark-gray);
   line-height: 1.6;
   background-color: var(--white);
 }
 
-/* Fallback for components still using Inter */
-.inter-font {
-  font-family: 'Inter', sans-serif;
-}
-
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Open Sans", sans-serif;
   font-weight: 600;
   line-height: 1.2;
-  color: var(--dgc-text-primary);
 }
 
 a {
@@ -78,26 +47,10 @@ a {
 
 button {
   cursor: pointer;
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
-/* Data Governance Center Specific Classes */
-.dgc-primary-blue { background-color: var(--dgc-primary-blue); }
-.dgc-secondary-blue { background-color: var(--dgc-secondary-blue); }
-.dgc-accent-gold { background-color: var(--dgc-accent-gold); }
-.dgc-light-gray { background-color: var(--dgc-light-gray); }
-.dgc-success-green { background-color: var(--dgc-success-green); }
-
-.text-dgc-primary { color: var(--dgc-primary-blue); }
-.text-dgc-secondary { color: var(--dgc-text-secondary); }
-.text-dgc-accent { color: var(--dgc-accent-gold); }
-.text-dgc-success { color: var(--dgc-success-green); }
-
-.border-dgc { border: 1px solid var(--dgc-border-gray); }
-.border-dgc-primary { border-color: var(--dgc-primary-blue); }
-.border-dgc-accent { border-color: var(--dgc-accent-gold); }
-
-/* Layout - Keep existing utility classes */
+/* Layout */
 .min-h-screen {
   min-height: 100vh;
 }
@@ -189,6 +142,7 @@ button {
 .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
 .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
 .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+.py-12 { padding-top: 3rem; padding-bottom: 3rem; }
 
 .m-2 { margin: 0.5rem; }
 .m-4 { margin: 1rem; }
@@ -204,7 +158,49 @@ button {
 .my-6 { margin-top: 1.5rem; margin-bottom: 1.5rem; }
 .my-8 { margin-top: 2rem; margin-bottom: 2rem; }
 
-/* Text colors - Legacy support */
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+.mt-12 { margin-top: 3rem; }
+.mt-16 { margin-top: 4rem; }
+
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mb-12 { margin-bottom: 3rem; }
+.mb-16 { margin-bottom: 4rem; }
+
+.ml-2 { margin-left: 0.5rem; }
+.ml-4 { margin-left: 1rem; }
+.ml-6 { margin-left: 1.5rem; }
+.ml-8 { margin-left: 2rem; }
+
+.mr-2 { margin-right: 0.5rem; }
+.mr-4 { margin-right: 1rem; }
+.mr-6 { margin-right: 1.5rem; }
+.mr-8 { margin-right: 2rem; }
+
+/* Text */
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: 0.875rem; }
+.text-base { font-size: 1rem; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.25rem; }
+.text-2xl { font-size: 1.5rem; }
+.text-3xl { font-size: 1.875rem; }
+.text-4xl { font-size: 2.25rem; }
+
+.font-normal { font-weight: 400; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
 .text-primary-blue { color: var(--primary-blue); }
 .text-secondary-blue { color: var(--secondary-blue); }
 .text-dark-gray { color: var(--dark-gray); }
@@ -214,7 +210,7 @@ button {
 .text-success-green { color: var(--success-green); }
 .text-error-red { color: var(--error-red); }
 
-/* Backgrounds - Legacy support */
+/* Backgrounds */
 .bg-primary-blue { background-color: var(--primary-blue); }
 .bg-secondary-blue { background-color: var(--secondary-blue); }
 .bg-dark-gray { background-color: var(--dark-gray); }
@@ -242,18 +238,12 @@ button {
 .rounded-md { border-radius: 6px; }
 .rounded-sm { border-radius: 4px; }
 
-/* DGC Specific Border Radius */
-.rounded-dgc { border-radius: var(--dgc-border-radius); }
-.rounded-dgc-lg { border-radius: var(--dgc-border-radius-large); }
-
 /* Shadows */
 .shadow { box-shadow: var(--shadow-sm); }
 .shadow-md { box-shadow: var(--shadow-md); }
 .shadow-lg { box-shadow: var(--shadow-lg); }
-.shadow-dgc { box-shadow: var(--dgc-shadow); }
-.shadow-dgc-hover { box-shadow: var(--dgc-shadow-hover); }
 
-/* Card Styles - Updated for DGC */
+/* Card Styles */
 .card {
   background-color: var(--white);
   border-radius: var(--border-radius);
@@ -267,21 +257,7 @@ button {
   box-shadow: var(--shadow-md);
 }
 
-.card-dgc {
-  background-color: var(--dgc-primary-blue);
-  border-radius: var(--dgc-border-radius);
-  color: white;
-  overflow: hidden;
-  transition: var(--dgc-transition);
-  box-shadow: var(--dgc-shadow);
-}
-
-.card-dgc:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--dgc-shadow-hover);
-}
-
-/* Button Styles - Updated with DGC variants */
+/* Button Styles */
 .btn {
   display: inline-block;
   padding: 0.5rem 1rem;
@@ -290,7 +266,6 @@ button {
   transition: background-color var(--transition-speed), transform var(--transition-speed);
   text-align: center;
   border: none;
-  font-family: "Open Sans", sans-serif;
 }
 
 .btn:hover {
@@ -315,46 +290,7 @@ button {
   background-color: #e0e0e0;
 }
 
-/* DGC Button Variants */
-.btn-dgc-primary {
-  background: linear-gradient(135deg, var(--dgc-primary-blue) 0%, var(--dgc-secondary-blue) 100%);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: var(--dgc-transition);
-}
-
-.btn-dgc-primary:hover {
-  background: linear-gradient(135deg, var(--dgc-secondary-blue) 0%, #00658a 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 43, 64, 0.3);
-}
-
-.btn-dgc-secondary {
-  background: var(--dgc-light-gray);
-  color: var(--dgc-text-primary);
-  border: 2px solid transparent;
-  padding: 8px 16px;
-  border-radius: 64px;
-  font-weight: 600;
-  transition: var(--dgc-transition);
-  box-shadow: 0px 4px 4px 0px rgba(108, 108, 108, 0.25);
-}
-
-.btn-dgc-secondary:hover {
-  background: #e0e0e0;
-  transform: translateY(-2px);
-}
-
-.btn-dgc-secondary.active {
-  background: var(--dgc-primary-blue);
-  color: white;
-  border-color: var(--dgc-accent-gold);
-}
-
-/* Form Styles - Enhanced for DGC */
+/* Form Styles */
 .form-group {
   margin-bottom: 1.5rem;
 }
@@ -362,9 +298,7 @@ button {
 .form-label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 600;
-  font-family: "Open Sans", sans-serif;
-  color: var(--dgc-text-primary);
+  font-weight: 500;
 }
 
 .form-input,
@@ -374,7 +308,7 @@ button {
   padding: 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: 4px;
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1rem;
   transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
 }
@@ -383,23 +317,8 @@ button {
 .form-select:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: var(--dgc-primary-blue);
-  box-shadow: 0 0 0 3px rgba(0, 43, 64, 0.1);
-}
-
-/* DGC Form Variants */
-.form-input-dgc {
-  border: 2px solid var(--dgc-border-gray);
-  border-radius: var(--dgc-border-radius-large);
-  background-color: #fafafa;
-  font-family: "Open Sans", sans-serif;
-  transition: var(--dgc-transition);
-}
-
-.form-input-dgc:focus {
-  border-color: var(--dgc-primary-blue);
-  background-color: white;
-  box-shadow: 0 0 0 3px rgba(0, 43, 64, 0.1);
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(0, 94, 162, 0.1);
 }
 
 .form-textarea {
@@ -407,7 +326,7 @@ button {
   resize: vertical;
 }
 
-/* Tag Styles - Enhanced for DGC */
+/* Tag Styles */
 .tag {
   display: inline-flex;
   align-items: center;
@@ -419,29 +338,12 @@ button {
   font-weight: 500;
 }
 
-.tag-dgc {
-  background: rgba(212, 183, 106, 0.2);
-  color: var(--dgc-accent-gold);
-  padding: 2px 6px;
-  border-radius: 8px;
-  font-size: 9px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-
 /* Utilities */
 .overflow-hidden { overflow: hidden; }
 .relative { position: relative; }
 .absolute { position: absolute; }
 .w-full { width: 100%; }
 .h-full { height: 100%; }
-
-/* DGC Specific Utilities */
-.dgc-transition { transition: var(--dgc-transition); }
-.dgc-font { font-family: "Open Sans", sans-serif; }
-.dgc-font-weight-600 { font-weight: 600; }
-.dgc-font-weight-700 { font-weight: 700; }
 
 /* Responsive utils */
 @media (min-width: 640px) {

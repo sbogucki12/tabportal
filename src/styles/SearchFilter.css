@@ -1,0 +1,359 @@
+/* SearchAndFilter.css */
+.search-filter-container {
+  background-color: white;
+  padding: 20px 0;
+  margin-bottom: 30px;
+}
+
+.search-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.search-input-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-label {
+  color: #525252;
+  text-align: center;
+  font-family: "Open Sans", sans-serif;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 36px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.search-input {
+  width: 452px;
+  height: 50px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 2px solid #1A1A1A;
+  padding: 0 16px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #002b40;
+  box-shadow: 0 0 0 3px rgba(0, 43, 64, 0.1);
+}
+
+.search-input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.search-icon {
+  width: 51px;
+  height: 51px;
+  background-color: #002b40;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-icon:hover {
+  background-color: #004a6b;
+}
+
+/* Filter Section */
+.filter-section {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-label {
+  color: #525252;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+}
+
+.filter-dropdown {
+  width: 200px;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px solid #eff2f3;
+  padding: 0 12px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  background-color: #F7F7F7;
+  color: #1A1A1A;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-dropdown:focus {
+  outline: none;
+  border-color: #002b40;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(0, 43, 64, 0.1);
+}
+
+.filter-dropdown:hover {
+  background-color: #e0e0e0;
+}
+
+/* Quick Filter Pills */
+.quick-filters {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.quick-filter-pill {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: #F7F7F7;
+  border: 2px solid transparent;
+  color: #1A1A1A;
+  font-family: "Open Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.quick-filter-pill:hover {
+  background: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+.quick-filter-pill.active {
+  background: #002b40;
+  color: white;
+  border-color: #d4b76a;
+}
+
+.quick-filter-pill.active:hover {
+  background: #004a6b;
+}
+
+/* Results Summary */
+.results-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+  padding: 0 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.results-count {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #002b3f;
+  margin: 0;
+}
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sort-label {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #525252;
+  margin: 0;
+}
+
+.sort-dropdown {
+  width: 160px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid #eff2f3;
+  padding: 0 10px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 13px;
+  background-color: white;
+  color: #1A1A1A;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.sort-dropdown:focus {
+  outline: none;
+  border-color: #002b40;
+}
+
+/* Clear Filters */
+.clear-filters {
+  background: none;
+  border: 2px solid #ff6b6b;
+  color: #ff6b6b;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 20px;
+}
+
+.clear-filters:hover {
+  background: #ff6b6b;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Active Filter Indicators */
+.active-filters {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.active-filter {
+  background: #002b40;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.active-filter-remove {
+  background: none;
+  border: none;
+  color: #d4b76a;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  margin-left: 4px;
+}
+
+.active-filter-remove:hover {
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .search-section {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .search-input {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .filter-section {
+    gap: 20px;
+  }
+  
+  .filter-dropdown {
+    width: 160px;
+  }
+  
+  .quick-filters {
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .quick-filter-pill {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+  .results-summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 0 10px;
+  }
+  
+  .sort-controls {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-filter-container {
+    padding: 15px 0;
+  }
+  
+  .search-input {
+    height: 45px;
+    font-size: 14px;
+  }
+  
+  .search-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+  
+  .filter-section {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .filter-dropdown {
+    width: 200px;
+    height: 36px;
+    font-size: 13px;
+  }
+  
+  .quick-filters {
+    gap: 8px;
+    padding: 0 10px;
+  }
+  
+  .quick-filter-pill {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+  
+  .clear-filters {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}
