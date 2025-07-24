@@ -129,7 +129,8 @@ const HomePage = () => {
     <div className="home-page">
       <Header />
       
-      <main className="home-main">
+      {/* Fixed Search Banner */}
+      <div className="search-banner-fixed">
         <SearchBar 
           onSearch={handleSearch} 
           initialValues={{
@@ -138,18 +139,25 @@ const HomePage = () => {
             organization: new URLSearchParams(location.search).get('organization') || ''
           }} 
         />
-        
-        {!searchApplied && featuredDashboard && (
-          <FeaturedDashboard dashboard={featuredDashboard} />
-        )}
-        
-        <DashboardGrid 
-          dashboards={filteredDashboards} 
-          title={getGridTitle()} 
-        />
-      </main>
+      </div>
       
-      <Footer />
+      {/* Main Content with White Card */}
+      <main className="home-main">
+        <div className="content-card">
+          <div className="content-card-inner">
+            {!searchApplied && featuredDashboard && (
+              <FeaturedDashboard dashboard={featuredDashboard} />
+            )}
+            
+            <DashboardGrid 
+              dashboards={filteredDashboards} 
+              title={getGridTitle()} 
+            />
+            
+            <Footer />
+          </div>
+        </div>
+      </main>
     </div>
   );
 };

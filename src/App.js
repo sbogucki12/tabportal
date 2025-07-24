@@ -7,7 +7,7 @@ import AllDashboardsPage from './pages/AllDashboardsPage';
 import CategoriesPage from './pages/CategoriesPage';
 import { DashboardProvider } from './context/DashboardContext';
 import PasswordModal from './components/common/PasswordModal';
-//import './styles/index.css';
+import './styles/index.css';
 //import './styles/App.css';
 
 const testStyle = `
@@ -23,8 +23,8 @@ const testStyle = `
     left: 0;
     right: 0;
     height: 80vh;
-    background: #004a6b !important;
-    border-radius: 0 0 100px 100px !important;
+    background: #002b40 !important;
+    border-radius: 0 0 100px 0 !important;
     clip-path: none !important;
     z-index: 0;
   }
