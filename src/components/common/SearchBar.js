@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faFilter, faTimes } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/SearchBar.css';
 
-const SearchBar = ({ onSearch, initialValues = {} }) => {
+const SearchBar = ({ onSearch, initialValues = {}, hideHeader = false }) => {
   const [searchQuery, setSearchQuery] = useState(initialValues.query || '');
   const [category, setCategory] = useState(initialValues.category || '');
   const [organization, setOrganization] = useState(initialValues.organization || '');
@@ -77,10 +77,13 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
   return (
     <section className="search-section-mui">
       <div className="search-container-mui">
-        <div className="search-header">
-          <h2 className="search-title-mui">Find Aviation Intelligence</h2>
-          <p className="search-subtitle">Search through our comprehensive dashboard collection</p>
-        </div>
+        {/* Conditionally render header based on hideHeader prop */}
+        {!hideHeader && (
+          <div className="search-header">
+            <h2 className="search-title-mui">Find Aviation Intelligence</h2>
+            <p className="search-subtitle">Search through our comprehensive dashboard collection</p>
+          </div>
+        )}
         
         <form onSubmit={handleSubmit} className="search-form-mui">
           {/* Main Search Input */}

@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Header from '../components/common/Header';
+import NavigationHeader from '../components/common/NavigationHeader';
 import Footer from '../components/common/Footer';
 import SearchBar from '../components/common/SearchBar';
 import FeaturedDashboard from '../components/dashboard/FeaturedDashboard';
@@ -53,36 +54,26 @@ const HomePage = () => {
           setSearchApplied(true);
         } else if (featuredDashboard) {
           // Otherwise show default dashboards (excluding featured)
-          setFilteredDashboards(
-            dashboards
-              .filter(dash => dash.id !== featuredDashboard.id)
-              .slice(0, 6)  // Show only first 6 dashboards on homepage
-          );
-          setSearchApplied(false);
+          const nonFeaturedDashboards = dashboards.filter(d => d.id !== featuredDashboard.id);
+          setFilteredDashboards(nonFeaturedDashboards);
+        } else {
+          // If no featured dashboard, show all
+          setFilteredDashboards(dashboards);
         }
       }
     }
-  }, [dashboards, featuredDashboard, location.search, searchDashboards]);
+  }, [dashboards, featuredDashboard, searchDashboards, location.search]);
   
-  const handleSearch = (searchParams) => {
-    const results = searchDashboards(
-      searchParams.query,
-      {
-        category: searchParams.category,
-        organization: searchParams.organization
-      }
-    );
-    
+  const handleSearch = (searchTerm, filters) => {
+    const results = searchDashboards(searchTerm, filters);
     setFilteredDashboards(results);
     setSearchApplied(true);
     
-    // Update URL without triggering new navigation events
+    // Update URL with search parameters
     const queryParams = new URLSearchParams();
-    if (searchParams.query) queryParams.set('query', searchParams.query);
-    if (searchParams.category) queryParams.set('category', searchParams.category);
-    if (searchParams.organization) queryParams.set('organization', searchParams.organization);
+    if (filters.category) queryParams.set('category', filters.category);
+    if (filters.organization) queryParams.set('organization', filters.organization);
     
-    // Use history.replace to update URL without adding to history stack
     const url = queryParams.toString() ? 
       `${location.pathname}?${queryParams.toString()}` : 
       location.pathname;
@@ -128,32 +119,53 @@ const HomePage = () => {
   return (
     <div className="home-page">
       <Header />
-      
-      {/* Fixed Search Banner */}
-      <div className="search-banner-fixed">
-        <SearchBar 
-          onSearch={handleSearch} 
-          initialValues={{
-            query: '',
-            category: new URLSearchParams(location.search).get('category') || '',
-            organization: new URLSearchParams(location.search).get('organization') || ''
-          }} 
-        />
-      </div>
+      <NavigationHeader />
       
       {/* Main Content with White Card */}
       <main className="home-main">
         <div className="content-card">
           <div className="content-card-inner">
-            {!searchApplied && featuredDashboard && (
-              <FeaturedDashboard dashboard={featuredDashboard} />
-            )}
+            {/* Light Gray Content Card - wraps ALL content */}
+            <div className="content-inner-card">
+              {/* NEW DGC Style Banner Section */}
+              <div className="page-header-section">
+                <div className="header-first">
+                  <div className="logo">
+                    <div className="logo-text">EIM</div>
+                  </div>
+                  <div className="vl"></div>
+                  <div className="header-content">
+                    <h1 className="header-main-title">Enterprise Information Management</h1>
+                    <h4 className="header-subtitle">Visualization Showcase</h4>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Search Section - NO HEADER TEXT */}
+              <div className="search-section-custom">
+                <SearchBar 
+                  onSearch={handleSearch} 
+                  initialValues={{
+                    query: '',
+                    category: new URLSearchParams(location.search).get('category') || '',
+                    organization: new URLSearchParams(location.search).get('organization') || ''
+                  }} 
+                />
+              </div>
+              
+              {/* Featured Dashboard */}
+              {!searchApplied && featuredDashboard && (
+                <FeaturedDashboard dashboard={featuredDashboard} />
+              )}
+              
+              {/* Dashboard Grid */}
+              <DashboardGrid 
+                dashboards={filteredDashboards} 
+                title={getGridTitle()} 
+              />
+            </div>
             
-            <DashboardGrid 
-              dashboards={filteredDashboards} 
-              title={getGridTitle()} 
-            />
-            
+            {/* Footer */}
             <Footer />
           </div>
         </div>

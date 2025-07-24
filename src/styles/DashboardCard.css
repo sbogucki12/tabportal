@@ -1,364 +1,150 @@
-/* DashboardCard.css - Updated for Data Governance Center Integration */
+/* DashboardCard.css - Simplified Full Background Design */
 
-/* Main card container - Transform to DGC style */
+/* Main card container */
 .dashboard-card {
-  display: flex;
-  width: 100%;
-  min-width: 250px;
-  height: 160px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  border-radius: 5px;
-  background-color: var(--dgc-primary-blue);
-  color: white;
-  flex-direction: column;
-  justify-content: space-between;
   position: relative;
+  width: 100%;
+  height: 120px;
+  border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin-bottom: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   font-family: "Open Sans", sans-serif;
 }
 
 .dashboard-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-.dashboard-card.featured {
-  background: linear-gradient(145deg, var(--dgc-primary-blue), var(--dgc-secondary-blue));
-  border: 2px solid var(--dgc-accent-gold);
-}
-
-/* Image/Media container - Keep as background for DGC cards */
-.card-image-container {
+/* Full background thumbnail (image or video) */
+.dashboard-thumbnail {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 60%;
-  overflow: hidden;
-  z-index: 0;
-}
-
-.card-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.3; /* Make background image subtle */
-  transition: transform 0.3s ease;
+  z-index: 1;
 }
 
-.card-image-container:hover .card-image {
-  transform: scale(1.05);
-  opacity: 0.4;
-}
-
-/* Media type indicator - Update for DGC */
-.card-media-type {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-  font-size: 12px;
-}
-
-/* Expand button - Update for DGC */
-.card-expand-button {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background-color: rgba(255, 255, 255, 0.9);
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  z-index: 10;
-}
-
-.card-expand-button:hover {
-  background-color: var(--white);
-}
-
-.card-expand-button a {
-  color: var(--dgc-primary-blue);
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  font-size: 12px;
-}
-
-/* Content area - DGC style overlay */
-.card-content {
-  padding: 15px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: relative;
-  z-index: 5;
-  background: linear-gradient(to top, rgba(0, 43, 64, 0.95) 0%, rgba(0, 43, 64, 0.7) 50%, transparent 100%);
-}
-
-/* Header section */
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-}
-
-/* Title styling - DGC */
-.card-title {
-  color: white;
-  font-family: "Open Sans", sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 20px;
-  margin: 0;
-  flex: 1;
-  padding-right: 10px;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  text-decoration: none;
-}
-
-.card-title:hover {
-  color: var(--dgc-accent-gold);
-  text-decoration: underline;
-}
-
-/* Description - Hide in compact DGC cards */
-.card-description {
-  display: none; /* DGC cards are more compact */
-}
-
-/* Footer section */
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin-top: auto;
-}
-
-/* Owner/Meta info */
-.card-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 11px;
-  color: white;
-  width: 100%;
-}
-
-.card-meta-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--dgc-accent-gold);
-}
-
-.card-meta-icon {
-  color: var(--dgc-accent-gold);
-  font-size: 10px;
-}
-
-/* Tags - DGC style */
-.card-tags {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  max-width: 60%;
-  justify-content: flex-end;
-}
-
-.card-tag {
-  background: rgba(212, 183, 106, 0.2);
-  color: var(--dgc-accent-gold);
-  padding: 2px 6px;
-  border-radius: 8px;
-  font-size: 9px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-
-/* Featured badge */
-.featured-badge {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  background: var(--dgc-accent-gold);
-  color: var(--dgc-primary-blue);
-  padding: 3px 8px;
-  border-radius: 12px;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  z-index: 10;
-}
-
-/* Views count and update indicator */
-.views-count {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 10px;
-}
-
-.update-indicator {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--dgc-success-green);
-}
-
-/* Card variations for different dashboard types */
-.dashboard-card.tableau {
-  border-left: 4px solid #e97627;
-}
-
-.dashboard-card.powerbi {
-  border-left: 4px solid #f2c811;
-}
-
-.dashboard-card.qlik {
-  border-left: 4px solid #009845;
-}
-
-/* Loading state */
-.dashboard-card.loading {
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.dashboard-card.loading .card-content::after {
-  content: '';
+/* Dark blue overlay for tinting */
+.dashboard-overlay {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  animation: shimmer 1.5s infinite;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 43, 64, 0.7); /* Updated to #002b40 */
+  z-index: 2;
 }
 
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-/* Error state */
-.dashboard-card.error {
-  background-color: #4a1a1a;
-  border-left: 4px solid #ff4444;
-}
-
-.dashboard-card.error .card-title {
-  color: #ffcccc;
-}
-
-.dashboard-card.error .card-meta-item {
-  color: #ff8888;
-}
-
-/* Icon styling */
-.card-icon {
-  color: var(--dgc-success-green);
-  font-size: 18px;
-  flex-shrink: 0;
+/* Icon - top left corner */
+.dashboard-icon {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  z-index: 6;
+  top: 12px;
+  left: 12px;
+  font-size: 24px;
+  color: white;
+  z-index: 10;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-/* Responsive adjustments */
+/* Text label - bottom left corner */
+.dashboard-title {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 50px; /* Leave space for arrow */
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  text-decoration: none;
+  word-wrap: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.dashboard-title:hover {
+  color: #f0f0f0;
+  text-decoration: underline;
+}
+
+/* Green arrow - bottom right corner */
+.dashboard-arrow {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  font-size: 18px;
+  color: #4CAF50; /* Bright green */
+  z-index: 10;
+  transition: transform 0.3s ease, color 0.3s ease;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.dashboard-card:hover .dashboard-arrow {
+  transform: translateX(2px);
+  color: #66BB6A; /* Brighter green on hover */
+}
+
+/* Featured card styling */
+.dashboard-card.featured .dashboard-overlay {
+  background-color: rgba(139, 94, 60, 0.7); /* Brown tint for featured */
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
   .dashboard-card {
-    height: 140px;
-    min-width: 220px;
+    height: 100px;
   }
   
-  .card-content {
-    padding: 12px;
+  .dashboard-icon {
+    font-size: 20px;
+    top: 10px;
+    left: 10px;
   }
   
-  .card-title {
-    font-size: 14px;
-    line-height: 18px;
+  .dashboard-title {
+    font-size: 13px;
+    bottom: 10px;
+    left: 10px;
+    right: 45px;
   }
   
-  .card-meta {
-    font-size: 10px;
-  }
-  
-  .card-tags {
-    max-width: 70%;
-  }
-  
-  .card-tag {
-    font-size: 8px;
-    padding: 1px 4px;
-  }
-  
-  .featured-badge {
-    font-size: 9px;
-    padding: 2px 6px;
+  .dashboard-arrow {
+    font-size: 16px;
+    bottom: 10px;
+    right: 10px;
   }
 }
 
 @media (max-width: 480px) {
   .dashboard-card {
-    height: 120px;
-    min-width: 200px;
+    height: 80px;
   }
   
-  .card-content {
-    padding: 10px;
+  .dashboard-icon {
+    font-size: 18px;
+    top: 8px;
+    left: 8px;
   }
   
-  .card-title {
-    font-size: 13px;
-    line-height: 16px;
+  .dashboard-title {
+    font-size: 12px;
+    bottom: 8px;
+    left: 8px;
+    right: 40px;
   }
   
-  .card-meta {
-    font-size: 9px;
-  }
-  
-  .card-meta-icon {
-    font-size: 9px;
-  }
-  
-  .card-icon {
-    font-size: 16px;
-    top: 12px;
-    right: 12px;
+  .dashboard-arrow {
+    font-size: 14px;
+    bottom: 8px;
+    right: 8px;
   }
 }

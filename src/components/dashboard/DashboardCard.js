@@ -1,18 +1,60 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExpand, faUser, faCalendar, faVideo, faImage } from '@fortawesome/free-solid-svg-icons';
+import { 
+  faArrowRight, 
+  faPlane, 
+  faRocket, 
+  faBuilding, 
+  faDollarSign, 
+  faEarthAmericas, 
+  faMicrochip, 
+  faGlobe, 
+  faPerson, 
+  faShield, 
+  faCloud,
+  faChartLine,
+  faSatellite,
+  faPlaneDeparture
+} from '@fortawesome/free-solid-svg-icons';
 import '../../styles/DashboardCard.css';
 
 const DashboardCard = ({ dashboard }) => {
   
+  // Map categories to appropriate FontAwesome icons
+  const getCategoryIcon = (category) => {
+    const iconMap = {
+      'Aeronautical': faPlaneDeparture,
+      'Aircraft': faRocket,
+      'Airport': faPlane,
+      'Airspace': faSatellite,
+      'Facilities': faBuilding,
+      'Finance': faDollarSign,
+      'Flight': faPlane,
+      'Geospatial': faEarthAmericas,
+      'Information Technology': faMicrochip,
+      'International': faGlobe,
+      'People': faPerson,
+      'Safety': faShield,
+      'Weather': faCloud,
+      'Analytics': faChartLine,
+      'Default': faChartLine
+    };
+    
+    return iconMap[category] || iconMap['Default'];
+  };
+
+  // Get primary category for icon
+  const primaryCategory = dashboard.category || dashboard.tags?.[0] || 'Analytics';
+  const categoryIcon = getCategoryIcon(primaryCategory);
+
   return (
-    <div className="dashboard-card">
-      <div className="card-image-container">
-        {dashboard.isVideo ? (
+    <div className={`dashboard-card ${dashboard.featured ? 'featured' : ''}`}>
+      {/* Full background thumbnail */}
+      {dashboard.thumbnailUrl && (
+        dashboard.isVideo ? (
           <video 
             src={dashboard.thumbnailUrl} 
-            alt={dashboard.title} 
-            className="card-image"
+            className="dashboard-thumbnail"
             muted
             autoPlay
             loop
@@ -21,53 +63,27 @@ const DashboardCard = ({ dashboard }) => {
         ) : (
           <img 
             src={dashboard.thumbnailUrl} 
-            alt={dashboard.title} 
-            className="card-image"
+            alt={dashboard.title}
+            className="dashboard-thumbnail"
           />
-        )}
-        <div className="card-media-type">
-          <FontAwesomeIcon icon={dashboard.isVideo ? faVideo : faImage} />
-        </div>
-        <div className="card-expand-button">
-          <a href={`/dashboard/${dashboard.id}`}>
-            <FontAwesomeIcon icon={faExpand} />
-          </a>
-        </div>
-      </div>
+        )
+      )}
       
-      <div className="card-content">
-        <a href={`/dashboard/${dashboard.id}`}>
-          <h3 className="card-title">{dashboard.title}</h3>
-        </a>
-        
-        <p className="card-description">
-          {dashboard.description}
-        </p>
-        
-        <div className="card-tags">
-          {dashboard.tags.slice(0, 3).map((tag, index) => (
-            <span key={index} className="card-tag">
-              {tag}
-            </span>
-          ))}
-          {dashboard.tags.length > 3 && (
-            <span className="card-tag">
-              +{dashboard.tags.length - 3}
-            </span>
-          )}
-        </div>
-        
-        <div className="card-meta">
-          <span className="card-meta-item">
-            <FontAwesomeIcon icon={faUser} className="card-meta-icon" /> 
-            {dashboard.ownerAbbr}
-          </span>
-          <span className="card-meta-item">
-            <FontAwesomeIcon icon={faCalendar} className="card-meta-icon" /> 
-            {dashboard.updateFrequency}
-          </span>
-        </div>
-      </div>
+      {/* Dark blue overlay */}
+      <div className="dashboard-overlay"></div>
+      
+      {/* Icon - top left */}
+      <FontAwesomeIcon icon={categoryIcon} className="dashboard-icon" />
+      
+      {/* Title - bottom left */}
+      <a href={`/dashboard/${dashboard.id}`} className="dashboard-title">
+        {dashboard.title}
+      </a>
+      
+      {/* Arrow - bottom right */}
+      <a href={`/dashboard/${dashboard.id}`}>
+        <FontAwesomeIcon icon={faArrowRight} className="dashboard-arrow" />
+      </a>
     </div>
   );
 };

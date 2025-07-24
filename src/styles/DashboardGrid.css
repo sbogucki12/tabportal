@@ -1,48 +1,154 @@
+/* DashboardGrid.css - Data Governance Center Style */
+
 .dashboard-grid-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+  width: 100%; /* Take full width of the light gray container */
+  margin: 0;
+  padding: 40px 60px; /* More generous padding */
+}
+
+.dashboard-grid-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  color: var(--primary-blue, #005ea2);
+  font-family: "Open Sans", sans-serif;
+  letter-spacing: 0.02em;
+  text-align: center;
+  padding: 0 20px;
+}
+
+/* Card parent - DGC style grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns as specified */
+  column-gap: 30px; /* Horizontal spacing */
+  row-gap: 20px; /* Slightly more vertical spacing for our cards */
+  height: fit-content;
+  margin-top: 20px;
+  margin-bottom: 3rem;
+  width: 100%;
+}
+
+/* Multi-column layout for different screen sizes */
+@media (max-width: 1600px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns for smaller wide screens */
+    column-gap: 25px;
+    row-gap: 18px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .dashboard-grid-container {
+    padding: 50px 60px; /* Adjust padding for medium screens */
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for medium screens */
+    column-gap: 20px;
+    row-gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid-container {
+    padding: 40px 30px; /* Reduce padding on tablets */
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(1, 1fr); /* Single column for tablets */
+    column-gap: 0;
+    row-gap: 15px;
+  }
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: white;
+  border: 2px dashed #e0e0e0;
+  border-radius: 12px;
+  margin: 2rem 0;
+}
+
+.empty-state-title {
+  font-size: 1.5rem;
+  color: var(--primary-blue, #005ea2);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-family: "Open Sans", sans-serif;
+}
+
+.empty-state-subtitle {
+  color: var(--dark-gray, #525252);
+  font-size: 1.1rem;
+  font-family: "Open Sans", sans-serif;
+}
+
+/* Browse by Information Domain section styling */
+.card-text {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-blue, #005ea2);
+  font-family: "Open Sans", sans-serif;
+  text-align: center;
+  margin-bottom: 2rem;
+  letter-spacing: 0.02em;
+}
+
+.cardparent {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .cardparent {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .cardparent {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .cardparent {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 35px;
+  }
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 767px) {
+  .dashboard-grid-container {
+    padding: 0 10px;
   }
   
   .dashboard-grid-title {
     font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    color: var(--dark-gray);
+    margin-bottom: 1.5rem;
   }
   
   .dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 2rem;
-    margin-bottom: 4rem;
+    gap: 16px;
   }
   
   .empty-state {
-    text-align: center;
-    padding: 4rem 0;
-    background-color: var(--light-gray);
-    border-radius: var(--border-radius);
+    padding: 3rem 1rem;
   }
   
   .empty-state-title {
-    font-size: 1.25rem;
-    color: var(--dark-gray);
+    font-size: 1.3rem;
   }
   
   .empty-state-subtitle {
-    color: #777;
-    margin-top: 0.5rem;
+    font-size: 1rem;
   }
-  
-  @media (min-width: 640px) {
-    .dashboard-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .dashboard-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
+}
