@@ -15,10 +15,10 @@ import {
 import '../../styles/Header.css';
 
 const Header = () => {
-  const location = useLocation();
+  // const location = useLocation();
   
   // Helper to determine if the link is active
-  const isActive = (path) => {
+/*   const isActive = (path) => {
     if (path === '/' && location.pathname === '/') return true;
     if (path !== '/' && location.pathname.startsWith(path)) return true;
     return false;
@@ -29,7 +29,7 @@ const Header = () => {
     localStorage.removeItem('flightdeck-auth');
     // Force page reload to show the login modal
     window.location.reload();
-  };
+  }; */
   
   return (
     <header className="main-header">
