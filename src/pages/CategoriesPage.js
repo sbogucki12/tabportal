@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
+import NavigationHeader from '../components/common/NavigationHeader';
 import Footer from '../components/common/Footer';
 import { DashboardContext } from '../context/DashboardContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,9 +16,11 @@ import {
   faCity,
   faBalanceScale,
   faInfoCircle,
-  faTimes
+  faTimes,
+  faArrowRight
 } from '@fortawesome/free-solid-svg-icons';
-import '../styles/CategoriesPage.css';
+import '../styles/HomePage.css'; // Use HomePage styles for consistent layout
+import '../styles/CategoriesPage.css'; // Additional styles for categories and hide nav title
 
 const CategoriesPage = () => {
   const { dashboards, loading, error } = useContext(DashboardContext);
@@ -100,166 +103,153 @@ const CategoriesPage = () => {
     }
   };
   
-  // Handle category click - now shows a modal instead of navigating
+  // Handle category selection - most aggressive approach
   const handleCategoryClick = (categoryName) => {
-    setSelectedCategory(categoryName);
-    setShowModal(true);
+    // Store the category name in both localStorage and sessionStorage
+    localStorage.setItem('selectedCategory', categoryName);
+    sessionStorage.setItem('selectedCategory', categoryName);
+    
+    // Add a timestamp to identify this navigation
+    localStorage.setItem('categoryNavigationTime', new Date().getTime());
+    
+    // Use the most direct navigation approach
+    window.location.href = `/all-dashboards?category=${encodeURIComponent(categoryName)}`;
   };
   
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-text">Loading categories...</div>
+      <div className="home-page">
+        <Header />
+        <NavigationHeader />
+        <main className="home-main">
+          <div className="content-card">
+            <div className="content-card-inner">
+              <div className="content-inner-card">
+                <div className="loading-container">
+                  <div className="loading-text">Loading categories...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
   
   if (error) {
     return (
-      <div className="loading-container">
-        <div className="error-text">{error}</div>
+      <div className="home-page">
+        <Header />
+        <NavigationHeader />
+        <main className="home-main">
+          <div className="content-card">
+            <div className="content-card-inner">
+              <div className="content-inner-card">
+                <div className="loading-container">
+                  <div className="error-text">Error loading categories: {error}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
   
   return (
-    <div className="categories-page">
+    <div className="home-page">
       <Header />
+      <NavigationHeader />
       
-      <main className="categories-main">
-        <div className="page-banner">
-          <div className="page-banner-container">
-            <h1 className="page-title">Dashboard Categories</h1>
-            <p className="page-description">
-              Browse our dashboard categories. Click on a category to see details.
-            </p>
-            <div style={{ 
-              backgroundColor: 'white', 
-              borderLeft: '4px solid #005ea2', 
-              padding: '12px 15px', 
-              borderRadius: '4px',
-              marginTop: '15px',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-            }}>
-              <p style={{ 
-                color: '#005ea2', 
-                fontWeight: '500',
-                margin: 0
-              }}>
-                Note: Category filtering is temporarily disabled. Please use the search filters on the All Dashboards page.
-              </p>
+      {/* Main Content with White Card - Same structure as HomePage */}
+      <main className="home-main">
+        <div className="content-card">
+          <div className="content-card-inner">
+            {/* Light Gray Content Card - wraps ALL content */}
+            <div className="content-inner-card">
+              {/* NEW DGC Style Banner Section */}
+              <div className="page-header-section">
+                <div className="header-first">
+                  <div className="logo">
+                    <div className="logo-text">EIM</div>
+                  </div>
+                  <div className="vl"></div>
+                  <div className="header-content">
+                    <h1 className="header-main-title">Enterprise Information Management</h1>
+                    <h4 className="header-subtitle">Visualization Showcase</h4>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Categories Content */}
+              <section className="categories-container">
+                <div className="categories-grid">
+                  {categories.map((category, index) => (
+                    <div
+                      key={index}
+                      className={`category-card ${getCategoryClass(category.name)}`}
+                      onClick={() => handleCategoryClick(category.name)}
+                    >
+                      {/* Category Background Overlay - like dashboard overlay */}
+                      <div className="category-background"></div>
+                      
+                      {/* Category Icon - positioned like dashboard icon */}
+                      <FontAwesomeIcon 
+                        icon={getCategoryIcon(category.name)} 
+                        className="category-icon" 
+                      />
+                      
+                      {/* Category Title - positioned like dashboard title */}
+                      <h2 className="category-title">{category.name}</h2>
+                      
+                      {/* Green Arrow - positioned like dashboard arrow */}
+                      <FontAwesomeIcon 
+                        icon={faArrowRight} 
+                        className="category-arrow" 
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
             </div>
+            
+            {/* Footer */}
+            <Footer />
           </div>
         </div>
-        
-        <section className="categories-container">
-          <div className="categories-grid">
-            {categories.map((category, index) => (
-              <div
-                key={index}
-                className="category-card"
-                onClick={() => handleCategoryClick(category.name)}
-              >
-                <div className="category-header">
-                  <div className={`category-icon-container ${getCategoryClass(category.name)}`}>
-                    <FontAwesomeIcon icon={getCategoryIcon(category.name)} className="category-icon" />
-                  </div>
-                  <h2 className="category-title">{category.name}</h2>
-                </div>
-                
-                <p className="category-count">
-                  {category.count} {category.count === 1 ? 'dashboard' : 'dashboards'}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
       </main>
       
-      <Footer />
-      
-      {/* Maintenance Modal */}
+      {/* Modal for category info */}
       {showModal && (
-        <div className="modal-overlay" style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000
-        }}>
-          <div className="modal-container" style={{
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            width: '90%',
-            maxWidth: '500px',
-            padding: '25px',
-            boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
-            position: 'relative'
-          }}>
-            <button 
-              onClick={() => setShowModal(false)}
-              style={{
-                position: 'absolute',
-                top: '15px',
-                right: '15px',
-                background: 'none',
-                border: 'none',
-                fontSize: '18px',
-                cursor: 'pointer',
-                color: '#666'
-              }}
-            >
-              <FontAwesomeIcon icon={faTimes} />
-            </button>
-            
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-              <FontAwesomeIcon 
-                icon={faInfoCircle} 
-                style={{ 
-                  color: '#005ea2', 
-                  fontSize: '40px',
-                  marginBottom: '15px'
-                }}
-              />
-              <h3 style={{ 
-                fontSize: '22px', 
-                margin: '0 0 10px',
-                color: '#333' 
-              }}>
-                Category: {selectedCategory}
-              </h3>
-            </div>
-            
-            <p style={{
-              margin: '20px 0',
-              color: '#333',
-              lineHeight: '1.5',
-              fontSize: '16px'
-            }}>
-              Category filtering is currently under maintenance. Please visit the All Dashboards page and use the search filters there instead.
-            </p>
-            
-            <div style={{ textAlign: 'center', marginTop: '25px' }}>
-              <button
-                onClick={() => navigate('/all-dashboards')}
-                style={{
-                  backgroundColor: '#005ea2',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '10px 20px',
-                  fontSize: '16px',
-                  cursor: 'pointer',
-                  fontWeight: '500'
-                }}
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Category: {selectedCategory}</h3>
+              <button 
+                className="modal-close"
+                onClick={() => setShowModal(false)}
               >
-                Go to All Dashboards
+                <FontAwesomeIcon icon={faTimes} />
               </button>
+            </div>
+            <div className="modal-body">
+              <p>
+                Click below to view all dashboards in the "{selectedCategory}" category.
+              </p>
+              <div className="modal-actions">
+                <button 
+                  className="btn btn-primary"
+                  onClick={() => handleCategoryClick(selectedCategory)}
+                >
+                  View {selectedCategory} Dashboards
+                </button>
+                <button 
+                  className="btn btn-secondary"
+                  onClick={() => setShowModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         </div>

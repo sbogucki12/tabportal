@@ -1,23 +1,31 @@
-/* Option 1: Using pseudo-element with border-radius (Recommended) */
+/* App.css - Main App Component Styling */
+
+/* Primary App styling - matches current inline implementation */
 .App {
-  background: white;
-  min-height: 100vh;
+  background: white !important;
+  min-height: 100vh !important;
+  position: relative !important;
   display: flex;
   flex-direction: column;
   font-family: "Open Sans", sans-serif;
-  position: relative;
 }
 
 .App::before {
   content: '';
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 60vh;
-  background: var(--dgc-secondary-blue);
-  clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 50% 100%, 0% 85%);
-  z-index: -1;
+  height: 50vh;
+  background: #002b40 !important;
+  border-radius: 0 0 100px 0 !important;
+  clip-path: none !important;
+  z-index: 0;
+}
+
+.App > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Override body background for DGC theme */
@@ -29,129 +37,51 @@ body {
   min-height: 100vh;
 }
 
-/* Alternative Option 2: Using clip-path for more complex curves */
-.App-curved {
-  background: white;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  font-family: "Open Sans", sans-serif;
-  position: relative;
+/* Hide the navigation header page title that appears in the middle */
+.nav-right-section .page-title {
+  display: none !important;
 }
 
-.App-curved::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60vh;
-  background: var(--dgc-secondary-blue);
-  clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 50% 100%, 0% 85%);
-  z-index: -1;
+.nav-right-section .page-subtitle {
+  display: none !important;
 }
 
-/* Alternative Option 3: Using SVG-like curve with clip-path */
-.App-wave {
-  background: white;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  font-family: "Open Sans", sans-serif;
-  position: relative;
+.page-info {
+  display: none !important;
 }
 
-.App-wave::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60vh;
-  background: var(--dgc-secondary-blue);
-  clip-path: ellipse(100% 100% at 50% 0%);
-  z-index: -1;
-}
-
-/* Alternative Option 4: Asymmetric rounded corners */
-.App-asymmetric {
-  background: white;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  font-family: "Open Sans", sans-serif;
-  position: relative;
-}
-
-.App-asymmetric::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60vh;
-  background: var(--dgc-secondary-blue);
-  border-radius: 0 0 60px 20px;
-  z-index: -1;
-}
-
-/* Alternative Option 5: Large radius for subtle curve */
-.App-subtle {
-  background: white;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  font-family: "Open Sans", sans-serif;
-  position: relative;
-}
-
-.App-subtle::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60vh;
-  background: var(--dgc-secondary-blue);
-  border-radius: 0 0 100px 100px;
-  z-index: -1;
-}
-
-/* Responsive adjustments for all options */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .App::before,
-  .App-curved::before,
-  .App-wave::before,
-  .App-asymmetric::before,
-  .App-subtle::before {
-    height: 50vh;
-    border-radius: 0 0 30px 30px;
-  }
-  
-  .App-asymmetric::before {
-    border-radius: 0 0 40px 15px;
-  }
-  
-  .App-subtle::before {
-    border-radius: 0 0 60px 60px;
+  .App::before {
+    height: 40vh;
+    border-radius: 0 0 60px 0 !important;
   }
 }
 
 @media (max-width: 480px) {
-  .App::before,
-  .App-curved::before,
-  .App-wave::before,
-  .App-asymmetric::before,
-  .App-subtle::before {
-    height: 45vh;
-    border-radius: 0 0 20px 20px;
+  .App::before {
+    height: 35vh;
+    border-radius: 0 0 40px 0 !important;
   }
-  
-  .App-asymmetric::before {
-    border-radius: 0 0 30px 10px;
-  }
-  
-  .App-subtle::before {
-    border-radius: 0 0 40px 40px;
-  }
+}
+
+/* Alternative curve styles (if needed later) */
+.App-polygon::before {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 50% 100%, 0% 85%) !important;
+  border-radius: none !important;
+}
+
+.App-ellipse::before {
+  clip-path: ellipse(100% 100% at 50% 0%) !important;
+  border-radius: none !important;
+}
+
+.App-asymmetric::before {
+  border-radius: 0 0 60px 20px !important;
+  clip-path: none !important;
+}
+
+.App-subtle::before {
+  border-radius: 0 0 100px 100px !important;
+  clip-path: none !important;
 }

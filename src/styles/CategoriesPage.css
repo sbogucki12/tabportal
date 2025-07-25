@@ -1,129 +1,346 @@
-.categories-page {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .categories-main {
-    flex-grow: 1;
-  }
-  
-  .categories-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    margin-bottom: 4rem;
-  }
-  
+/* CategoriesPage.css - Dashboard Card Style Matching */
+
+/* Hide the navigation header page title that appears in the middle */
+.nav-right-section .page-title {
+  display: none !important;
+}
+
+.nav-right-section .page-subtitle {
+  display: none !important;
+}
+
+.page-info {
+  display: none !important;
+}
+
+/* Categories Container */
+.categories-container {
+  padding: 20px 0;
+}
+
+/* Categories Grid - Match DashboardGrid layout */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 0 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Category Card - Match Dashboard Card Style */
+.category-card {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: "Open Sans", sans-serif;
+}
+
+.category-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Category Background Overlay - Match Dashboard Overlay */
+.category-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+/* Category Icon - Match Dashboard Icon Position */
+.category-icon {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 24px;
+  color: white;
+  z-index: 10;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Category Title - Match Dashboard Title Position */
+.category-title {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 50px; /* Leave space for count */
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  text-decoration: none;
+  word-wrap: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-family: "Open Sans", sans-serif;
+  margin: 0;
+}
+
+.category-title:hover {
+  color: #f0f0f0;
+  text-decoration: underline;
+}
+
+/* Category Count - Match Dashboard Arrow Position */
+.category-arrow {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  font-size: 18px;
+  color: #4CAF50; /* Bright green - same as dashboard cards */
+  z-index: 10;
+  transition: transform 0.3s ease, color 0.3s ease;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Category-specific background colors - DGC Theme Only */
+.category-operations .category-background {
+  background-color: rgba(0, 43, 64, 0.7); /* DGC Primary Blue */
+}
+
+.category-air-traffic .category-background {
+  background-color: rgba(0, 74, 107, 0.7); /* DGC Secondary Blue */
+}
+
+.category-safety .category-background {
+  background-color: rgba(0, 43, 64, 0.8); /* DGC Primary Blue - slightly darker */
+}
+
+.category-maintenance .category-background {
+  background-color: rgba(0, 74, 107, 0.8); /* DGC Secondary Blue - slightly darker */
+}
+
+.category-financial .category-background {
+  background-color: rgba(0, 43, 64, 0.75); /* DGC Primary Blue - medium */
+}
+
+.category-compliance .category-background {
+  background-color: rgba(0, 74, 107, 0.75); /* DGC Secondary Blue - medium */
+}
+
+.category-risk-management .category-background {
+  background-color: rgba(0, 43, 64, 0.85); /* DGC Primary Blue - darker */
+}
+
+.category-airports .category-background {
+  background-color: rgba(0, 74, 107, 0.85); /* DGC Secondary Blue - darker */
+}
+
+.category-regulatory .category-background {
+  background-color: rgba(0, 43, 64, 0.9); /* DGC Primary Blue - darkest */
+}
+
+.category-default .category-background {
+  background-color: rgba(0, 43, 64, 0.7); /* DGC Primary Blue */
+}
+
+/* Hover effects for arrows */
+.category-card:hover .category-arrow {
+  transform: translateX(2px);
+  color: #66BB6A; /* Brighter green on hover - same as dashboard cards */
+}
+
+/* Remove old styling that's no longer needed */
+.category-header,
+.category-icon-container {
+  display: none;
+}
+
+/* Modal Styles - Keep existing modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0 24px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 24px;
+}
+
+.modal-header h3 {
+  font-family: "Open Sans", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--dgc-primary-blue, #002b40);
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+
+.modal-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.modal-body {
+  padding: 0 24px 24px 24px;
+}
+
+.modal-body p {
+  font-family: "Open Sans", sans-serif;
+  color: var(--dgc-text-secondary, #525252);
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary {
+  background: var(--dgc-primary-blue, #002b40);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--dgc-secondary-blue, #004a6b);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--dgc-text-secondary, #525252);
+  border: 2px solid #e0e0e0;
+}
+
+.btn-secondary:hover {
+  border-color: var(--dgc-accent-gold, #d4b76a);
+  color: var(--dgc-primary-blue, #002b40);
+}
+
+/* Responsive Design - Match Dashboard Card Responsive */
+@media (max-width: 768px) {
   .categories-grid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 0 15px;
   }
   
   .category-card {
-    background-color: var(--white);
-    border-radius: var(--border-radius);
-    border: 1px solid var(--light-gray);
-    padding: 1.5rem;
-    box-shadow: var(--shadow-sm);
-    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-    cursor: pointer;
-  }
-  
-  .category-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-  }
-  
-  .category-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  
-  .category-icon-container {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 1rem;
+    height: 100px;
   }
   
   .category-icon {
-    font-size: 1.25rem;
+    font-size: 20px;
+    top: 10px;
+    left: 10px;
   }
   
   .category-title {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 13px;
+    bottom: 10px;
+    left: 10px;
+    right: 45px;
   }
   
-  .category-count {
-    color: #777;
+  .category-arrow {
+    font-size: 16px;
+    bottom: 10px;
+    right: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0 10px;
   }
   
-  /* Category colors */
-  .category-operations {
-    background-color: #e6f7ff;
-    color: #0066cc;
+  .category-card {
+    height: 80px;
   }
   
-  .category-air-traffic {
-    background-color: #e6f9ff;
-    color: #0099cc;
+  .category-icon {
+    font-size: 18px;
+    top: 8px;
+    left: 8px;
   }
   
-  .category-safety {
-    background-color: #ffe6e6;
-    color: #cc0000;
+  .category-title {
+    font-size: 12px;
+    bottom: 8px;
+    left: 8px;
+    right: 40px;
   }
   
-  .category-maintenance {
-    background-color: #fff9e6;
-    color: #cc9900;
+  .category-arrow {
+    font-size: 14px;
+    bottom: 8px;
+    right: 8px;
   }
   
-  .category-financial {
-    background-color: #e6ffee;
-    color: #00cc66;
+  .modal-content {
+    width: 95%;
   }
   
-  .category-compliance {
-    background-color: #f2e6ff;
-    color: #6600cc;
+  .modal-header {
+    padding: 20px 20px 0 20px;
   }
   
-  .category-risk-management {
-    background-color: #fff2e6;
-    color: #cc6600;
+  .modal-body {
+    padding: 0 20px 20px 20px;
   }
   
-  .category-airports {
-    background-color: #e6eeff;
-    color: #0033cc;
+  .modal-actions {
+    flex-direction: column;
   }
-  
-  .category-regulatory {
-    background-color: #f0f0f0;
-    color: #666666;
-  }
-  
-  .category-default {
-    background-color: var(--light-brown);
-    color: var(--accent-brown);
-  }
-  
-  @media (min-width: 640px) {
-    .categories-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .categories-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
+}

@@ -1,7 +1,7 @@
-/* SearchBar.css - Modern Material-UI Design */
+/* SearchBar.css - Modern Material-UI Design with DGC Search Input */
 
 .search-section-mui {
-  background: (--dgc-secondary-blue);
+  background: var(--dgc-secondary-blue);
   padding: 3rem 0 2rem 0;
   position: relative;
   overflow: hidden;
@@ -14,7 +14,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  
+  background-image: linear-gradient(45deg, rgba(212, 183, 106, 0.1) 25%, transparent 25%),
+                    linear-gradient(-45deg, rgba(212, 183, 106, 0.1) 25%, transparent 25%);
   background-size: 30px 30px;
   opacity: 0.3;
 }
@@ -61,7 +62,7 @@
   box-shadow: 0px 12px 35px rgba(0, 0, 0, 0.2);
 }
 
-/* Main Search Input Container */
+/* Main Search Input Container - Original Layout */
 .search-input-container-mui {
   display: flex;
   align-items: stretch;
@@ -70,21 +71,21 @@
   min-height: 56px;
 }
 
+/* Search Input Wrapper - Updated with DGC styling */
 .search-input-wrapper {
   flex: 1;
   position: relative;
   display: flex;
   align-items: center;
-  background: #f5f5f5;
-  border: 2px solid transparent;
-  border-radius: 8px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white;
+  border: 2px solid #1A1A1A;
+  border-radius: 12px;
+  transition: all 0.3s ease;
   min-height: 56px;
 }
 
 .search-input-wrapper:focus-within {
-  background: white;
-  border-color: var(--dgc-primary-blue);
+  border-color: #002b40;
   box-shadow: 0 0 0 3px rgba(0, 43, 64, 0.1);
 }
 
@@ -98,16 +99,17 @@
 }
 
 .search-input-wrapper:focus-within .search-input-icon {
-  color: var(--dgc-primary-blue);
+  color: #002b40;
 }
 
+/* Search Input - DGC Styling */
 .search-input-mui {
   flex: 1;
   border: none;
   background: transparent;
   padding: 0 48px 0 48px;
   font-family: "Open Sans", sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   color: #333;
   height: 52px;
@@ -116,7 +118,7 @@
 
 .search-input-mui::placeholder {
   color: #999;
-  font-style: normal;
+  font-style: italic;
 }
 
 .clear-input-button {
@@ -141,7 +143,7 @@
   color: #666;
 }
 
-/* Filter Toggle Button */
+/* Filter Toggle Button - Original Styling */
 .filter-toggle-button {
   display: inline-flex;
   align-items: center;
@@ -185,7 +187,7 @@
   border: 2px solid white;
 }
 
-/* Search Submit Button */
+/* Search Submit Button - Original Styling */
 .search-submit-button {
   display: inline-flex;
   align-items: center;
@@ -241,7 +243,7 @@
   align-items: end;
 }
 
-/* Filter Groups */
+/* Filter Groups - Original Styling */
 .filter-group-mui {
   display: flex;
   flex-direction: column;

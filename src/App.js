@@ -8,35 +8,7 @@ import CategoriesPage from './pages/CategoriesPage';
 import { DashboardProvider } from './context/DashboardContext';
 import PasswordModal from './components/common/PasswordModal';
 import './styles/index.css';
-//import './styles/App.css';
-
-const testStyle = `
-  .App {
-    background: white !important;
-    min-height: 100vh !important;
-    position: relative !important;
-  }
-  .App::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 80vh;
-    background: #002b40 !important;
-    border-radius: 0 0 100px 0 !important;
-    clip-path: none !important;
-    z-index: 0;
-  }
-  .App > * {
-    position: relative;
-    z-index: 1;
-  }
-`;
-
-const styleSheet = document.createElement("style");
-styleSheet.innerText = testStyle;
-document.head.appendChild(styleSheet);
+import './styles/App.css';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

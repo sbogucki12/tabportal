@@ -8,9 +8,9 @@
 
 .dashboard-grid-title {
   font-size: 2.2rem;
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 3rem;
-  color: var(--primary-blue, #005ea2);
+  color: var(--dgc-text-secondary, #005ea2);
   font-family: "Open Sans", sans-serif;
   letter-spacing: 0.02em;
   text-align: center;
