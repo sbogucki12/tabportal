@@ -9,7 +9,6 @@
     fill: rgb(255, 255, 255);
     z-index: 2;
     background-color: #002b40; /* Same dark blue as header */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     margin-top: 64px; /* Account for fixed header */
 }
 

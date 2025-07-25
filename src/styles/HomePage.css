@@ -29,7 +29,7 @@
   top: calc(64px + 60px + 20px); /* Header + Navigation Header + padding */
   left: 50%;
   transform: translateX(-50%);
-  width: 99%; /* Expand to take up almost full screen width */
+  width: 97%; /* Expand to take up almost full screen width */
   height: calc(100vh - 64px - 60px - 40px); /* Full height minus both headers and padding */
   z-index: 50;
   overflow-y: auto; /* Enable vertical scrolling on the white card */
@@ -212,7 +212,7 @@
   .content-card {
     border-radius: 8px;
     padding: 4px;
-    width: 99%; /* Maintain 99% width on mobile */
+    width: 97%; /* Maintain 99% width on mobile */
     top: calc(56px + 5px); /* Smaller header on mobile */
     height: calc(100vh - 56px - 10px);
   }
@@ -268,7 +268,7 @@
   .content-card {
     top: calc(56px + 5px);
     height: calc(100vh - 56px - 10px);
-    width: 99%; /* Maintain 99% width on small mobile */
+    width: 97%; /* Maintain 99% width on small mobile */
   }
   
   .content-card-inner {
