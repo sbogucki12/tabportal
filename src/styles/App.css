@@ -17,7 +17,7 @@
   left: 0;
   right: 0;
   height: 50vh;
-  background: #002b40 !important;
+  background: #011E33 !important; /* Updated to medium-dark background */
   border-radius: 0 0 100px 0 !important;
   clip-path: none !important;
   z-index: 0;

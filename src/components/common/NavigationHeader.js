@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/NavigationHeader.css';
 
 const NavigationHeader = () => {
   const location = useLocation();
-  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   
   // Helper to determine active tab
   const isActive = (path) => {
@@ -30,7 +27,7 @@ const NavigationHeader = () => {
                   role="tab"
                   aria-selected={isActive('/')}
                 >
-                  Aviation Intelligence Hub
+                  Visualization Showcase
                 </Link>
                 <Link 
                   to="/all-dashboards" 
@@ -52,17 +49,7 @@ const NavigationHeader = () => {
               <div className="nav-tab-indicator"></div>
             </div>
             
-            {/* More Button */}
-            <button 
-              className="nav-more-button"
-              onClick={() => setMoreMenuOpen(!moreMenuOpen)}
-              aria-label="More Dashboards"
-              aria-haspopup="true"
-              aria-expanded={moreMenuOpen}
-            >
-              More
-              <FontAwesomeIcon icon={faChevronDown} className="more-icon" />
-            </button>
+            {/* More Button has been removed as it was non-functional */}
           </div>
         </div>
         
@@ -70,6 +57,7 @@ const NavigationHeader = () => {
         <div className="nav-right-section">
           <div className="page-info">
             <h1 className="page-title">              
+              {location.pathname === '/' && 'Visualization Showcase'}
               {location.pathname === '/all-dashboards' && 'All Dashboards'}
               {location.pathname === '/categories' && 'Browse by Category'}
               {location.pathname === '/admin' && 'Dashboard Administration'}

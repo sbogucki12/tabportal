@@ -46,13 +46,13 @@
 }
 
 .nav-link.active {
-  background: #002b40;
+  background: #011E33; /* Updated to medium-dark background */
   color: white;
   border-color: #d4b76a;
 }
 
 .nav-link.active:hover {
-  background: #004a6b;
+  background: rgba(1, 30, 51, 0.8); /* Slightly lighter on hover */
 }
 
 .nav-icon {
@@ -81,7 +81,7 @@
 }
 
 .breadcrumb-link {
-  color: #002b40;
+  color: #011E33; /* Updated to medium-dark background */
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
