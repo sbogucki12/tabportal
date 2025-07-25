@@ -14,8 +14,7 @@ import {
   faClipboardCheck,
   faExclamationTriangle,
   faCity,
-  faBalanceScale,
-  faInfoCircle,
+  faBalanceScale,  
   faTimes,
   faArrowRight
 } from '@fortawesome/free-solid-svg-icons';
@@ -25,9 +24,9 @@ import '../styles/CategoriesPage.css'; // Additional styles for categories and h
 const CategoriesPage = () => {
   const { dashboards, loading, error } = useContext(DashboardContext);
   const [categories, setCategories] = useState([]);
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory] = useState("");
   
   useEffect(() => {
     if (dashboards.length > 0) {
