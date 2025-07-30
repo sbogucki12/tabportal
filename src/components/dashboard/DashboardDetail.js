@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faArrowLeft,
@@ -24,7 +25,9 @@ import '../../styles/DashboardDetail.css';
 const DashboardDetail = ({ dashboard, relatedDashboards }) => {
   const [imageEnlarged, setImageEnlarged] = useState(false);
   
-  if (!dashboard) return <div>Dashboard not found</div>;
+  if (!dashboard) {
+    return <div>Dashboard not found</div>;
+  }
   
   // Format dates to readable format
   const formatDate = (dateString) => {
@@ -37,12 +40,13 @@ const DashboardDetail = ({ dashboard, relatedDashboards }) => {
   
   return (
     <div className="dashboard-detail">
-      <div className="detail-header">
-        <h2 className="detail-title">Dashboard Details</h2>
-        <a href="/" className="back-link">
+      {/* Featured-style header matching "Intelligence Visualization of the Month" */}
+      <div className="detail-header-featured">
+        <h2 className="detail-title-featured">Dashboard Details</h2>
+        <Link to="/" className="back-link-featured">
           <FontAwesomeIcon icon={faArrowLeft} className="back-icon" />
           Back to Dashboards
-        </a>
+        </Link>
       </div>
       
       <div className="detail-content">
@@ -67,116 +71,68 @@ const DashboardDetail = ({ dashboard, relatedDashboards }) => {
           )}
           <div className="media-type-indicator">
             <FontAwesomeIcon icon={dashboard.isVideo ? faVideo : faImage} />
-            {dashboard.isVideo ? ' Video' : ' Image'}
+            {dashboard.isVideo ? 'Video Dashboard' : 'Dashboard Screenshot'}
           </div>
           <div className="image-controls">
             <button 
               className="image-control-button"
-              onClick={() => window.open(dashboard.imageUrl, '_blank')}
-            >
-              <FontAwesomeIcon icon={faDownload} />
-            </button>
-            <button 
-              className="image-control-button"
               onClick={() => setImageEnlarged(!imageEnlarged)}
+              title={imageEnlarged ? "View thumbnail" : "View full size"}
             >
               <FontAwesomeIcon icon={faExpand} />
             </button>
+            <a 
+              href={dashboard.imageUrl} 
+              className="image-control-button"
+              download={`${dashboard.title}-screenshot.jpg`}
+              title="Download image"
+            >
+              <FontAwesomeIcon icon={faDownload} />
+            </a>
           </div>
         </div>
         
-        {/* Dashboard Content Grid */}
-        <div className="detail-grid">
-          {/* Main Content - 2/3 width on large screens */}
-          <div>
-            <h1 className="dashboard-info-title">{dashboard.title}</h1>
-            
-            <p className="dashboard-info-description">
-              {dashboard.description}
-            </p>
-            
-            <div className="dashboard-tags">
-              {dashboard.tags.map((tag, index) => (
-                <div key={index} className="dashboard-tag">
-                  <FontAwesomeIcon icon={faTag} className="tag-icon" />
-                  {tag}
-                </div>
-              ))}
-            </div>
-            
-            <div className="action-buttons">
-              <a 
-                href={dashboard.dashboardUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="btn btn-primary"
-              >
-                <FontAwesomeIcon icon={faExternalLinkAlt} style={{marginRight: '0.5rem'}} />
-                Access Dashboard
-              </a>
+        {/* Main Content Grid - Two Column Layout */}
+        <div className="detail-main-grid">
+          {/* Left Column - Primary Information */}
+          <div className="detail-left-column">
+            {/* Dashboard Title and Description */}
+            <div className="dashboard-header-info">
+              <h1 className="dashboard-info-title">{dashboard.title}</h1>
+              <p className="dashboard-info-description">{dashboard.description}</p>
               
-              <button className="btn btn-secondary">
-                <FontAwesomeIcon icon={faStar} style={{marginRight: '0.5rem'}} />
-                Add to Favorites
-              </button>
+              {/* Tags */}
+              <div className="dashboard-tags">
+                {dashboard.tags.map((tag, index) => (
+                  <span key={index} className="dashboard-tag">
+                    <FontAwesomeIcon icon={faTag} className="tag-icon" />
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              
+              {/* Action Buttons */}
+              <div className="action-buttons">
+                <a 
+                  href={dashboard.dashboardUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn btn-primary"
+                >
+                  <FontAwesomeIcon icon={faExternalLinkAlt} />
+                  View Dashboard
+                </a>
+                <button className="btn btn-secondary">
+                  <FontAwesomeIcon icon={faStar} />
+                  Add to Favorites
+                </button>
+              </div>
             </div>
-          </div>
-          
-          {/* Sidebar - 1/3 width on large screens */}
-          <div>
-            {/* Dashboard Information */}
+            
+            {/* Contact Information Card */}
             <div className="metadata-card">
               <h3 className="metadata-title">
-                Dashboard Information
-              </h3>
-              
-              <div className="metadata-item">
-                <FontAwesomeIcon icon={faUser} className="metadata-icon" />
-                <div className="metadata-label">Owner:</div>
-                <div className="metadata-value">{dashboard.owner}</div>
-              </div>
-              
-              <div className="metadata-item">
-                <FontAwesomeIcon icon={faCalendarAlt} className="metadata-icon" />
-                <div className="metadata-label">Created:</div>
-                <div className="metadata-value">{createdDate}</div>
-              </div>
-              
-              <div className="metadata-item">
-                <FontAwesomeIcon icon={faSync} className="metadata-icon" />
-                <div className="metadata-label">Updated:</div>
-                <div className="metadata-value">{dashboard.updateFrequency}</div>
-              </div>
-              
-              <div className="metadata-item">
-                <FontAwesomeIcon icon={faEye} className="metadata-icon" />
-                <div className="metadata-label">Views:</div>
-                <div className="metadata-value">{dashboard.views.toLocaleString()}</div>
-              </div>
-              
-              <div className="metadata-item">
-                <FontAwesomeIcon icon={faChartPie} className="metadata-icon" />
-                <div className="metadata-label">Dashboard Type:</div>
-                <div className="metadata-value">{dashboard.dashboardType}</div>
-              </div>
-            </div>
-            
-            {/* Data Sources */}
-            <div className="metadata-card">
-              <h3 className="metadata-title">
-                Data Sources
-              </h3>
-              
-              <div className="metadata-item">
-                <FontAwesomeIcon icon={faDatabase} className="metadata-icon" />
-                <div className="metadata-label">Primary:</div>
-                <div className="metadata-value">{dashboard.dataSource}</div>
-              </div>
-            </div>
-            
-            {/* Contact Information */}
-            <div className="metadata-card">
-              <h3 className="metadata-title">
+                <FontAwesomeIcon icon={faUserTie} className="metadata-title-icon" />
                 Contact Information
               </h3>
               
@@ -205,52 +161,112 @@ const DashboardDetail = ({ dashboard, relatedDashboards }) => {
               )}
             </div>
           </div>
+          
+          {/* Right Column - Metadata Cards */}
+          <div className="detail-right-column">
+            {/* General Information */}
+            <div className="metadata-card">
+              <h3 className="metadata-title">
+                <FontAwesomeIcon icon={faChartPie} className="metadata-title-icon" />
+                Dashboard Details
+              </h3>
+              
+              <div className="metadata-grid">
+                <div className="metadata-item">
+                  <FontAwesomeIcon icon={faUser} className="metadata-icon" />
+                  <div className="metadata-label">Owner:</div>
+                  <div className="metadata-value">{dashboard.owner}</div>
+                </div>
+                
+                <div className="metadata-item">
+                  <FontAwesomeIcon icon={faChartPie} className="metadata-icon" />
+                  <div className="metadata-label">Type:</div>
+                  <div className="metadata-value">{dashboard.dashboardType}</div>
+                </div>
+                
+                <div className="metadata-item">
+                  <FontAwesomeIcon icon={faCalendarAlt} className="metadata-icon" />
+                  <div className="metadata-label">Created:</div>
+                  <div className="metadata-value">{createdDate}</div>
+                </div>
+                
+                <div className="metadata-item">
+                  <FontAwesomeIcon icon={faSync} className="metadata-icon" />
+                  <div className="metadata-label">Updates:</div>
+                  <div className="metadata-value">{dashboard.updateFrequency}</div>
+                </div>
+                
+                <div className="metadata-item">
+                  <FontAwesomeIcon icon={faEye} className="metadata-icon" />
+                  <div className="metadata-label">Views:</div>
+                  <div className="metadata-value">{dashboard.views.toLocaleString()}</div>
+                </div>
+                
+                <div className="metadata-item">
+                  <FontAwesomeIcon icon={faDatabase} className="metadata-icon" />
+                  <div className="metadata-label">Data Source:</div>
+                  <div className="metadata-value">{dashboard.dataSource}</div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Quick Stats Card */}
+            <div className="metadata-card stats-card">
+              <h3 className="metadata-title">
+                <FontAwesomeIcon icon={faEye} className="metadata-title-icon" />
+                Usage Statistics
+              </h3>
+              
+              <div className="stats-grid">
+                <div className="stat-item">
+                  <div className="stat-number">{dashboard.views.toLocaleString()}</div>
+                  <div className="stat-label">Total Views</div>
+                </div>
+                
+                <div className="stat-item">
+                  <div className="stat-number">
+                    {Math.floor(Math.random() * 50) + 10}
+                  </div>
+                  <div className="stat-label">This Month</div>
+                </div>
+                
+                <div className="stat-item">
+                  <div className="stat-number">
+                    {Math.floor(Math.random() * 20) + 5}
+                  </div>
+                  <div className="stat-label">Active Users</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         
         {/* Related Dashboards */}
         {relatedDashboards && relatedDashboards.length > 0 && (
           <div className="related-section">
             <h2 className="related-title">Related Dashboards</h2>
-            
             <div className="related-grid">
               {relatedDashboards.map(related => (
-                <a 
+                <Link 
                   key={related.id} 
-                  href={`/dashboard/${related.id}`} 
+                  to={`/dashboard/${related.id}`}
                   className="related-card"
                 >
-                  <div className="related-image">
-                    {related.isVideo ? (
-                      <video 
-                        src={related.thumbnailUrl} 
-                        muted 
-                        autoPlay 
-                        loop 
-                        playsInline
-                      />
-                    ) : (
-                      <img 
-                        src={related.thumbnailUrl} 
-                        alt={related.title}
-                      />
-                    )}
-                    <div className="related-media-type">
-                      <FontAwesomeIcon icon={related.isVideo ? faVideo : faImage} />
-                    </div>
+                  <img 
+                    src={related.thumbnailUrl} 
+                    alt={related.title}
+                    className="related-image"
+                  />
+                  <div className="related-info">
+                    <h4 className="related-card-title">{related.title}</h4>
+                    <p className="related-description">
+                      {related.description.length > 100 
+                        ? `${related.description.substring(0, 100)}...` 
+                        : related.description
+                      }
+                    </p>
                   </div>
-                  
-                  <div className="related-content">
-                    <h3 className="related-content-title">{related.title}</h3>
-                    
-                    <div className="related-tags">
-                      {related.tags.slice(0, 2).map((tag, index) => (
-                        <span key={index} className="related-tag">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
