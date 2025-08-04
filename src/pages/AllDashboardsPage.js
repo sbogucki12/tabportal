@@ -1,151 +1,67 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useContext, useCallback } from 'react';
 import Header from '../components/common/Header';
 import NavigationHeader from '../components/common/NavigationHeader';
 import Footer from '../components/common/Footer';
-import SearchBar from '../components/common/SearchBar';
-import DashboardGrid from '../components/dashboard/DashboardGrid';
 import { DashboardContext } from '../context/DashboardContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+  faBuilding,
+  faPlane,
+  faCity,
+  faRocket,
+  faWifi,
+  faBalanceScale,
+  faHandshake,
+  faGlobe,
+  faServer,
+  faShieldAlt,
+  faArrowRight
+} from '@fortawesome/free-solid-svg-icons';
 import '../styles/HomePage.css'; // Use HomePage styles for consistent layout
-import '../styles/AllDashboardsPage.css'; // Additional styles to hide navigation title
+import '../styles/AllDashboardsPage.css'; // Additional styles
 
 const AllDashboardsPage = () => {
-  const { dashboards, loading, error, searchDashboards } = useContext(DashboardContext);
-  const [filteredDashboards, setFilteredDashboards] = useState([]);
-  const [searchApplied, setSearchApplied] = useState(false);
-  const location = useLocation();
-  //const navigate = useNavigate();
+  const { loading, error } = useContext(DashboardContext);
   
-  // Function to manually clear URL parameters
-  const clearUrlParameters = () => {
-    // Remove query parameters from URL without page refresh
-    window.history.replaceState({}, '', location.pathname);
-  };
+  // Define the standard organizations with icons
+  const standardOrganizations = [
+    { name: 'AVS', fullName: 'Aviation Safety', icon: faShieldAlt, color: 'org-avs' },
+    { name: 'ATO', fullName: 'Air Traffic Organization', icon: faPlane, color: 'org-ato' },
+    { name: 'ARP', fullName: 'Airports', icon: faCity, color: 'org-arp' },
+    { name: 'AST', fullName: 'Commercial Space Transportation', icon: faRocket, color: 'org-ast' },
+    { name: 'AFN', fullName: 'NextGen', icon: faWifi, color: 'org-afn' },
+    { name: 'AGC', fullName: 'General Counsel', icon: faBalanceScale, color: 'org-agc' },
+    { name: 'ANG', fullName: 'Government & Industry Affairs', icon: faHandshake, color: 'org-ang' },
+    { name: 'APL', fullName: 'Policy & International Affairs', icon: faGlobe, color: 'org-apl' },
+    { name: 'AIT', fullName: 'Information & Technology', icon: faServer, color: 'org-ait' },
+    { name: 'ASH', fullName: 'Security & Hazardous Materials', icon: faBuilding, color: 'org-ash' }
+  ];
   
-  // Function to clear all filters and URL parameters - now more aggressive
-/*   const clearAllFilters = () => {
-    // First clear URL parameters
-    window.history.replaceState({}, '', window.location.pathname);
+  // Handle organization card clicks
+  const handleOrganizationClick = useCallback((organizationName) => {
+    // Store the organization name in both localStorage and sessionStorage
+    localStorage.setItem('selectedOrganization', organizationName);
+    sessionStorage.setItem('selectedOrganization', organizationName);
     
-    // Reset internal state
-    setFilteredDashboards(dashboards);
-    setSearchApplied(false);
+    // Add a timestamp to identify this navigation
+    localStorage.setItem('organizationNavigationTime', new Date().getTime());
     
-    // Force a complete page reload - most reliable solution
-    window.location.reload();
-  }; */
-  
-  // Function to go back to home
-/*   const escapeToHome = () => {
-    window.location.href = '/';
-  }; */
-  
-  // Effect to clear URL parameters when component unmounts
-  useEffect(() => {
-    return () => {
-      // Clean up URL parameters when leaving this page
-      clearUrlParameters();
-    };
-  }, );
-  
-  useEffect(() => {
-    // Get category from session storage if available
-    const selectedCategory = sessionStorage.getItem('selectedCategory');
-    
-    if (dashboards.length > 0) {
-      // If category stored in session, filter by it
-      if (selectedCategory) {
-        console.log('Filtering by session category:', selectedCategory);
-        const results = searchDashboards(
-          '', // No text query
-          {
-            category: selectedCategory,
-            organization: ''
-          }
-        );
-        setFilteredDashboards(results);
-        setSearchApplied(true);
-        
-        // Clear session storage after using it
-        sessionStorage.removeItem('selectedCategory');
-      }
-      // Get query parameters from URL as fallback
-      else {
-        const queryParams = new URLSearchParams(location.search);
-        const categoryParam = queryParams.get('category');
-        const organizationParam = queryParams.get('organization');
-        
-        if (categoryParam || organizationParam) {
-          // If category parameter exists, filter by it
-          console.log('Filtering by URL params:', { categoryParam, organizationParam });
-          const results = searchDashboards(
-            '', // No text query
-            {
-              category: categoryParam || '',
-              organization: organizationParam || ''
-            }
-          );
-          setFilteredDashboards(results);
-          setSearchApplied(true);
-        } else {
-          // Otherwise show all dashboards
-          setFilteredDashboards(dashboards);
-          setSearchApplied(false);
-        }
-      }
-    }
-  }, [dashboards, location.search, searchDashboards]);
-  
-  const handleSearch = (searchParams) => {
-    console.log('Search triggered with params:', searchParams);
-    const results = searchDashboards(
-      searchParams.query,
-      {
-        category: searchParams.category,
-        organization: searchParams.organization
-      }
-    );
-    
-    setFilteredDashboards(results);
-    setSearchApplied(true);
-  };
+    // Use the most direct navigation approach
+    window.location.href = `/all-dashboards?organization=${encodeURIComponent(organizationName)}`;
+  }, []);
   
   if (loading) {
     return (
-      <div className="home-page">
-        <Header />
-        <NavigationHeader />
-        <main className="home-main">
-          <div className="content-card">
-            <div className="content-card-inner">
-              <div className="content-inner-card">
-                <div className="loading-container">
-                  <div className="loading-text">Loading dashboards...</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
+      <div className="loading-container">
+        <div className="loading-text">Loading organizations...</div>
       </div>
     );
   }
   
   if (error) {
     return (
-      <div className="home-page">
-        <Header />
-        <NavigationHeader />
-        <main className="home-main">
-          <div className="content-card">
-            <div className="content-card-inner">
-              <div className="content-inner-card">
-                <div className="loading-container">
-                  <div className="error-text">Error loading dashboards: {error}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
+      <div className="loading-container">
+        <div className="error-text">{error}</div>
       </div>
     );
   }
@@ -155,13 +71,13 @@ const AllDashboardsPage = () => {
       <Header />
       <NavigationHeader />
       
-      {/* Main Content with White Card - Same structure as HomePage */}
+      {/* Main Content with White Card - Same structure as other pages */}
       <main className="home-main">
         <div className="content-card">
           <div className="content-card-inner">
             {/* Light Gray Content Card - wraps ALL content */}
             <div className="content-inner-card">
-              {/* NEW DGC Style Banner Section */}
+              {/* EIM Header Section */}
               <div className="page-header-section">
                 <div className="header-first">
                   <div className="logo">
@@ -170,29 +86,45 @@ const AllDashboardsPage = () => {
                   <div className="vl"></div>
                   <div className="header-content">
                     <h1 className="header-main-title">Enterprise Information Management</h1>
-                    <h4 className="header-subtitle">Visualization Showcase</h4>
+                    <h4 className="header-subtitle">All Dashboards</h4>
                   </div>
                 </div>
               </div>
-              
-              {/* Search Section - NO HEADER TEXT */}
-              <div className="search-section-custom">
-                <SearchBar 
-                  onSearch={handleSearch} 
-                  initialValues={{
-                    query: '',
-                    category: new URLSearchParams(location.search).get('category') || '',
-                    organization: new URLSearchParams(location.search).get('organization') || ''
-                  }}
-                  hideHeader={true}
-                />
-              </div>
-              
-              {/* Dashboard Grid */}
-              <DashboardGrid 
-                dashboards={filteredDashboards} 
-                title={searchApplied ? `Search Results (${filteredDashboards.length})` : `All Dashboards (${filteredDashboards.length})`}
-              />
+
+              {/* Organization Navigation Section */}
+              <section className="category-navigation-section">
+                <h2 className="section-title">Browse by Organization</h2>
+                <div className="category-cards-grid">
+                  {standardOrganizations.map((organization, index) => (
+                    <div
+                      key={index}
+                      className={`category-nav-card category-${organization.color}`}
+                      onClick={() => handleOrganizationClick(organization.name)}
+                    >
+                      {/* Organization Background Overlay */}
+                      <div className="category-nav-background"></div>
+                      
+                      {/* Organization Icon */}
+                      <FontAwesomeIcon 
+                        icon={organization.icon} 
+                        className="category-nav-icon" 
+                      />
+                      
+                      {/* Organization Title */}
+                      <h3 className="category-nav-title">{organization.name}</h3>
+                      
+                      {/* Organization Full Name */}
+                      <p className="organization-full-name">{organization.fullName}</p>
+                      
+                      {/* Arrow Icon */}
+                      <FontAwesomeIcon 
+                        icon={faArrowRight} 
+                        className="category-nav-arrow" 
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
             </div>
             
             {/* Footer */}

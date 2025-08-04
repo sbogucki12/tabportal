@@ -104,7 +104,7 @@ const CategoriesPage = () => {
           <div className="content-card-inner">
             {/* Light Gray Content Card - wraps ALL content */}
             <div className="content-inner-card">
-              {/* NEW DGC Style Banner Section */}
+              {/* EIM Header Section */}
               <div className="page-header-section">
                 <div className="header-first">
                   <div className="logo">
@@ -113,7 +113,7 @@ const CategoriesPage = () => {
                   <div className="vl"></div>
                   <div className="header-content">
                     <h1 className="header-main-title">Enterprise Information Management</h1>
-                    <h4 className="header-subtitle">Visualization Showcase</h4>
+                    <h4 className="header-subtitle">All Categories</h4>
                   </div>
                 </div>
               </div>
