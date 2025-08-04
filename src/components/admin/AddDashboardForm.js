@@ -1,218 +1,163 @@
 import React, { useState, useContext } from 'react';
+import { DashboardContext } from '../../context/DashboardContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
-  faCloudUploadAlt, 
+  faCheckCircle, 
+  faExclamationCircle, 
   faTimes,
-  faCheckCircle,
-  faExclamationCircle
+  faUpload 
 } from '@fortawesome/free-solid-svg-icons';
-import { DashboardContext } from '../../context/DashboardContext';
 import '../../styles/AddDashboardForm.css';
 
 const AddDashboardForm = () => {
   const { addDashboard } = useContext(DashboardContext);
+  const [tagInput, setTagInput] = useState('');
+  const [submitMessage, setSubmitMessage] = useState({ text: '', type: '' });
   const [formData, setFormData] = useState({
     title: '',
+    description: '',
     owner: '',
     ownerAbbr: '',
-    description: '',
     tags: [],
     dataSource: '',
     updateFrequency: '',
+    contactName: '',
+    contactEmail: '',
+    contactPhone: '',
     dashboardType: '',
     accessLevel: 'Public',
     dashboardUrl: '',
-    contactName: '',
-    contactEmail: '',
-    contactPhone: ''
+    thumbnailUrl: '',
+    imageUrl: '',
+    isVideo: false
   });
-  
-  const [tagInput, setTagInput] = useState('');
-  const [imagePreview, setImagePreview] = useState('');
-  const [imageFile, setImageFile] = useState(null);
-  const [submitMessage, setSubmitMessage] = useState({ type: '', text: '' });
-  
-  // Map owner to abbreviation
-  const getOwnerAbbr = (owner) => {
-    switch(owner) {
-      case 'FAA Headquarters':
-        return 'FAA';
-      case 'Air Traffic Organization':
-        return 'ATO';
-      case 'Aviation Safety':
-        return 'AVS';
-      case 'Airports':
-        return 'ARP';
-      case 'Security & Hazardous Materials':
-        return 'ASH';
-      case 'Policy & Innovation':
-        return 'AGI';
-      default:
-        return '';
-    }
+
+  // Organization abbreviation mapping
+  const organizationMapping = {
+    'AVS': 'AVS',
+    'ATO': 'ATO', 
+    'ARP': 'ARP',
+    'AST': 'AST',
+    'AFN': 'AFN',
+    'AGC': 'AGC',
+    'ANG': 'ANG',
+    'APL': 'APL',
+    'AIT': 'AIT',
+    'ASH': 'ASH'
   };
-  
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     
-    if (name === 'owner') {
-      setFormData({
-        ...formData,
+    if (type === 'checkbox') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: checked
+      }));
+    } else if (name === 'owner') {
+      // Auto-populate abbreviation when organization is selected
+      setFormData(prev => ({
+        ...prev,
         [name]: value,
-        ownerAbbr: getOwnerAbbr(value)
-      });
+        ownerAbbr: organizationMapping[value] || value
+      }));
     } else {
-      setFormData({
-        ...formData,
+      setFormData(prev => ({
+        ...prev,
         [name]: value
-      });
+      }));
     }
   };
-  
+
   const handleTagInputChange = (e) => {
     setTagInput(e.target.value);
   };
-  
+
   const handleTagInputKeyDown = (e) => {
-    // Add tag on Enter or comma
     if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault();
       addTag();
     }
   };
-  
+
   const addTag = () => {
-    const tag = tagInput.trim();
-    if (tag && !formData.tags.includes(tag)) {
-      setFormData({
-        ...formData,
-        tags: [...formData.tags, tag]
-      });
-      setTagInput('');
+    const trimmedTag = tagInput.trim();
+    if (trimmedTag && !formData.tags.includes(trimmedTag)) {
+      setFormData(prev => ({
+        ...prev,
+        tags: [...prev.tags, trimmedTag]
+      }));
     }
-  };
-  
-  const removeTag = (tagToRemove) => {
-    setFormData({
-      ...formData,
-      tags: formData.tags.filter(tag => tag !== tagToRemove)
-    });
-  };
-  
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      
-      // Create a preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-  
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
-  
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      setImageFile(file);
-      
-      // Create a preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-  
-  const resetForm = () => {
-    setFormData({
-      title: '',
-      owner: '',
-      ownerAbbr: '',
-      description: '',
-      tags: [],
-      dataSource: '',
-      updateFrequency: '',
-      dashboardType: '',
-      accessLevel: 'Public',
-      dashboardUrl: '',
-      contactName: '',
-      contactEmail: '',
-      contactPhone: ''
-    });
     setTagInput('');
-    setImagePreview('');
-    setImageFile(null);
-    setSubmitMessage({ type: '', text: '' });
   };
-  
-  const handleSubmit = (e) => {
+
+  const removeTag = (tagToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      tags: prev.tags.filter(tag => tag !== tagToRemove)
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Basic validation
-    if (!formData.title || !formData.description || !formData.owner || !formData.dataSource || !formData.dashboardUrl) {
+    if (!formData.title || !formData.description || !formData.owner || 
+        !formData.dataSource || !formData.contactName || !formData.contactEmail || 
+        !formData.dashboardType || !formData.dashboardUrl || formData.tags.length === 0) {
       setSubmitMessage({
-        type: 'error',
-        text: 'Please fill in all required fields.'
+        text: 'Please fill in all required fields.',
+        type: 'error'
       });
       return;
     }
-    
-    if (formData.tags.length === 0) {
-      setSubmitMessage({
-        type: 'error',
-        text: 'Please add at least one category tag.'
-      });
-      return;
-    }
-    
-    if (!imageFile) {
-      setSubmitMessage({
-        type: 'error',
-        text: 'Please upload a dashboard screenshot.'
-      });
-      return;
-    }
-    
-    // In a real app, we would upload the image file to a storage service
-    // and get back a URL. For now, we'll just use the preview URL
-    const newDashboard = {
-      ...formData,
-      thumbnailUrl: imagePreview,
-      imageUrl: imagePreview,
-      views: 0,
-      isFeatured: false,
-      createdAt: new Date().toISOString()
-    };
-    
-    // Add the dashboard
+
     try {
+      // Create dashboard object
+      const newDashboard = {
+        ...formData,
+        id: `dash-${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        views: 0,
+        isFeatured: false,
+        imageUrl: formData.thumbnailUrl || '/media/default-dashboard.jpg'
+      };
+
+      // Add to context
       addDashboard(newDashboard);
       
       setSubmitMessage({
-        type: 'success',
-        text: 'Dashboard added successfully!'
+        text: 'Dashboard added successfully!',
+        type: 'success'
       });
       
-      // Reset form after successful submission
-      resetForm();
+      // Reset form
+      setFormData({
+        title: '',
+        description: '',
+        owner: '',
+        ownerAbbr: '',
+        tags: [],
+        dataSource: '',
+        updateFrequency: '',
+        contactName: '',
+        contactEmail: '',
+        contactPhone: '',
+        dashboardType: '',
+        accessLevel: 'Public',
+        dashboardUrl: '',
+        thumbnailUrl: '',
+        imageUrl: '',
+        isVideo: false
+      });
+      setTagInput('');
       
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setSubmitMessage({ type: '', text: '' });
-      }, 3000);
     } catch (error) {
+      console.error('Error adding dashboard:', error);
       setSubmitMessage({
-        type: 'error',
-        text: 'Error adding dashboard. Please try again.'
+        text: 'Error adding dashboard. Please try again.',
+        type: 'error'
       });
     }
   };
@@ -264,12 +209,16 @@ const AddDashboardForm = () => {
                 onChange={handleChange}
               >
                 <option value="">Select organization</option>
-                <option value="FAA Headquarters">FAA Headquarters</option>
-                <option value="Air Traffic Organization">Air Traffic Organization</option>
-                <option value="Aviation Safety">Aviation Safety</option>
-                <option value="Airports">Airports</option>
-                <option value="Security & Hazardous Materials">Security & Hazardous Materials</option>
-                <option value="Policy & Innovation">Policy & Innovation</option>
+                <option value="AVS">AVS</option>
+                <option value="ATO">ATO</option>
+                <option value="ARP">ARP</option>
+                <option value="AST">AST</option>
+                <option value="AFN">AFN</option>
+                <option value="AGC">AGC</option>
+                <option value="ANG">ANG</option>
+                <option value="APL">APL</option>
+                <option value="AIT">AIT</option>
+                <option value="ASH">ASH</option>
               </select>
             </div>
           </div>
@@ -315,7 +264,10 @@ const AddDashboardForm = () => {
                   onBlur={addTag}
                 />
               </div>
-              <span className="form-hint">Press Enter or comma to add a tag</span>
+              <span className="form-hint">
+                Use categories: Aviation Safety, Personnel / HR, Finance, Aviation Operations, IT, 
+                Oversight / Compliance & Enforcement, Air Traffic, Airports, Weather, Geospatial / Maps / Charts
+              </span>
             </div>
             
             <div className="form-group">
@@ -472,78 +424,49 @@ const AddDashboardForm = () => {
           </div>
         </div>
         
-        {/* Dashboard Image */}
+        {/* Media Information */}
         <div className="form-section">
           <h3 className="form-section-title">
-            Dashboard Image
+            Media & Preview
           </h3>
           
-          <div className="form-group">
-            <label>
-              Upload Dashboard Screenshot <span className="required-field">*</span>
-            </label>
-            
-            <div
-              className="upload-area"
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
-              onClick={() => document.getElementById('fileInput').click()}
-            >
-              {!imagePreview ? (
-                <>
-                  <FontAwesomeIcon 
-                    icon={faCloudUploadAlt} 
-                    className="upload-icon"
-                  />
-                  <p>Drag & drop a screenshot here, or click to browse</p>
-                  <p className="form-hint">Recommended size: 1200×600px, Max size: 5MB</p>
-                </>
-              ) : (
-                <div className="upload-preview">
-                  <img 
-                    src={imagePreview} 
-                    alt="Dashboard preview" 
-                    className="preview-image"
-                  />
-                  <span 
-                    className="preview-remove"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setImagePreview('');
-                      setImageFile(null);
-                      document.getElementById('fileInput').value = '';
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faTimes} />
-                  </span>
-                </div>
-              )}
-              
+          <div className="form-grid form-grid-2">
+            <div className="form-group">
+              <label htmlFor="thumbnailUrl">
+                Screenshot/Thumbnail URL
+              </label>
               <input
-                type="file"
-                id="fileInput"
-                accept="image/*"
-                onChange={handleImageChange}
-                style={{ display: 'none' }}
+                type="url"
+                id="thumbnailUrl"
+                name="thumbnailUrl"
+                className="form-input"
+                placeholder="Enter URL for dashboard screenshot"
+                value={formData.thumbnailUrl}
+                onChange={handleChange}
               />
+              <span className="form-hint">Upload image to media folder and enter relative path (e.g., /media/dashboard-screenshot.jpg)</span>
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="isVideo">
+                <input
+                  type="checkbox"
+                  id="isVideo"
+                  name="isVideo"
+                  checked={formData.isVideo}
+                  onChange={handleChange}
+                  style={{ marginRight: '0.5rem' }}
+                />
+                Media is a video file
+              </label>
+              <span className="form-hint">Check if the media file is a video (MP4, etc.)</span>
             </div>
           </div>
         </div>
         
-        {/* Form Buttons */}
-        <div className="form-buttons">
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={resetForm}
-          >
-            Cancel
-          </button>
-          
-          <button
-            type="submit"
-            className="btn btn-primary"
-          >
+        <div className="form-actions">
+          <button type="submit" className="submit-button">
+            <FontAwesomeIcon icon={faUpload} style={{ marginRight: '0.5rem' }} />
             Add Dashboard
           </button>
         </div>

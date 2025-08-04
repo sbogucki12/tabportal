@@ -1,20 +1,20 @@
-import React, { useContext, useState, useEffect } from 'react';
-//import { useNavigate } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
 import Header from '../components/common/Header';
 import NavigationHeader from '../components/common/NavigationHeader';
 import Footer from '../components/common/Footer';
 import { DashboardContext } from '../context/DashboardContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
-  faChartLine, 
-  faPlane, 
-  faShieldAlt, 
-  faTools, 
+  faShieldAlt,
+  faUsers,
   faMoneyBillWave,
+  faChartLine,
+  faLaptopCode,
   faClipboardCheck,
-  faExclamationTriangle,
+  faPlane,
   faCity,
-  faBalanceScale,  
+  faCloud,
+  faMap,
   faTimes,
   faArrowRight
 } from '@fortawesome/free-solid-svg-icons';
@@ -22,85 +22,23 @@ import '../styles/HomePage.css'; // Use HomePage styles for consistent layout
 import '../styles/CategoriesPage.css'; // Additional styles for categories and hide nav title
 
 const CategoriesPage = () => {
-  const { dashboards, loading, error } = useContext(DashboardContext);
-  const [categories, setCategories] = useState([]);
-  //const navigate = useNavigate();
+  const { loading, error } = useContext(DashboardContext);
   const [showModal, setShowModal] = useState(false);
   const [selectedCategory] = useState("");
   
-  useEffect(() => {
-    if (dashboards.length > 0) {
-      // Extract all unique categories from dashboards
-      const allTags = dashboards.flatMap(dashboard => dashboard.tags);
-      const uniqueCategories = [...new Set(allTags)];
-      
-      // Count dashboards per category
-      const categoriesWithCount = uniqueCategories.map(category => {
-        const count = dashboards.filter(dashboard => 
-          dashboard.tags.includes(category)
-        ).length;
-        
-        return { name: category, count };
-      });
-      
-      // Sort by count (descending)
-      categoriesWithCount.sort((a, b) => b.count - a.count);
-      
-      setCategories(categoriesWithCount);
-    }
-  }, [dashboards]);
-  
-  // Map categories to icons
-  const getCategoryIcon = (category) => {
-    switch(category.toLowerCase()) {
-      case 'operations':
-        return faChartLine;
-      case 'air traffic':
-        return faPlane;
-      case 'safety':
-        return faShieldAlt;
-      case 'maintenance':
-        return faTools;
-      case 'financial':
-        return faMoneyBillWave;
-      case 'compliance':
-        return faClipboardCheck;
-      case 'risk management':
-        return faExclamationTriangle;
-      case 'airports':
-        return faCity;
-      case 'regulatory':
-        return faBalanceScale;
-      default:
-        return faChartLine;
-    }
-  };
-  
-  // Get category CSS class
-  const getCategoryClass = (category) => {
-    switch(category.toLowerCase()) {
-      case 'operations':
-        return 'category-operations';
-      case 'air traffic':
-        return 'category-air-traffic';
-      case 'safety':
-        return 'category-safety';
-      case 'maintenance':
-        return 'category-maintenance';
-      case 'financial':
-        return 'category-financial';
-      case 'compliance':
-        return 'category-compliance';
-      case 'risk management':
-        return 'category-risk-management';
-      case 'airports':
-        return 'category-airports';
-      case 'regulatory':
-        return 'category-regulatory';
-      default:
-        return 'category-default';
-    }
-  };
+  // Use the same standard categories as HomePage
+  const standardCategories = [
+    { name: 'Aviation Safety', icon: faShieldAlt, color: 'aviation-safety' },
+    { name: 'Personnel / HR', icon: faUsers, color: 'personnel-hr' },
+    { name: 'Finance', icon: faMoneyBillWave, color: 'finance' },
+    { name: 'Aviation Operations', icon: faChartLine, color: 'aviation-operations' },
+    { name: 'IT', icon: faLaptopCode, color: 'it' },
+    { name: 'Oversight / Compliance & Enforcement', icon: faClipboardCheck, color: 'oversight-compliance' },
+    { name: 'Air Traffic', icon: faPlane, color: 'air-traffic' },
+    { name: 'Airports', icon: faCity, color: 'airports' },
+    { name: 'Weather', icon: faCloud, color: 'weather' },
+    { name: 'Geospatial / Maps / Charts', icon: faMap, color: 'geospatial' }
+  ];
   
   // Handle category selection - most aggressive approach
   const handleCategoryClick = (categoryName) => {
@@ -183,10 +121,10 @@ const CategoriesPage = () => {
               {/* Categories Content */}
               <section className="categories-container">
                 <div className="categories-grid">
-                  {categories.map((category, index) => (
+                  {standardCategories.map((category, index) => (
                     <div
                       key={index}
-                      className={`category-card ${getCategoryClass(category.name)}`}
+                      className={`category-card category-${category.color}`}
                       onClick={() => handleCategoryClick(category.name)}
                     >
                       {/* Category Background Overlay - like dashboard overlay */}
@@ -194,7 +132,7 @@ const CategoriesPage = () => {
                       
                       {/* Category Icon - positioned like dashboard icon */}
                       <FontAwesomeIcon 
-                        icon={getCategoryIcon(category.name)} 
+                        icon={category.icon} 
                         className="category-icon" 
                       />
                       

@@ -20,12 +20,42 @@
   opacity: 0.3;
 }
 
+/* HomePage SearchBar - Match FeaturedDashboard width exactly */
+.search-section-homepage {
+  background: white !important;
+  margin-bottom: 1.5rem;
+  padding: 0 !important;
+}
+
+.search-section-homepage::before {
+  display: none !important;
+}
+
 .search-container-mui {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
   position: relative;
   z-index: 1;
+}
+
+/* HomePage SearchBar container - match FeaturedDashboard container exactly */
+.search-section-homepage .search-container-mui {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+/* HomePage SearchBar form - style as card like FeaturedDashboard */
+.search-section-homepage .search-form-mui {
+  background: white !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .search-header {
@@ -60,6 +90,11 @@
 
 .search-form-mui:hover {
   box-shadow: 0px 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* HomePage SearchBar form styling */
+.search-section-homepage .search-form-mui:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* Main Search Input Container - Original Layout */
@@ -219,7 +254,7 @@
   box-shadow: 0 2px 8px rgba(0, 43, 64, 0.2);
 }
 
-/* Expandable Filters Container */
+/* Expandable Filters Container - REMOVED BORDER */
 .filters-container {
   max-height: 0;
   overflow: hidden;
@@ -233,7 +268,7 @@
   max-height: 200px;
   padding: 1.5rem;
   margin: 1rem -1.5rem 0 -1.5rem;
-  border-top: 1px solid #e0e0e0;
+  /* REMOVED: border-top: 1px solid #e0e0e0; */
 }
 
 .filters-grid {
