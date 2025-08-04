@@ -1,4 +1,4 @@
-// src/pages/CategoriesPage.js - Updated with Personnel page navigation
+// src/pages/PersonnelPage.js
 import React, { useContext } from 'react';
 import Header from '../components/common/Header';
 import NavigationHeader from '../components/common/NavigationHeader';
@@ -6,56 +6,63 @@ import Footer from '../components/common/Footer';
 import { DashboardContext } from '../context/DashboardContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
-  faShieldAlt,
+  faUserPlus,
+  faUserMinus,
+  faLaptopHouse,
   faUsers,
-  faMoneyBillWave,
+  faChartPie,
+  faHeart,
   faChartLine,
-  faLaptopCode,
-  faClipboardCheck,
-  faPlane,
-  faCity,
-  faCloud,
-  faMap,
+  faGraduationCap,
+  faClipboardList,
+  faUserCog,
+  faCalendarAlt,
+  faDollarSign,
+  faHandshake,
+  faComments,
+  faExchangeAlt,
+  faHardHat,
   faArrowRight
 } from '@fortawesome/free-solid-svg-icons';
 import '../styles/HomePage.css'; // Use HomePage styles for consistent layout
-import '../styles/CategoriesPage.css'; // Additional styles for categories and hide nav title
+import '../styles/CategoriesPage.css'; // Use Categories page styles for cards
 
-const CategoriesPage = () => {
+const PersonnelPage = () => {
   const { loading, error } = useContext(DashboardContext);
   
-  // Use the same standard categories as HomePage
-  const standardCategories = [
-    { name: 'Aviation Safety', icon: faShieldAlt, color: 'aviation-safety' },
-    { name: 'Personnel / HR', icon: faUsers, color: 'personnel-hr' },
-    { name: 'Finance', icon: faMoneyBillWave, color: 'finance' },
-    { name: 'Aviation Operations', icon: faChartLine, color: 'aviation-operations' },
-    { name: 'IT', icon: faLaptopCode, color: 'it' },
-    { name: 'Oversight / Compliance & Enforcement', icon: faClipboardCheck, color: 'oversight-compliance' },
-    { name: 'Air Traffic', icon: faPlane, color: 'air-traffic' },
-    { name: 'Airports', icon: faCity, color: 'airports' },
-    { name: 'Weather', icon: faCloud, color: 'weather' },
-    { name: 'Geospatial / Maps / Charts', icon: faMap, color: 'geospatial' }
+  // Define the Personnel/HR subcategories with relevant icons
+  const personnelCategories = [
+    { name: 'Hiring', icon: faUserPlus, color: 'personnel-hiring' },
+    { name: 'Attrition', icon: faUserMinus, color: 'personnel-attrition' },
+    { name: 'Telework', icon: faLaptopHouse, color: 'personnel-telework' },
+    { name: 'Diversity', icon: faUsers, color: 'personnel-diversity' },
+    { name: 'Workforce Composition', icon: faChartPie, color: 'personnel-composition' },
+    { name: 'Employee Engagement', icon: faHeart, color: 'personnel-engagement' },
+    { name: 'Performance Management', icon: faChartLine, color: 'personnel-performance' },
+    { name: 'Training & Development', icon: faGraduationCap, color: 'personnel-training' },
+    { name: 'Workforce Planning', icon: faClipboardList, color: 'personnel-planning' },
+    { name: 'Succession Planning', icon: faUserCog, color: 'personnel-succession' },
+    { name: 'Leave & Attendance', icon: faCalendarAlt, color: 'personnel-attendance' },
+    { name: 'Competence & Benefits', icon: faDollarSign, color: 'personnel-benefits' },
+    { name: 'Onboarding', icon: faHandshake, color: 'personnel-onboarding' },
+    { name: 'Employee Relations', icon: faComments, color: 'personnel-relations' },
+    { name: 'Workforce Mobility', icon: faExchangeAlt, color: 'personnel-mobility' },
+    { name: 'Workforce Safety', icon: faHardHat, color: 'personnel-safety' }
   ];
   
-  // Handle category selection - Special handling for Personnel / HR
+  // Handle category selection - navigate to All Dashboards with specific subcategory filter
   const handleCategoryClick = (categoryName) => {
-    // Special case: Personnel / HR goes to dedicated Personnel page
-    if (categoryName === 'Personnel / HR') {
-      window.location.href = '/personnel';
-      return;
-    }
-    
-    // For all other categories, navigate to All Dashboards with filter
-    // Store the category name in both localStorage and sessionStorage
-    localStorage.setItem('selectedCategory', categoryName);
-    sessionStorage.setItem('selectedCategory', categoryName);
+    // Store the category name in localStorage for the search to pick up
+    localStorage.setItem('selectedCategory', 'Personnel / HR');
+    localStorage.setItem('selectedSubcategory', categoryName);
+    sessionStorage.setItem('selectedCategory', 'Personnel / HR');
+    sessionStorage.setItem('selectedSubcategory', categoryName);
     
     // Add a timestamp to identify this navigation
     localStorage.setItem('categoryNavigationTime', new Date().getTime());
     
-    // Use the most direct navigation approach
-    window.location.href = `/all-dashboards?category=${encodeURIComponent(categoryName)}`;
+    // Navigate to all dashboards with both category and subcategory
+    window.location.href = `/all-dashboards?category=${encodeURIComponent('Personnel / HR')}&subcategory=${encodeURIComponent(categoryName)}`;
   };
   
   if (loading) {
@@ -68,7 +75,7 @@ const CategoriesPage = () => {
             <div className="content-card-inner">
               <div className="content-inner-card">
                 <div className="loading-container">
-                  <div className="loading-text">Loading categories...</div>
+                  <div className="loading-text">Loading personnel categories...</div>
                 </div>
               </div>
             </div>
@@ -88,7 +95,7 @@ const CategoriesPage = () => {
             <div className="content-card-inner">
               <div className="content-inner-card">
                 <div className="loading-container">
-                  <div className="error-text">Error loading categories: {error}</div>
+                  <div className="error-text">Error loading personnel categories: {error}</div>
                 </div>
               </div>
             </div>
@@ -103,7 +110,7 @@ const CategoriesPage = () => {
       <Header />
       <NavigationHeader />
       
-      {/* Main Content with White Card - Same structure as HomePage */}
+      {/* Main Content with White Card - Same structure as HomePage and CategoriesPage */}
       <main className="home-main">
         <div className="content-card">
           <div className="content-card-inner">
@@ -118,15 +125,15 @@ const CategoriesPage = () => {
                   <div className="vl"></div>
                   <div className="header-content">
                     <h1 className="header-main-title">Enterprise Information Management</h1>
-                    <h4 className="header-subtitle">All Categories</h4>
+                    <h4 className="header-subtitle">Personnel / HR Analytics</h4>
                   </div>
                 </div>
               </div>
               
-              {/* Categories Content */}
+              {/* Personnel Categories Content */}
               <section className="categories-container">
                 <div className="categories-grid">
-                  {standardCategories.map((category, index) => (
+                  {personnelCategories.map((category, index) => (
                     <div
                       key={index}
                       className={`category-card category-${category.color}`}
@@ -161,4 +168,4 @@ const CategoriesPage = () => {
   );
 };
 
-export default CategoriesPage;
+export default PersonnelPage;

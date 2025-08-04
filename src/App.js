@@ -1,3 +1,4 @@
+// src/App.js - Updated with Personnel Page route
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -5,6 +6,7 @@ import DetailPage from './pages/DetailPage';
 import AdminPage from './pages/AdminPage';
 import AllDashboardsPage from './pages/AllDashboardsPage';
 import CategoriesPage from './pages/CategoriesPage';
+import PersonnelPage from './pages/PersonnelPage'; // Import new Personnel page
 import { DashboardProvider } from './context/DashboardContext';
 import PasswordModal from './components/common/PasswordModal';
 import './styles/index.css';
@@ -59,6 +61,7 @@ function App() {
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/all-dashboards" element={<AllDashboardsPage />} />
             <Route path="/categories" element={<CategoriesPage />} />
+            <Route path="/personnel" element={<PersonnelPage />} /> {/* New Personnel page route */}
           </Routes>
         )}
       </DashboardProvider>

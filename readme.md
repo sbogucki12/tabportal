@@ -8,15 +8,14 @@ TabPortal is an actively developed prototype dashboard portal designed specifica
 
 ### Recent Development Highlights
 
+- **NEW: Personnel / HR Subcategory Page**: Implemented dedicated Personnel page with 16 HR-specific subcategories
+- **Enhanced Category Navigation**: Special handling for Personnel / HR card clicks to navigate to dedicated subcategory page
+- **Expanded HR Analytics**: Added comprehensive Personnel subcategories including Hiring, Attrition, Telework, Diversity, and more
 - **Updated Category System**: Implemented new aviation-specific categories to better align with FAA organizational structure
 - **Enhanced Organization Mapping**: Updated organization dropdown with official FAA abbreviations
 - **Improved Category Icons**: Added appropriate FontAwesome icons for new category types including Weather, IT, and Geospatial
 - **Unified Layout System**: Maintained consistent white card, blue-bordered card, and gray content card layout across all pages
 - **Data Governance Center Integration**: Styled to match DGC design standards with appropriate colors, typography, and component styling
-- **Enhanced Search Experience**: Updated search bar with DGC-inspired styling while maintaining full functionality
-- **Category Browse System**: Visual category cards with DGC color scheme and dashboard-style layout
-- **Responsive Design**: Optimized for desktop, tablet, and mobile viewing experiences
-- **Authentication System**: Password-protected access with session management
 
 ## Overview
 
@@ -24,6 +23,7 @@ TabPortal serves as a centralized hub for aviation intelligence dashboards, feat
 
 - **Dashboard Discovery**: Browse and filter available dashboards with advanced search capabilities
 - **Category Organization**: Visual category browsing with color-coded cards
+- **Personnel/HR Analytics**: Dedicated subcategory page with 16 specialized HR categories
 - **Detailed Dashboard Views**: Comprehensive metadata and access information
 - **Featured Content**: Highlighted "Intelligence Visualization of the Month"
 - **Administrative Interface**: Dashboard management and content administration
@@ -31,11 +31,11 @@ TabPortal serves as a centralized hub for aviation intelligence dashboards, feat
 
 ## Category System
 
-### Current Categories
-The platform now uses the following FAA-aligned categories:
+### Main Categories
+The platform uses the following FAA-aligned categories:
 
 - **Aviation Safety**: Safety metrics, incident reporting, and compliance dashboards
-- **Personnel / HR**: Human resources and personnel management analytics
+- **Personnel / HR**: Human resources and personnel management analytics (with dedicated subcategory page)
 - **Finance**: Financial performance, budgeting, and cost analysis dashboards
 - **Aviation Operations**: Operational efficiency and performance metrics
 - **IT**: Information technology systems and infrastructure monitoring
@@ -44,6 +44,26 @@ The platform now uses the following FAA-aligned categories:
 - **Airports**: Airport operations and infrastructure dashboards
 - **Weather**: Weather-related data and forecasting dashboards
 - **Geospatial / Maps / Charts**: Geographic information systems and mapping analytics
+
+### Personnel / HR Subcategories
+The Personnel / HR category includes a dedicated page with 16 specialized subcategories:
+
+- **Hiring**: Recruitment and hiring process analytics
+- **Attrition**: Employee turnover and retention metrics
+- **Telework**: Remote work and flexible work arrangement tracking
+- **Diversity**: Diversity, equity, and inclusion metrics
+- **Workforce Composition**: Employee demographic and structural analysis
+- **Employee Engagement**: Engagement surveys and satisfaction metrics
+- **Performance Management**: Performance review and evaluation dashboards
+- **Training & Development**: Learning and professional development tracking
+- **Workforce Planning**: Strategic workforce planning and forecasting
+- **Succession Planning**: Leadership pipeline and succession planning
+- **Leave & Attendance**: Time-off and attendance management
+- **Competence & Benefits**: Compensation and benefits analysis
+- **Onboarding**: New employee integration and onboarding metrics
+- **Employee Relations**: HR case management and employee relations
+- **Workforce Mobility**: Internal mobility and career progression
+- **Workforce Safety**: Workplace safety and occupational health metrics
 
 ### Organization Codes
 The platform uses official FAA organization abbreviations:
@@ -134,36 +154,34 @@ src/
 │   ├── common/          # Shared components (Header, Footer, SearchBar)
 │   └── dashboard/       # Dashboard-specific components
 ├── pages/               # Main page components
+│   ├── HomePage.js      # Main landing page
+│   ├── CategoriesPage.js # Category browsing page
+│   ├── PersonnelPage.js # Personnel/HR subcategory page (NEW)
+│   └── ...              # Other page components
 ├── styles/              # CSS styling files
 ├── context/             # React Context for state management
 └── data/                # Static data and configuration
 ```
 
-## Recent Changes (August 2025)
+## Recent Changes (August 4, 2025)
 
-### Category System Update
-- **New Categories**: Replaced generic categories with FAA-specific ones
-  - Added: Aviation Safety, Personnel / HR, Finance, Aviation Operations, IT
-  - Added: Oversight / Compliance & Enforcement, Weather, Geospatial / Maps / Charts
-  - Maintained: Air Traffic, Airports for continuity
+### Personnel / HR Subcategory Implementation
+- **New PersonnelPage Component**: Created dedicated page for Personnel/HR subcategories
+- **16 HR Subcategories**: Implemented comprehensive HR analytics categories with relevant icons
+- **Special Navigation Logic**: Updated HomePage and CategoriesPage to handle Personnel/HR card clicks
+- **Personnel Page Routing**: Added `/personnel` route to App.js with proper navigation handling
+- **Visual Consistency**: Applied same DGC styling and layout structure as other pages
 
-### Organization System Update  
-- **FAA Abbreviations**: Updated organization dropdown to use official FAA codes
-  - Replaced long-form names with standard abbreviations (AVS, ATO, ARP, etc.)
-  - Maintained backward compatibility for existing data
+### Navigation Updates
+- **NavigationHeader Enhancement**: Added Personnel page title support
+- **Category Click Handling**: Implemented special logic for Personnel/HR navigation vs. regular category filtering
+- **URL Routing**: Added new `/personnel` route with proper authentication flow
 
-### Technical Updates
-- **SearchBar.js**: Updated dropdown options for both category and organization filters
-- **AddDashboardForm.js**: Updated form dropdowns and added category guidance
-- **CategoriesPage.js**: Enhanced category mapping with new icons and CSS classes
-- **CategoriesPage.css**: Added new category-specific styling and gradients
-
-### Icon Updates
-- Added appropriate FontAwesome icons for new categories:
-  - `faUsers` for Personnel / HR
-  - `faLaptopCode` for IT  
-  - `faCloud` for Weather
-  - `faMap` for Geospatial / Maps / Charts
+### Styling Enhancements
+- **PersonnelPage.css**: Created comprehensive styling for 16 Personnel subcategories
+- **Color-coded Categories**: Unique gradient backgrounds for each Personnel subcategory
+- **Icon Integration**: Added relevant FontAwesome icons for each HR subcategory
+- **Responsive Design**: Maintained mobile-friendly layout across all new components
 
 ## Development Roadmap
 
@@ -176,6 +194,7 @@ src/
 - [x] Administrative interface for content management
 - [x] Updated category and organization taxonomies
 - [x] Enhanced icon mapping for new categories
+- [x] Personnel / HR subcategory page implementation
 
 ### In Development 🚧
 - [ ] Backend API integration and data persistence
@@ -183,8 +202,10 @@ src/
 - [ ] Dashboard analytics and usage tracking
 - [ ] Advanced search capabilities with faceted filtering
 - [ ] Migration tools for existing dashboard data
+- [ ] Personnel subcategory dashboard integration
 
 ### Future Considerations 🔮
+- [ ] Additional subcategory pages for other main categories
 - [ ] Single Sign-On (SSO) integration
 - [ ] Real-time dashboard status monitoring
 - [ ] Personalized dashboard recommendations
@@ -202,10 +223,10 @@ src/
 
 For existing installations, the following updates are recommended:
 
-1. **Data Migration**: Update existing dashboard tags to use new category names
-2. **Organization Updates**: Map existing organization names to new abbreviations
-3. **CSS Updates**: Ensure new category CSS classes are properly applied
-4. **Testing**: Verify search and filter functionality with new taxonomy
+1. **Route Updates**: Ensure `/personnel` route is properly configured
+2. **Navigation Logic**: Update category click handlers to support Personnel page navigation
+3. **CSS Integration**: Include PersonnelPage.css styling
+4. **Testing**: Verify Personnel page navigation from both Home and Categories pages
 
 ## License
 
@@ -216,6 +237,13 @@ This project is for demonstration and development purposes. All rights reserved.
 **Note**: This is a prototype application designed to showcase modern web development practices and Data Governance Center design integration. The current implementation uses simulated data and authentication for demonstration purposes.
 
 ## Changelog
+
+### August 4, 2025
+- **Personnel / HR Subcategory Page**: Implemented dedicated Personnel page with 16 HR-specific subcategories
+- **Enhanced Navigation Logic**: Added special handling for Personnel/HR card clicks
+- **Visual Integration**: Applied consistent DGC styling and layout to Personnel page
+- **Icon Library Expansion**: Added relevant FontAwesome icons for all Personnel subcategories
+- **Routing Enhancement**: Added new `/personnel` route with proper authentication flow
 
 ### August 3, 2025
 - **Category System Overhaul**: Implemented new FAA-aligned category taxonomy

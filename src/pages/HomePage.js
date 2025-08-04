@@ -1,3 +1,4 @@
+// src/pages/HomePage.js - Updated with Personnel page navigation
 import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import Header from '../components/common/Header';
@@ -109,8 +110,15 @@ const HomePage = () => {
     window.history.replaceState(null, '', url);
   }, [searchDashboards, location.pathname]);
   
-  // Handle category card clicks
+  // Handle category card clicks - Special handling for Personnel / HR
   const handleCategoryClick = useCallback((categoryName) => {
+    // Special case: Personnel / HR goes to dedicated Personnel page
+    if (categoryName === 'Personnel / HR') {
+      window.location.href = '/personnel';
+      return;
+    }
+    
+    // For all other categories, navigate to All Dashboards with filter
     // Store the category name in both localStorage and sessionStorage
     localStorage.setItem('selectedCategory', categoryName);
     sessionStorage.setItem('selectedCategory', categoryName);
@@ -138,31 +146,12 @@ const HomePage = () => {
     );
   }
   
-  // Get title based on filter params
-/*   const getGridTitle = () => {
-    const queryParams = new URLSearchParams(location.search);
-    const category = queryParams.get('category');
-    const organization = queryParams.get('organization');
-    
-    if (category && organization) {
-      return `${category} Dashboards from ${organization}`;
-    } else if (category) {
-      return `${category} Dashboards`;
-    } else if (organization) {
-      return `${organization} Dashboards`;
-    } else if (searchApplied) {
-      return "Search Results";
-    } else {
-      return "Browse Intelligence Dashboards";
-    }
-  }; */
-  
   return (
     <div className="home-page">
       <Header />
       <NavigationHeader />
       
-      {/* Main Content with White Card - Same structure as other pages */}
+      {/* Main Content with White Card */}
       <main className="home-main">
         <div className="content-card">
           <div className="content-card-inner">
@@ -181,20 +170,15 @@ const HomePage = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Search Bar */}
-              <SearchBar 
-                onSearch={handleSearch} 
-                initialValues={{
-                  query: '',
-                  category: new URLSearchParams(location.search).get('category') || '',
-                  organization: new URLSearchParams(location.search).get('organization') || ''
-                }} 
-              />
               
-              {/* Featured Dashboard */}
+              {/* Search Bar */}
+              <SearchBar onSearch={handleSearch} />
+              
+              {/* Featured Dashboard Section - Only show when not searching */}
               {!searchApplied && featuredDashboard && (
-                <FeaturedDashboard dashboard={featuredDashboard} />
+                <section className="featured-dashboard-section">
+                  <FeaturedDashboard dashboard={featuredDashboard} />
+                </section>
               )}
               
               {/* Category Navigation Section - Only show when not searching */}

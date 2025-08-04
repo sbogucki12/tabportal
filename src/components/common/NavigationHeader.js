@@ -1,3 +1,4 @@
+// src/components/common/NavigationHeader.js - Updated with Personnel page support
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../../styles/NavigationHeader.css';
@@ -60,6 +61,7 @@ const NavigationHeader = () => {
               {location.pathname === '/' && 'Visualization Showcase'}
               {location.pathname === '/all-dashboards' && 'All Dashboards'}
               {location.pathname === '/categories' && 'Browse by Category'}
+              {location.pathname === '/personnel' && 'Personnel / HR Analytics'}
               {location.pathname === '/admin' && 'Dashboard Administration'}
               {location.pathname.startsWith('/dashboard/') && 'Dashboard Details'}
             </h1>
