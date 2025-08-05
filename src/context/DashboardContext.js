@@ -1,3 +1,4 @@
+// src/context/DashboardContext.js - Enhanced search algorithm
 import React, { createContext, useState, useEffect } from 'react';
 import { sampleDashboards } from '../data/sampleData';
 
@@ -10,47 +11,68 @@ export const DashboardProvider = ({ children }) => {
   const [featuredDashboard, setFeaturedDashboard] = useState(null);
 
   useEffect(() => {
-    // In a real app, we would fetch from an API
-    // For now, we'll use the sample data
-    try {
-      setDashboards(sampleDashboards);
-      // Set the first dashboard as featured for now
-      setFeaturedDashboard(sampleDashboards.find(dash => dash.isFeatured) || sampleDashboards[0]);
-      setLoading(false);
-    } catch (err) {
-      setError('Failed to load dashboards');
-      setLoading(false);
-    }
+    const loadDashboards = async () => {
+      try {
+        setLoading(true);
+        
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        setDashboards(sampleDashboards);
+        
+        // Set the first featured dashboard
+        const featured = sampleDashboards.find(d => d.isFeatured);
+        if (featured) {
+          setFeaturedDashboard(featured);
+        }
+        
+        setError(null);
+      } catch (err) {
+        setError('Failed to load dashboards');
+        console.error('Error loading dashboards:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDashboards();
   }, []);
 
   const getDashboardById = (id) => {
     return dashboards.find(dashboard => dashboard.id === id);
   };
 
-  const getRelatedDashboards = (id, limit = 3) => {
-    const dashboard = getDashboardById(id);
-    if (!dashboard) return [];
-
-    // Find dashboards with similar tags
+  const getRelatedDashboards = (currentId) => {
+    const currentDashboard = getDashboardById(currentId);
+    if (!currentDashboard) return [];
+    
+    // Get related dashboards based on shared tags or same owner
     return dashboards
-      .filter(d => d.id !== id && d.tags.some(tag => dashboard.tags.includes(tag)))
-      .slice(0, limit);
+      .filter(dashboard => 
+        dashboard.id !== currentId && (
+          dashboard.owner === currentDashboard.owner ||
+          dashboard.tags.some(tag => currentDashboard.tags.includes(tag))
+        )
+      )
+      .slice(0, 3);
   };
 
-  const addDashboard = (newDashboard) => {
-    // In a real app, we would send to an API
-    const dashboardWithId = {
-      ...newDashboard,
-      id: Math.random().toString(36).substr(2, 9), // Simple ID generation
-      createdAt: new Date().toISOString()
+  const addDashboard = (dashboardData) => {
+    const newDashboard = {
+      id: `dash-${Date.now()}`,
+      ...dashboardData,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      views: 0,
+      isFeatured: false
     };
     
-    setDashboards([...dashboards, dashboardWithId]);
-    return dashboardWithId;
+    setDashboards([...dashboards, newDashboard]);
+    return newDashboard;
   };
 
   const updateDashboard = (id, updatedData) => {
-    const updatedDashboards = dashboards.map(dashboard => 
+    const updatedDashboards = dashboards.map(dashboard =>
       dashboard.id === id ? { ...dashboard, ...updatedData } : dashboard
     );
     setDashboards(updatedDashboards);
@@ -72,24 +94,201 @@ export const DashboardProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Enhanced search algorithm that searches across multiple fields with improved scoring
+   * @param {string} query - Text search query
+   * @param {object} filters - Filter object with category, organization, etc.
+   * @returns {Array} - Filtered and scored dashboard results
+   */
   const searchDashboards = (query, filters = {}) => {
-    if (!query && Object.keys(filters).length === 0) return dashboards;
+    console.log('🔍 Search called with:', { query, filters });
+    console.log('📊 Total dashboards:', dashboards.length);
+    
+    // If no query and no filters, return all dashboards
+    if (!query && Object.keys(filters).length === 0) {
+      console.log('✅ No search/filters - returning all dashboards');
+      return dashboards;
+    }
 
-    return dashboards.filter(dashboard => {
-      // Search by text
-      const matchesQuery = !query || 
-        dashboard.title.toLowerCase().includes(query.toLowerCase()) ||
-        dashboard.description.toLowerCase().includes(query.toLowerCase());
+    const normalizedQuery = query ? query.toLowerCase().trim() : '';
+    console.log('🔤 Normalized query:', normalizedQuery);
+    
+    const results = dashboards.filter(dashboard => {
+      // === TEXT SEARCH (Lexical Search) ===
+      let matchesQuery = true;
+      
+      if (normalizedQuery) {
+        // Create searchable text from multiple fields
+        const searchableFields = [
+          dashboard.title,
+          dashboard.description,
+          dashboard.dataSource,
+          dashboard.owner,
+          dashboard.contactName,
+          dashboard.dashboardType,
+          ...dashboard.tags
+        ].filter(Boolean); // Remove any undefined/null values
+        
+        // Split query into words for better matching
+        const queryWords = normalizedQuery.split(/\s+/).filter(word => word.length > 0);
+        console.log('🔎 Query words:', queryWords);
+        
+        // Check if ALL query words are found somewhere in the searchable fields
+        matchesQuery = queryWords.every(word => {
+          const found = searchableFields.some(field => 
+            field && field.toLowerCase().includes(word)
+          ) || 
+          // Also check individual tags for exact matches
+          dashboard.tags.some(tag => 
+            tag.toLowerCase().includes(word)
+          ) ||
+          // Check data source specifically
+          (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(word));
+          
+          if (!found) {
+            console.log(`❌ Word "${word}" not found in dashboard:`, dashboard.title);
+          }
+          return found;
+        });
+        
+        // Boost relevance for exact title matches
+        const titleMatch = dashboard.title.toLowerCase().includes(normalizedQuery);
+        const tagMatch = dashboard.tags.some(tag => tag.toLowerCase().includes(normalizedQuery));
+        const dataSourceMatch = dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(normalizedQuery);
+        
+        // If we have matches in important fields, prioritize them
+        if (titleMatch || tagMatch || dataSourceMatch) {
+          matchesQuery = true;
+        }
+        
+        if (matchesQuery) {
+          console.log('✅ Query match for:', dashboard.title);
+        }
+      }
 
-      // Filter by category/tag
+      // === CATEGORY FILTER ===
       const matchesCategory = !filters.category || 
-        dashboard.tags.includes(filters.category);
+        dashboard.tags.some(tag => 
+          tag.toLowerCase() === filters.category.toLowerCase()
+        );
+      
+      if (filters.category && !matchesCategory) {
+        console.log(`❌ Category "${filters.category}" not found in dashboard:`, dashboard.title, 'Tags:', dashboard.tags);
+      }
 
-      // Filter by organization
+      // === ORGANIZATION FILTER ===
+      // Check both ownerAbbr and full owner name for flexibility
       const matchesOrg = !filters.organization || 
-        dashboard.owner === filters.organization;
+        dashboard.ownerAbbr === filters.organization ||
+        dashboard.owner === filters.organization ||
+        dashboard.owner.toLowerCase().includes(filters.organization.toLowerCase());
 
-      return matchesQuery && matchesCategory && matchesOrg;
+      if (filters.organization && !matchesOrg) {
+        console.log(`❌ Organization "${filters.organization}" not found in dashboard:`, dashboard.title, 'Owner:', dashboard.owner, 'OwnerAbbr:', dashboard.ownerAbbr);
+      }
+
+      // === DATA SOURCE FILTER (if we add this to UI later) ===
+      const matchesDataSource = !filters.dataSource ||
+        (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(filters.dataSource.toLowerCase()));
+
+      // === DASHBOARD TYPE FILTER (if we add this to UI later) ===
+      const matchesDashboardType = !filters.dashboardType ||
+        (dashboard.dashboardType && dashboard.dashboardType.toLowerCase() === filters.dashboardType.toLowerCase());
+
+      const finalMatch = matchesQuery && matchesCategory && matchesOrg && matchesDataSource && matchesDashboardType;
+      
+      if (finalMatch) {
+        console.log('✅ Dashboard matches all criteria:', dashboard.title);
+      }
+      
+      return finalMatch;
+    }).sort((a, b) => {
+      // === RELEVANCE SCORING for search results ===
+      if (!normalizedQuery) return 0; // No sorting if no text query
+      
+      let scoreA = 0;
+      let scoreB = 0;
+      
+      // Score boost for title matches (highest priority)
+      if (a.title.toLowerCase().includes(normalizedQuery)) scoreA += 100;
+      if (b.title.toLowerCase().includes(normalizedQuery)) scoreB += 100;
+      
+      // Score boost for exact tag matches (high priority)
+      const tagMatchA = a.tags.some(tag => tag.toLowerCase() === normalizedQuery);
+      const tagMatchB = b.tags.some(tag => tag.toLowerCase() === normalizedQuery);
+      if (tagMatchA) scoreA += 75;
+      if (tagMatchB) scoreB += 75;
+      
+      // Score boost for partial tag matches (medium priority)
+      const tagPartialA = a.tags.some(tag => tag.toLowerCase().includes(normalizedQuery));
+      const tagPartialB = b.tags.some(tag => tag.toLowerCase().includes(normalizedQuery));
+      if (tagPartialA && !tagMatchA) scoreA += 50;
+      if (tagPartialB && !tagMatchB) scoreB += 50;
+      
+      // Score boost for data source matches (medium priority)
+      if (a.dataSource && a.dataSource.toLowerCase().includes(normalizedQuery)) scoreA += 40;
+      if (b.dataSource && b.dataSource.toLowerCase().includes(normalizedQuery)) scoreB += 40;
+      
+      // Score boost for description matches (lower priority)
+      if (a.description.toLowerCase().includes(normalizedQuery)) scoreA += 20;
+      if (b.description.toLowerCase().includes(normalizedQuery)) scoreB += 20;
+      
+      // Score boost for view count (popularity)
+      scoreA += Math.log10(a.views + 1);
+      scoreB += Math.log10(b.views + 1);
+      
+      // Sort by relevance score (descending)
+      return scoreB - scoreA;
+    });
+    
+    console.log('📋 Search results:', results.length, 'dashboards found');
+    console.log('📋 Result titles:', results.map(d => d.title));
+    
+    return results;
+  };
+
+  /**
+   * Advanced search for specific field targeting (future enhancement)
+   * @param {object} searchCriteria - Object with field-specific search terms
+   * @returns {Array} - Filtered dashboard results
+   */
+  const advancedSearch = (searchCriteria = {}) => {
+    return dashboards.filter(dashboard => {
+      // Title search
+      const matchesTitle = !searchCriteria.title || 
+        dashboard.title.toLowerCase().includes(searchCriteria.title.toLowerCase());
+      
+      // Description search
+      const matchesDescription = !searchCriteria.description ||
+        dashboard.description.toLowerCase().includes(searchCriteria.description.toLowerCase());
+      
+      // Tag search (exact match)
+      const matchesTags = !searchCriteria.tags || 
+        searchCriteria.tags.every(tag => 
+          dashboard.tags.some(dashTag => 
+            dashTag.toLowerCase() === tag.toLowerCase()
+          )
+        );
+      
+      // Data source search
+      const matchesDataSource = !searchCriteria.dataSource ||
+        (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(searchCriteria.dataSource.toLowerCase()));
+      
+      // Owner search
+      const matchesOwner = !searchCriteria.owner ||
+        dashboard.owner.toLowerCase().includes(searchCriteria.owner.toLowerCase()) ||
+        dashboard.ownerAbbr.toLowerCase().includes(searchCriteria.owner.toLowerCase());
+      
+      // Dashboard type search
+      const matchesDashboardType = !searchCriteria.dashboardType ||
+        (dashboard.dashboardType && dashboard.dashboardType.toLowerCase() === searchCriteria.dashboardType.toLowerCase());
+      
+      // Access level search
+      const matchesAccessLevel = !searchCriteria.accessLevel ||
+        dashboard.accessLevel.toLowerCase() === searchCriteria.accessLevel.toLowerCase();
+      
+      return matchesTitle && matchesDescription && matchesTags && 
+             matchesDataSource && matchesOwner && matchesDashboardType && matchesAccessLevel;
     });
   };
 
@@ -105,7 +304,8 @@ export const DashboardProvider = ({ children }) => {
       updateDashboard,
       deleteDashboard,
       setAsFeatured,
-      searchDashboards
+      searchDashboards,
+      advancedSearch
     }}>
       {children}
     </DashboardContext.Provider>

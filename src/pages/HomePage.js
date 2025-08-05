@@ -1,6 +1,6 @@
-// src/pages/HomePage.js - Updated with Personnel page navigation
+// src/pages/HomePage.js - Fixed to keep homepage clean, redirect search to AllDashboards
 import React, { useContext, useState, useEffect, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
 import NavigationHeader from '../components/common/NavigationHeader';
 import Footer from '../components/common/Footer';
@@ -24,9 +24,9 @@ import {
 import '../styles/HomePage.css';
 
 const HomePage = () => {
-  const { dashboards, loading, error, featuredDashboard, searchDashboards } = useContext(DashboardContext);
-  const [searchApplied, setSearchApplied] = useState(false);
+  const { dashboards, loading, error, featuredDashboard } = useContext(DashboardContext);
   const location = useLocation();
+  const navigate = useNavigate();
   
   // Define the new standard categories with icons
   const standardCategories = [
@@ -42,73 +42,33 @@ const HomePage = () => {
     { name: 'Geospatial / Maps / Charts', icon: faMap, color: 'geospatial' }
   ];
   
+  // Check for URL parameters and redirect to AllDashboards if search params exist
   useEffect(() => {
-    // Get category from session storage if available
-    const selectedCategory = sessionStorage.getItem('selectedCategory');
+    const queryParams = new URLSearchParams(location.search);
+    const hasSearchParams = queryParams.has('query') || queryParams.has('category') || queryParams.has('organization');
     
-    if (dashboards.length > 0) {
-      // If category stored in session, filter by it
-      if (selectedCategory) {
-        searchDashboards(
-          '', // No text query
-          {
-            category: selectedCategory,
-            organization: ''
-          }
-        );
-        setSearchApplied(true);
-        
-        // Clear session storage after using it
-        sessionStorage.removeItem('selectedCategory');
-      } 
-      // Check for query parameters from URL as fallback
-      else {
-        const queryParams = new URLSearchParams(location.search);
-        const categoryParam = queryParams.get('category');
-        const organizationParam = queryParams.get('organization');
-        
-        if (categoryParam || organizationParam) {
-          // If URL parameters exist, filter by them
-          searchDashboards(
-            '', // No text query
-            {
-              category: categoryParam || '',
-              organization: organizationParam || ''
-            }
-          );
-          setSearchApplied(true);
-        } else {
-          // Set search not applied for default homepage view
-          setSearchApplied(false);
-        }
-      }
+    if (hasSearchParams) {
+      console.log('🔀 Redirecting to AllDashboards with search params');
+      navigate(`/all-dashboards${location.search}`, { replace: true });
     }
-  }, [dashboards, featuredDashboard, location.search, searchDashboards]);
+  }, [location.search, navigate]);
   
+  // Handle search - redirect to AllDashboards page with search parameters
   const handleSearch = useCallback((searchParams) => {
-    searchDashboards(
-      searchParams.query,
-      {
-        category: searchParams.category,
-        organization: searchParams.organization
-      }
-    );
+    console.log('🔍 Search initiated on HomePage:', searchParams);
     
-    setSearchApplied(true);
-    
-    // Update URL without triggering new navigation events
+    // Build query string for AllDashboards page
     const queryParams = new URLSearchParams();
     if (searchParams.query) queryParams.set('query', searchParams.query);
     if (searchParams.category) queryParams.set('category', searchParams.category);
     if (searchParams.organization) queryParams.set('organization', searchParams.organization);
     
-    // Use history.replace to update URL without adding to history stack
-    const url = queryParams.toString() ? 
-      `${location.pathname}?${queryParams.toString()}` : 
-      location.pathname;
-      
-    window.history.replaceState(null, '', url);
-  }, [searchDashboards, location.pathname]);
+    const queryString = queryParams.toString();
+    const targetUrl = queryString ? `/all-dashboards?${queryString}` : '/all-dashboards';
+    
+    console.log('🔀 Navigating to:', targetUrl);
+    navigate(targetUrl);
+  }, [navigate]);
   
   // Handle category card clicks - Special handling for Personnel / HR
   const handleCategoryClick = useCallback((categoryName) => {
@@ -119,44 +79,25 @@ const HomePage = () => {
     }
     
     // For all other categories, navigate to All Dashboards with filter
-    // Store the category name in both localStorage and sessionStorage
-    localStorage.setItem('selectedCategory', categoryName);
+    // Store the category name in sessionStorage for AllDashboards page
     sessionStorage.setItem('selectedCategory', categoryName);
     
-    // Add a timestamp to identify this navigation
-    localStorage.setItem('categoryNavigationTime', new Date().getTime());
-    
-    // Use the most direct navigation approach
-    window.location.href = `/all-dashboards?category=${encodeURIComponent(categoryName)}`;
-  }, []);
+    // Navigate to AllDashboards with category filter
+    const targetUrl = `/all-dashboards?category=${encodeURIComponent(categoryName)}`;
+    console.log('🏷️ Category selected, navigating to:', targetUrl);
+    navigate(targetUrl);
+  }, [navigate]);
   
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-text">Loading dashboards...</div>
-      </div>
-    );
-  }
-  
-  if (error) {
-    return (
-      <div className="loading-container">
-        <div className="error-text">{error}</div>
-      </div>
-    );
-  }
-  
-  return (
-    <div className="home-page">
-      <Header />
-      <NavigationHeader />
-      
-      {/* Main Content with White Card */}
-      <main className="home-main">
-        <div className="content-card">
-          <div className="content-card-inner">
-            {/* Light Gray Content Card - wraps ALL content */}
-            <div className="content-inner-card">
+      <div className="home-page">
+        <Header />
+        <NavigationHeader />
+        <main className="home-main">
+          <div className="content-card">
+            <div className="content-card-inner">
+              <div className="content-inner-card">
+              
               {/* EIM Header Section */}
               <div className="page-header-section">
                 <div className="header-first">
@@ -170,57 +111,94 @@ const HomePage = () => {
                   </div>
                 </div>
               </div>
-              
-              {/* Search Bar */}
-              <SearchBar onSearch={handleSearch} />
-              
-              {/* Featured Dashboard Section - Only show when not searching */}
-              {!searchApplied && featuredDashboard && (
-                <section className="featured-dashboard-section">
-                  <FeaturedDashboard dashboard={featuredDashboard} />
-                </section>
-              )}
-              
-              {/* Category Navigation Section - Only show when not searching */}
-              {!searchApplied && (
-                <section className="category-navigation-section">
-                  <h2 className="section-title">Browse by Category</h2>
-                  <div className="category-cards-grid">
-                    {standardCategories.map((category, index) => (
-                      <div
-                        key={index}
-                        className={`category-nav-card category-${category.color}`}
-                        onClick={() => handleCategoryClick(category.name)}
-                      >
-                        {/* Category Background Overlay */}
-                        <div className="category-nav-background"></div>
-                        
-                        {/* Category Icon */}
-                        <FontAwesomeIcon 
-                          icon={category.icon} 
-                          className="category-nav-icon" 
-                        />
-                        
-                        {/* Category Title */}
-                        <h3 className="category-nav-title">{category.name}</h3>
-                        
-                        {/* Arrow Icon */}
-                        <FontAwesomeIcon 
-                          icon={faArrowRight} 
-                          className="category-nav-arrow" 
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )}
+                <div className="loading-container">
+                  <div className="loading-text">Loading dashboards...</div>
+                </div>
+              </div>
             </div>
-            
-            {/* Footer */}
-            <Footer />
+          </div>
+        </main>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="home-page">
+        <Header />
+        <NavigationHeader />
+        <main className="home-main">
+          <div className="content-card">
+            <div className="content-card-inner">
+              <div className="content-inner-card">
+                <div className="loading-container">
+                  <div className="error-text">{error}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+  
+  console.log('🏠 Rendering clean HomePage with featured dashboard and categories');
+  
+  return (
+    <div className="home-page">
+      <Header />
+      <NavigationHeader />
+      
+      {/* Main Content with White Card Layout */}
+      <main className="home-main">
+        <div className="content-card">
+          <div className="content-card-inner">
+            <div className="content-inner-card">
+              
+              {/* Search Bar - redirects to AllDashboards on search */}
+              <SearchBar 
+                onSearch={handleSearch} 
+                initialValues={{
+                  query: '',
+                  category: '',
+                  organization: ''
+                }} 
+              />
+              
+              {/* Featured Dashboard - Always show if available */}
+              {featuredDashboard && (
+                <FeaturedDashboard dashboard={featuredDashboard} />
+              )}
+              
+              {/* Category Navigation - Always show */}
+              <section className="category-section">
+                <h2 className="section-title">Browse by Information Domain</h2>
+                <div className="category-cards-grid">
+                  {standardCategories.map((category, index) => (
+                    <div
+                      key={index}
+                      className={`category-nav-card category-${category.color}`}
+                      onClick={() => handleCategoryClick(category.name)}
+                    >
+                      <div className="category-nav-background"></div>
+                      <div className="category-nav-icon">
+                        <FontAwesomeIcon icon={category.icon} />
+                      </div>
+                      <h3 className="category-nav-title">{category.name}</h3>
+                      <div className="category-nav-arrow">
+                        <FontAwesomeIcon icon={faArrowRight} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+              
+            </div>
           </div>
         </div>
       </main>
+      
+      <Footer />
     </div>
   );
 };

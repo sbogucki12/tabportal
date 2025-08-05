@@ -1,4 +1,4 @@
-/* App.css - Main App Component Styling */
+/* App.css - Main App Component Styling - Fixed to show EIM headers */
 
 /* Primary App styling - matches current inline implementation */
 .App {
@@ -37,7 +37,7 @@ body {
   min-height: 100vh;
 }
 
-/* Hide the navigation header page title that appears in the middle */
+/* Hide the navigation header page title that appears in the navbar - KEEP THESE! */
 .nav-right-section .page-title {
   display: none !important;
 }
