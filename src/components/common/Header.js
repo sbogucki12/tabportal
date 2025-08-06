@@ -1,3 +1,4 @@
+// src/components/common/Header.js - Updated to redirect all nav icons to Coming Soon page
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,22 +16,6 @@ import {
 import '../../styles/Header.css';
 
 const Header = () => {
-  // const location = useLocation();
-  
-  // Helper to determine if the link is active
-/*   const isActive = (path) => {
-    if (path === '/' && location.pathname === '/') return true;
-    if (path !== '/' && location.pathname.startsWith(path)) return true;
-    return false;
-  };
-  
-  // Handle logout
-  const handleLogout = () => {
-    localStorage.removeItem('flightdeck-auth');
-    // Force page reload to show the login modal
-    window.location.reload();
-  }; */
-  
   return (
     <header className="main-header">
       <div className="header-toolbar">
@@ -39,47 +24,47 @@ const Header = () => {
           <div className="eim-text">EIM Enterprise Information Management</div>
           <div className="header-vertical-line"></div>
           
-          {/* Left Navigation Icons */}
+          {/* Left Navigation Icons - All redirect to Coming Soon */}
           <div className="left-nav-icons">
-            <button className="nav-icon-button" aria-label="Applications">
+            <Link to="/coming-soon" className="nav-icon-button" aria-label="Applications">
               <FontAwesomeIcon icon={faThLarge} />
-            </button>
+            </Link>
             
-            <Link to="/all-dashboards" className="nav-icon-button" aria-label="Browse">
+            <Link to="/coming-soon" className="nav-icon-button" aria-label="Browse">
               <FontAwesomeIcon icon={faEye} />
             </Link>
             
-            <button className="nav-icon-button" aria-label="Search">
+            <Link to="/coming-soon" className="nav-icon-button" aria-label="Search">
               <FontAwesomeIcon icon={faSearch} />
-            </button>
+            </Link>
           </div>
         </div>
         
-        {/* Right Section - User action icons */}
+        {/* Right Section - User action icons - All redirect to Coming Soon except Admin */}
         <div className="header-right-section">
           <Link to="/admin" className="nav-icon-button" aria-label="Create">
             <FontAwesomeIcon icon={faPlus} />
           </Link>
           
-          <button className="nav-icon-button" aria-label="Tasks">
+          <Link to="/coming-soon" className="nav-icon-button" aria-label="Tasks">
             <FontAwesomeIcon icon={faTasks} />
-          </button>
+          </Link>
           
-          <button className="nav-icon-button" aria-label="Activities">
+          <Link to="/coming-soon" className="nav-icon-button" aria-label="Activities">
             <FontAwesomeIcon icon={faChartLine} />
-          </button>
+          </Link>
           
-          <Link to="/all-dashboards" className="nav-icon-button" aria-label="Shopping Basket">
+          <Link to="/coming-soon" className="nav-icon-button" aria-label="Shopping Basket">
             <FontAwesomeIcon icon={faShoppingBasket} />
           </Link>
           
-          <button className="nav-icon-button" aria-label="Help">
+          <Link to="/coming-soon" className="nav-icon-button" aria-label="Help">
             <FontAwesomeIcon icon={faQuestionCircle} />
-          </button>
+          </Link>
           
-          <button className="nav-icon-button" aria-label="User Profile">
+          <Link to="/coming-soon" className="nav-icon-button" aria-label="User Profile">
             <FontAwesomeIcon icon={faUser} />
-          </button>
+          </Link>
         </div>
       </div>
     </header>

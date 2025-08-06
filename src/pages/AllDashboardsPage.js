@@ -143,31 +143,12 @@ const AllDashboardsPage = () => {
     window.history.replaceState({}, '', `${location.pathname}${queryString}`);
   };
   
-  // Get page title based on search parameters
+  // Get page title based on search parameters - simplified to avoid incorrect titles
   const getPageTitle = () => {
-    const queryParams = new URLSearchParams(location.search);
-    const query = queryParams.get('query');           // ✅ Added this!
-    const category = queryParams.get('category');
-    const organization = queryParams.get('organization');
-    
-    if (query && category && organization) {
-      return `"${query}" in ${category} from ${organization}`;
-    } else if (query && category) {
-      return `"${query}" in ${category}`;
-    } else if (query && organization) {
-      return `"${query}" from ${organization}`;
-    } else if (query) {
-      return `Search Results for "${query}"`;        // ✅ Added this!
-    } else if (category && organization) {
-      return `${category} Dashboards from ${organization}`;
-    } else if (category) {
-      return `${category} Dashboards`;
-    } else if (organization) {
-      return `${organization} Dashboards`;
-    } else if (searchApplied) {
+    if (searchApplied) {
       return "Search Results";
     } else {
-      return "All Intelligence Dashboards";
+      return "All Dashboards";
     }
   };
   
