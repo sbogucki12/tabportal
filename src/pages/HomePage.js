@@ -1,5 +1,5 @@
 // src/pages/HomePage.js - Fixed to keep homepage clean, redirect search to AllDashboards
-import React, { useContext, useState, useEffect, useCallback } from 'react';
+import React, { useContext, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
 import NavigationHeader from '../components/common/NavigationHeader';
@@ -24,11 +24,11 @@ import {
 import '../styles/HomePage.css';
 
 const HomePage = () => {
-  const { dashboards, loading, error, featuredDashboard } = useContext(DashboardContext);
+  const { featuredDashboard, loading, error } = useContext(DashboardContext);
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Define the new standard categories with icons
+  // Define the new standard categories with icons - MOVED TO TOP TO ENSURE DEFINITION
   const standardCategories = [
     { name: 'Aviation Safety', icon: faShieldAlt, color: 'aviation-safety' },
     { name: 'Personnel / HR', icon: faUsers, color: 'personnel-hr' },
@@ -48,46 +48,39 @@ const HomePage = () => {
     const hasSearchParams = queryParams.has('query') || queryParams.has('category') || queryParams.has('organization');
     
     if (hasSearchParams) {
-      console.log('🔀 Redirecting to AllDashboards with search params');
+      // Redirect to AllDashboards page with all search parameters intact
       navigate(`/all-dashboards${location.search}`, { replace: true });
     }
-  }, [location.search, navigate]);
+  }, [location, navigate]);
   
-  // Handle search - redirect to AllDashboards page with search parameters
-  const handleSearch = useCallback((searchParams) => {
-    console.log('🔍 Search initiated on HomePage:', searchParams);
-    
-    // Build query string for AllDashboards page
-    const queryParams = new URLSearchParams();
-    if (searchParams.query) queryParams.set('query', searchParams.query);
-    if (searchParams.category) queryParams.set('category', searchParams.category);
-    if (searchParams.organization) queryParams.set('organization', searchParams.organization);
-    
-    const queryString = queryParams.toString();
-    const targetUrl = queryString ? `/all-dashboards?${queryString}` : '/all-dashboards';
-    
-    console.log('🔀 Navigating to:', targetUrl);
-    navigate(targetUrl);
-  }, [navigate]);
-  
-  // Handle category card clicks - Special handling for Personnel / HR
+  // Handle category clicks - redirect to AllDashboards with category filter
   const handleCategoryClick = useCallback((categoryName) => {
-    // Special case: Personnel / HR goes to dedicated Personnel page
+    console.log('Category clicked:', categoryName);
+    
+    // Special handling for Personnel / HR - navigate to dedicated page
     if (categoryName === 'Personnel / HR') {
-      window.location.href = '/personnel';
+      navigate('/personnel');
       return;
     }
     
-    // For all other categories, navigate to All Dashboards with filter
-    // Store the category name in sessionStorage for AllDashboards page
-    sessionStorage.setItem('selectedCategory', categoryName);
-    
-    // Navigate to AllDashboards with category filter
-    const targetUrl = `/all-dashboards?category=${encodeURIComponent(categoryName)}`;
-    console.log('🏷️ Category selected, navigating to:', targetUrl);
-    navigate(targetUrl);
+    // For all other categories, navigate to AllDashboards with category filter
+    navigate(`/all-dashboards?category=${encodeURIComponent(categoryName)}`);
   }, [navigate]);
-  
+
+  // Handle search - redirect to AllDashboards page
+  const handleSearch = useCallback((searchTerms) => {
+    console.log('Search initiated from HomePage:', searchTerms);
+    
+    // Build search URL parameters
+    const params = new URLSearchParams();
+    if (searchTerms.query) params.set('query', searchTerms.query);
+    if (searchTerms.category) params.set('category', searchTerms.category);
+    if (searchTerms.organization) params.set('organization', searchTerms.organization);
+    
+    // Redirect to AllDashboards page with search parameters
+    navigate(`/all-dashboards?${params.toString()}`);
+  }, [navigate]);
+
   if (loading) {
     return (
       <div className="home-page">
@@ -97,6 +90,74 @@ const HomePage = () => {
           <div className="content-card">
             <div className="content-card-inner">
               <div className="content-inner-card">
+                {/* EIM Header Section */}
+                <div className="page-header-section">
+                  <div className="header-first">
+                    <div className="logo">
+                      <div className="logo-text">EIM</div>
+                    </div>
+                    <div className="vl"></div>
+                    <div className="header-content">
+                      <h1 className="header-main-title">Enterprise Information Management</h1>
+                      <h4 className="header-subtitle">Visualization Showcase</h4>
+                    </div>
+                  </div>
+                </div>
+                <div className="loading-container">
+                  <div className="loading-text">Loading dashboards...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="home-page">
+        <Header />
+        <NavigationHeader />
+        <main className="home-main">
+          <div className="content-card">
+            <div className="content-card-inner">
+              <div className="content-inner-card">
+                {/* EIM Header Section */}
+                <div className="page-header-section">
+                  <div className="header-first">
+                    <div className="logo">
+                      <div className="logo-text">EIM</div>
+                    </div>
+                    <div className="vl"></div>
+                    <div className="header-content">
+                      <h1 className="header-main-title">Enterprise Information Management</h1>
+                      <h4 className="header-subtitle">Visualization Showcase</h4>
+                    </div>
+                  </div>
+                </div>
+                <div className="loading-container">
+                  <div className="error-text">{error}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  return (
+    <div className="home-page">
+      <Header />
+      <NavigationHeader />
+      
+      {/* Main Content with White Card - Same structure as other pages */}
+      <main className="home-main">
+        <div className="content-card">
+          <div className="content-card-inner">
+            {/* Light Gray Content Card - wraps ALL content */}
+            <div className="content-inner-card">
               
               {/* EIM Header Section */}
               <div className="page-header-section">
@@ -111,59 +172,19 @@ const HomePage = () => {
                   </div>
                 </div>
               </div>
-                <div className="loading-container">
-                  <div className="loading-text">Loading dashboards...</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
-  
-  if (error) {
-    return (
-      <div className="home-page">
-        <Header />
-        <NavigationHeader />
-        <main className="home-main">
-          <div className="content-card">
-            <div className="content-card-inner">
-              <div className="content-inner-card">
-                <div className="loading-container">
-                  <div className="error-text">{error}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
-  
-  console.log('🏠 Rendering clean HomePage with featured dashboard and categories');
-  
-  return (
-    <div className="home-page">
-      <Header />
-      <NavigationHeader />
-      
-      {/* Main Content with White Card Layout */}
-      <main className="home-main">
-        <div className="content-card">
-          <div className="content-card-inner">
-            <div className="content-inner-card">
               
-              {/* Search Bar - redirects to AllDashboards on search */}
-              <SearchBar 
-                onSearch={handleSearch} 
-                initialValues={{
-                  query: '',
-                  category: '',
-                  organization: ''
-                }} 
-              />
+              {/* Search Bar - redirect to AllDashboards on use */}
+              <div className="search-section search-section-homepage">
+                <SearchBar 
+                  onSearch={handleSearch} 
+                  placeholder="Search dashboards..." 
+                  initialValues={{
+                    query: '',
+                    category: '',
+                    organization: ''
+                  }} 
+                />
+              </div>
               
               {/* Featured Dashboard - Always show if available */}
               {featuredDashboard && (

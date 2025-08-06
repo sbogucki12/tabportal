@@ -1,6 +1,6 @@
-// src/pages/AllDashboardsPage.js - Fixed search with proper DGC layout
+// src/pages/AllDashboardsPage.js - Removed Quick Navigation, kept Clear Filters and Back to Home buttons
 import React, { useContext, useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Header from '../components/common/Header';
 import NavigationHeader from '../components/common/NavigationHeader';
 import Footer from '../components/common/Footer';
@@ -15,13 +15,19 @@ const AllDashboardsPage = () => {
   const [filteredDashboards, setFilteredDashboards] = useState([]);
   const [searchApplied, setSearchApplied] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
   
-  // Function to manually clear URL parameters
-  const clearUrlParameters = () => {
-    // Remove query parameters from URL without page refresh
-    window.history.replaceState({}, '', location.pathname);
-  };
+  // Effect to clear URL parameters when component unmounts
+  useEffect(() => {
+    const clearUrlParameters = () => {
+      // Remove query parameters from URL without page refresh
+      window.history.replaceState({}, '', location.pathname);
+    };
+    
+    return () => {
+      // Clean up URL parameters when leaving this page
+      clearUrlParameters();
+    };
+  }, [location.pathname]);
   
   // Function to clear all filters and URL parameters
   const clearAllFilters = () => {
@@ -40,14 +46,6 @@ const AllDashboardsPage = () => {
   const escapeToHome = () => {
     window.location.href = '/';
   };
-  
-  // Effect to clear URL parameters when component unmounts
-  useEffect(() => {
-    return () => {
-      // Clean up URL parameters when leaving this page
-      clearUrlParameters();
-    };
-  }, []);
   
   // FIXED: Main useEffect to handle all search parameters including query
   useEffect(() => {
@@ -141,65 +139,11 @@ const AllDashboardsPage = () => {
       queryString += (queryString ? '&' : '?') + `organization=${encodeURIComponent(searchParams.organization)}`;
     }
     
-    // Update the URL without a full page reload
-    window.history.replaceState({}, '', location.pathname + queryString);
+    // Update URL without triggering navigation
+    window.history.replaceState({}, '', `${location.pathname}${queryString}`);
   };
   
-  if (loading) {
-    return (
-      <div className="home-page">
-        <Header />
-        <NavigationHeader />
-        <main className="home-main">
-          <div className="content-card">
-            <div className="content-card-inner">
-              <div className="content-inner-card">
-              
-              {/* EIM Header Section */}
-              <div className="page-header-section">
-                <div className="header-first">
-                  <div className="logo">
-                    <div className="logo-text">EIM</div>
-                  </div>
-                  <div className="vl"></div>
-                  <div className="header-content">
-                    <h1 className="header-main-title">Enterprise Information Management</h1>
-                    <h4 className="header-subtitle">All Dashboards</h4>
-                  </div>
-                </div>
-              </div>
-                <div className="loading-container">
-                  <div className="loading-text">Loading dashboards...</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
-  
-  if (error) {
-    return (
-      <div className="home-page">
-        <Header />
-        <NavigationHeader />
-        <main className="home-main">
-          <div className="content-card">
-            <div className="content-card-inner">
-              <div className="content-inner-card">
-                <div className="loading-container">
-                  <div className="error-text">{error}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
-  
-  // FIXED: Get title based on filter params including query
+  // Get page title based on search parameters
   const getPageTitle = () => {
     const queryParams = new URLSearchParams(location.search);
     const query = queryParams.get('query');           // ✅ Added this!
@@ -227,6 +171,72 @@ const AllDashboardsPage = () => {
     }
   };
   
+  if (loading) {
+    return (
+      <div className="home-page">
+        <Header />
+        <NavigationHeader />
+        <main className="home-main">
+          <div className="content-card">
+            <div className="content-card-inner">
+              <div className="content-inner-card">
+                {/* EIM Header Section */}
+                <div className="page-header-section">
+                  <div className="header-first">
+                    <div className="logo">
+                      <div className="logo-text">EIM</div>
+                    </div>
+                    <div className="vl"></div>
+                    <div className="header-content">
+                      <h1 className="header-main-title">Enterprise Information Management</h1>
+                      <h4 className="header-subtitle">All Dashboards</h4>
+                    </div>
+                  </div>
+                </div>
+                <div className="loading-container">
+                  <div className="loading-text">Loading dashboards...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="home-page">
+        <Header />
+        <NavigationHeader />
+        <main className="home-main">
+          <div className="content-card">
+            <div className="content-card-inner">
+              <div className="content-inner-card">
+                {/* EIM Header Section */}
+                <div className="page-header-section">
+                  <div className="header-first">
+                    <div className="logo">
+                      <div className="logo-text">EIM</div>
+                    </div>
+                    <div className="vl"></div>
+                    <div className="header-content">
+                      <h1 className="header-main-title">Enterprise Information Management</h1>
+                      <h4 className="header-subtitle">All Dashboards</h4>
+                    </div>
+                  </div>
+                </div>
+                <div className="loading-container">
+                  <div className="error-text">{error}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+  
   console.log('🎨 Rendering AllDashboards with:', {
     filteredDashboards: filteredDashboards.length,
     searchApplied,
@@ -240,15 +250,14 @@ const AllDashboardsPage = () => {
       
       {/* Main Content with White Card Layout - Same as HomePage */}
       <main className="home-main">
-        
         <div className="content-card">
           <div className="content-card-inner">
             <div className="content-inner-card">
               
-              {/* Emergency navigation and clear filters - only show when search applied */}
+              {/* Only show Clear All Filters and Back to Home buttons when search applied */}
               {searchApplied && (
                 <div style={{ marginBottom: '2rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <button 
                       onClick={clearAllFilters}
                       style={{
@@ -270,91 +279,18 @@ const AllDashboardsPage = () => {
                       onClick={escapeToHome}
                       style={{
                         padding: '0.75rem 1.5rem',
-                        backgroundColor: '#d83933',
-                        color: 'white',
-                        fontWeight: '600',
+                        backgroundColor: '#d4b76a',
+                        color: '#1A1A1A',
                         border: 'none',
                         borderRadius: '6px',
                         cursor: 'pointer',
+                        fontWeight: '600',
+                        fontSize: '16px',
                         fontFamily: '"Open Sans", sans-serif'
                       }}
                     >
-                      Return to Home
+                      Back to Home
                     </button>
-                  </div>
-                  
-                  {/* Quick navigation links */}
-                  <div style={{ 
-                    padding: '15px', 
-                    backgroundColor: '#f8f9fa', 
-                    borderRadius: '8px',
-                    border: '1px solid #e9ecef'
-                  }}>
-                    <p style={{ fontSize: '14px', marginBottom: '10px', fontWeight: '600' }}>
-                      Quick Navigation:
-                    </p>
-                    <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-                      <a 
-                        href="/" 
-                        style={{ 
-                          textDecoration: 'none', 
-                          color: '#005ea2', 
-                          fontWeight: '500',
-                          fontSize: '14px',
-                          padding: '4px 8px',
-                          borderRadius: '4px',
-                          backgroundColor: 'white',
-                          border: '1px solid #005ea2'
-                        }}
-                      >
-                        Home
-                      </a>
-                      <a 
-                        href="/categories" 
-                        style={{ 
-                          textDecoration: 'none', 
-                          color: '#005ea2', 
-                          fontWeight: '500',
-                          fontSize: '14px',
-                          padding: '4px 8px',
-                          borderRadius: '4px',
-                          backgroundColor: 'white',
-                          border: '1px solid #005ea2'
-                        }}
-                      >
-                        Categories
-                      </a>
-                      <a 
-                        href="/all-dashboards" 
-                        style={{ 
-                          textDecoration: 'none', 
-                          color: '#005ea2', 
-                          fontWeight: '500',
-                          fontSize: '14px',
-                          padding: '4px 8px',
-                          borderRadius: '4px',
-                          backgroundColor: 'white',
-                          border: '1px solid #005ea2'
-                        }}
-                      >
-                        All Dashboards
-                      </a>
-                      <a 
-                        href="/admin" 
-                        style={{ 
-                          textDecoration: 'none', 
-                          color: '#005ea2', 
-                          fontWeight: '500',
-                          fontSize: '14px',
-                          padding: '4px 8px',
-                          borderRadius: '4px',
-                          backgroundColor: 'white',
-                          border: '1px solid #005ea2'
-                        }}
-                      >
-                        Admin
-                      </a>
-                    </div>
                   </div>
                 </div>
               )}
@@ -363,7 +299,7 @@ const AllDashboardsPage = () => {
               <SearchBar 
                 onSearch={handleSearch} 
                 initialValues={{
-                  query: new URLSearchParams(location.search).get('query') || '',      // ✅ Added this!
+                  query: new URLSearchParams(location.search).get('query') || '',
                   category: new URLSearchParams(location.search).get('category') || '',
                   organization: new URLSearchParams(location.search).get('organization') || ''
                 }} 

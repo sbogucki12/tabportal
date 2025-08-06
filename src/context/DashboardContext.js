@@ -1,4 +1,4 @@
-// src/context/DashboardContext.js - Enhanced search algorithm
+// src/context/DashboardContext.js - Enhanced search algorithm with ownerAbbr fix
 import React, { createContext, useState, useEffect } from 'react';
 import { sampleDashboards } from '../data/sampleData';
 
@@ -118,12 +118,13 @@ export const DashboardProvider = ({ children }) => {
       let matchesQuery = true;
       
       if (normalizedQuery) {
-        // Create searchable text from multiple fields
+        // FIXED: Create searchable text from multiple fields INCLUDING ownerAbbr
         const searchableFields = [
           dashboard.title,
           dashboard.description,
           dashboard.dataSource,
           dashboard.owner,
+          dashboard.ownerAbbr,     // ✅ FIXED: Added this missing field!
           dashboard.contactName,
           dashboard.dashboardType,
           ...dashboard.tags
@@ -143,10 +144,21 @@ export const DashboardProvider = ({ children }) => {
             tag.toLowerCase().includes(word)
           ) ||
           // Check data source specifically
-          (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(word));
+          (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(word)) ||
+          // ✅ FIXED: Also explicitly check ownerAbbr
+          (dashboard.ownerAbbr && dashboard.ownerAbbr.toLowerCase().includes(word));
           
           if (!found) {
             console.log(`❌ Word "${word}" not found in dashboard:`, dashboard.title);
+            console.log('   Searched in:', {
+              title: dashboard.title,
+              owner: dashboard.owner,
+              ownerAbbr: dashboard.ownerAbbr,
+              tags: dashboard.tags,
+              dataSource: dashboard.dataSource
+            });
+          } else {
+            console.log(`✅ Word "${word}" FOUND in dashboard:`, dashboard.title);
           }
           return found;
         });
@@ -155,9 +167,11 @@ export const DashboardProvider = ({ children }) => {
         const titleMatch = dashboard.title.toLowerCase().includes(normalizedQuery);
         const tagMatch = dashboard.tags.some(tag => tag.toLowerCase().includes(normalizedQuery));
         const dataSourceMatch = dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(normalizedQuery);
+        const ownerMatch = dashboard.owner.toLowerCase().includes(normalizedQuery);
+        const ownerAbbrMatch = dashboard.ownerAbbr && dashboard.ownerAbbr.toLowerCase().includes(normalizedQuery);
         
         // If we have matches in important fields, prioritize them
-        if (titleMatch || tagMatch || dataSourceMatch) {
+        if (titleMatch || tagMatch || dataSourceMatch || ownerMatch || ownerAbbrMatch) {
           matchesQuery = true;
         }
         
@@ -225,6 +239,14 @@ export const DashboardProvider = ({ children }) => {
       if (tagPartialA && !tagMatchA) scoreA += 50;
       if (tagPartialB && !tagMatchB) scoreB += 50;
       
+      // ✅ FIXED: Score boost for owner abbreviation matches (high priority)
+      if (a.ownerAbbr && a.ownerAbbr.toLowerCase().includes(normalizedQuery)) scoreA += 80;
+      if (b.ownerAbbr && b.ownerAbbr.toLowerCase().includes(normalizedQuery)) scoreB += 80;
+      
+      // Score boost for owner name matches (medium priority)
+      if (a.owner.toLowerCase().includes(normalizedQuery)) scoreA += 60;
+      if (b.owner.toLowerCase().includes(normalizedQuery)) scoreB += 60;
+      
       // Score boost for data source matches (medium priority)
       if (a.dataSource && a.dataSource.toLowerCase().includes(normalizedQuery)) scoreA += 40;
       if (b.dataSource && b.dataSource.toLowerCase().includes(normalizedQuery)) scoreB += 40;
@@ -274,10 +296,10 @@ export const DashboardProvider = ({ children }) => {
       const matchesDataSource = !searchCriteria.dataSource ||
         (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(searchCriteria.dataSource.toLowerCase()));
       
-      // Owner search
+      // Owner search (includes ownerAbbr)
       const matchesOwner = !searchCriteria.owner ||
         dashboard.owner.toLowerCase().includes(searchCriteria.owner.toLowerCase()) ||
-        dashboard.ownerAbbr.toLowerCase().includes(searchCriteria.owner.toLowerCase());
+        (dashboard.ownerAbbr && dashboard.ownerAbbr.toLowerCase().includes(searchCriteria.owner.toLowerCase()));
       
       // Dashboard type search
       const matchesDashboardType = !searchCriteria.dashboardType ||

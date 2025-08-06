@@ -1,4 +1,6 @@
+// src/components/common/SearchBar.js - Improved with proper category filtering
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes, faFilter } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/SearchBar.css';
@@ -8,6 +10,8 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
   const [category, setCategory] = useState('');
   const [organization, setOrganization] = useState('');
   const [filtersExpanded, setFiltersExpanded] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
   
   const hasActiveFilters = category || organization;
   
@@ -51,14 +55,82 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
       // Don't remove session storage here - the AllDashboardsPage will handle that
     }
   }, [onSearch, searchQuery, organization]);
+
+  // Handle category dropdown change - redirect to AllDashboards with filter
+  const handleCategoryChange = (selectedCategory) => {
+    console.log('Category selected:', selectedCategory);
+    setCategory(selectedCategory);
+    
+    if (selectedCategory) {
+      // If we're not already on AllDashboards page, navigate there with category filter
+      if (location.pathname !== '/all-dashboards') {
+        navigate(`/all-dashboards?category=${encodeURIComponent(selectedCategory)}`);
+      } else {
+        // If we're already on AllDashboards, just trigger the search
+        onSearch({
+          query: searchQuery,
+          category: selectedCategory,
+          organization: organization
+        });
+      }
+    } else {
+      // Clear category filter
+      onSearch({
+        query: searchQuery,
+        category: '',
+        organization: organization
+      });
+    }
+  };
+
+  // Handle organization dropdown change - redirect to AllDashboards with filter  
+  const handleOrganizationChange = (selectedOrganization) => {
+    console.log('Organization selected:', selectedOrganization);
+    setOrganization(selectedOrganization);
+    
+    if (selectedOrganization) {
+      // If we're not already on AllDashboards page, navigate there with organization filter
+      if (location.pathname !== '/all-dashboards') {
+        navigate(`/all-dashboards?organization=${encodeURIComponent(selectedOrganization)}`);
+      } else {
+        // If we're already on AllDashboards, just trigger the search
+        onSearch({
+          query: searchQuery,
+          category: category,
+          organization: selectedOrganization
+        });
+      }
+    } else {
+      // Clear organization filter
+      onSearch({
+        query: searchQuery,
+        category: category,
+        organization: ''
+      });
+    }
+  };
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSearch({
-      query: searchQuery,
-      category,
-      organization
-    });
+    
+    // If we have search terms or filters, redirect to AllDashboards with all parameters
+    if (searchQuery || category || organization) {
+      const params = new URLSearchParams();
+      if (searchQuery) params.set('query', searchQuery);
+      if (category) params.set('category', category);
+      if (organization) params.set('organization', organization);
+      
+      if (location.pathname !== '/all-dashboards') {
+        navigate(`/all-dashboards?${params.toString()}`);
+      } else {
+        // If we're already on AllDashboards, just trigger the search
+        onSearch({
+          query: searchQuery,
+          category,
+          organization
+        });
+      }
+    }
   };
     
   return (
@@ -88,7 +160,7 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
             
             <button
               type="button"
-              className={`filter-toggle-button ${filtersExpanded ? 'active' : ''}`}
+              className={`filter-toggle-button ${hasActiveFilters ? 'active' : ''}`}
               onClick={() => setFiltersExpanded(!filtersExpanded)}
             >
               <FontAwesomeIcon icon={faFilter} />
@@ -115,7 +187,7 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
                   id="category-select"
                   className="filter-select-mui"
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => handleCategoryChange(e.target.value)}
                 >
                   <option value="">All Categories</option>
                   <option value="Aviation Safety">Aviation Safety</option>
@@ -139,19 +211,19 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
                   id="organization-select"
                   className="filter-select-mui"
                   value={organization}
-                  onChange={(e) => setOrganization(e.target.value)}
+                  onChange={(e) => handleOrganizationChange(e.target.value)}
                 >
                   <option value="">All Organizations</option>
-                  <option value="AVS">AVS</option>
-                  <option value="ATO">ATO</option>
-                  <option value="ARP">ARP</option>
-                  <option value="AST">AST</option>
-                  <option value="AFN">AFN</option>
-                  <option value="AGC">AGC</option>
-                  <option value="ANG">ANG</option>
-                  <option value="APL">APL</option>
-                  <option value="AIT">AIT</option>
-                  <option value="ASH">ASH</option>
+                  <option value="AVS">Aviation Safety (AVS)</option>
+                  <option value="ATO">Air Traffic Organization (ATO)</option>
+                  <option value="ARP">Airports (ARP)</option>
+                  <option value="AST">Commercial Space Transportation (AST)</option>
+                  <option value="AFN">NextGen (AFN)</option>
+                  <option value="AGC">General Counsel (AGC)</option>
+                  <option value="ANG">Government and Industry Affairs (ANG)</option>
+                  <option value="APL">Policy, International Affairs and Environment (APL)</option>
+                  <option value="AIT">Information and Technology (AIT)</option>
+                  <option value="ASH">Security and Hazardous Materials Safety (ASH)</option>
                 </select>
               </div>
               
