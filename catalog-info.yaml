@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: tabportal
+  description: FAA TabPortal app
+  tags:
+    - internal
+    - web
+spec:
+  type: service
+  owner: ado/tabportal-team
+  lifecycle: production
