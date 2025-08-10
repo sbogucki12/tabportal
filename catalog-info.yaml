@@ -1,12 +1,78 @@
+# Tyrion-managed Backstage catalog entity (customize per https://wiki.faa.gov/display/ACP/Backstage+Catalog+Entities)
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  annotations:
+    argocd/app-selector: faa.gov/App=ado,faa.gov/Env
+    backstage.io/kubernetes-label-selector: faa.gov/App=ado
+    backstage.io/linguist: https://git.faa.gov/projects/ado/repos/tabportal/browse
+    datadoghq.com/site: ddog-gov.com
+    faa.gov/App: ado
+    faa.gov/AppID: APP000000
+    sonarqube.org/project-key: ado-tabportal.git
+    tektonci/build-namespace: tekton-app-ado
+    tektonci/pipeline-label-selector: repo-slug=tabportal
+    tyrion.faa.gov/ami-families: Bottlerocket
+    tyrion.faa.gov/ami-types: BOTTLEROCKET_x86_64
+    tyrion.faa.gov/eks-clusters: nonprod-tyrion,prod-tyrion
+    tyrion.faa.gov/image-repo: ado/tabportal
+    vault.io/secrets-path: ado/
+  links:
+  - icon: bitbucket
+    title: Source Code - Bitbucket
+    type: tyrion:bitbucket-code
+    url: https://git.faa.gov/projects/ado/repos/tabportal/browse
+  - icon: tekton
+    title: Builds - Tekton
+    type: tyrion:tekton-build
+    url: https://tekton.mgmt.tyrion.faa.gov/#/namespaces/tekton-app-ado/pipelineruns?labelSelector=repo-slug%3Dtabportal
+  - icon: jfrog
+    title: Images - Artifactory
+    type: tyrion:artifactory-image
+    url: https://artifactory.faa.gov/ui/repos/tree/General/faa-docker/ado/
+  - icon: aqua
+    title: Image Scans - Aqua Security
+    type: tyrion:aquasec
+    url: https://aquasec.faa.gov/#/dashboard
+  - icon: argo
+    title: Deployment - Argo CD
+    type: tyrion:argocd-project
+    url: https://argocd.mgmt.tyrion.faa.gov/applications?search=&proj=ado
+  - icon: vault
+    title: Secrets Nonprod - Vault Dev
+    type: tyrion:d-vault-customer
+    url: https://dev.vault.faa.gov:8200/ui/vault/auth?namespace=tyrion%2Fcustomer&with=oidc
+  - icon: vault
+    title: Secrets Prod - Vault
+    type: tyrion:prod-vault-customer
+    url: https://vault.faa.gov:8200/ui/vault/auth?namespace=tyrion%2Fcustomer&with=oidc
+  - icon: datadog
+    title: Observability - Datadog
+    type: tyrion:datadog-dashboard
+    url: https://faa.ddog-gov.com/dashboard/zbj-g75-vub/tyrion-application-deployments-overview?tpl_var_faa.gov%2Fapp%5B0%5D=ado
+  - icon: datadog
+    title: Rightsizing - Datadog
+    type: tyrion:datadog-rightsizing
+    url: https://faa.ddog-gov.com/dashboard/wcu-cu2-gen/tyrion-cpu-memory-usage?tpl_var_faa.gov%2Fapp%5B0%5D=ado
+  - icon: datadog
+    title: Pods - Datadog
+    type: tyrion:datadog-pods
+    url: https://faa.ddog-gov.com/orchestration/overview/pod?query=label%23faa.gov%2FApp%3Aado
+  - icon: datadog
+    title: Synthetics - Datadog
+    type: tyrion:datadog-synthetics
+    url: https://faa.ddog-gov.com/synthetics/tests?query=team%3A%28ado%29
+  - icon: datadog
+    title: Logs - Datadog
+    type: tyrion:datadog-logs
+    url: https://faa.ddog-gov.com/logs?query=faa.gov%2Fapp%3Aado
+  - icon: datadog
+    title: Events - Datadog
+    type: tyrion:datadog-events
+    url: https://faa.ddog-gov.com/event/explorer?query=faa.gov%2Fapp%3Aado
   name: tabportal
-  description: FAA TabPortal app
-  tags:
-    - internal
-    - web
 spec:
-  type: service
-  owner: ado/tabportal-team
   lifecycle: production
+  owner: ado-team
+  system: tabportal
+  type: website
