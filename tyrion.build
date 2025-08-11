@@ -1,4 +1,6 @@
 tekton:
+  branches:
+  - main
   build:
     tool: node
     node_env: production
