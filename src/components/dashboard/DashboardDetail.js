@@ -1,3 +1,4 @@
+// src/components/dashboard/DashboardDetail.js - Updated to show "Updated" instead of "Created"
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,7 +7,6 @@ import {
   faDownload, 
   faExpand, 
   faExternalLinkAlt, 
-  faStar, 
   faUser, 
   faCalendarAlt,
   faSync, 
@@ -36,7 +36,8 @@ const DashboardDetail = ({ dashboard, relatedDashboards }) => {
     return date.toLocaleDateString('en-US', options);
   };
   
-  const createdDate = formatDate(dashboard.createdAt);
+  // CHANGED: Use updatedAt instead of createdAt
+  const updatedDate = formatDate(dashboard.updatedAt);
   
   return (
     <div className="dashboard-detail">
@@ -77,38 +78,40 @@ const DashboardDetail = ({ dashboard, relatedDashboards }) => {
             <button 
               className="image-control-button"
               onClick={() => setImageEnlarged(!imageEnlarged)}
-              title={imageEnlarged ? "View thumbnail" : "View full size"}
+              title={imageEnlarged ? 'Show Thumbnail' : 'Show Full Size'}
             >
               <FontAwesomeIcon icon={faExpand} />
             </button>
-            <a 
-              href={dashboard.imageUrl} 
+            <button 
               className="image-control-button"
-              download={`${dashboard.title}-screenshot.jpg`}
-              title="Download image"
+              title="Download Image"
             >
               <FontAwesomeIcon icon={faDownload} />
-            </a>
+            </button>
           </div>
         </div>
         
         {/* Main Content Grid - Two Column Layout */}
         <div className="detail-main-grid">
-          {/* Left Column - Primary Information */}
+          {/* Left Column - Primary Content */}
           <div className="detail-left-column">
-            {/* Dashboard Title and Description */}
+            {/* Title and Description Section */}
             <div className="dashboard-header-info">
-              <h1 className="dashboard-info-title">{dashboard.title}</h1>
-              <p className="dashboard-info-description">{dashboard.description}</p>
+              <div className="title-section">
+                <h1 className="dashboard-info-title">{dashboard.title}</h1>
+                <div className="dashboard-tags">
+                  {dashboard.tags.map((tag, index) => (
+                    <span key={index} className="dashboard-tag">
+                      <FontAwesomeIcon icon={faTag} className="tag-icon" />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
               
-              {/* Tags */}
-              <div className="dashboard-tags">
-                {dashboard.tags.map((tag, index) => (
-                  <span key={index} className="dashboard-tag">
-                    <FontAwesomeIcon icon={faTag} className="tag-icon" />
-                    {tag}
-                  </span>
-                ))}
+              {/* Description */}
+              <div className="dashboard-info-description">
+                <p>{dashboard.description}</p>
               </div>
               
               {/* Action Buttons */}
@@ -119,20 +122,69 @@ const DashboardDetail = ({ dashboard, relatedDashboards }) => {
                   rel="noopener noreferrer"
                   className="btn btn-primary"
                 >
-                  <FontAwesomeIcon icon={faExternalLinkAlt} />
-                  View Dashboard
+                  <FontAwesomeIcon icon={faExternalLinkAlt} style={{marginRight: '0.5rem'}} />
+                  Access Dashboard
                 </a>
-                <button className="btn btn-secondary">
-                  <FontAwesomeIcon icon={faStar} />
-                  Add to Favorites
-                </button>
+              </div>
+            </div>
+          </div>
+          
+          {/* Right Column - Metadata Cards */}
+          <div className="detail-right-column">
+            {/* Dashboard Information */}
+            <div className="metadata-card">
+              <h3 className="metadata-title">
+                Dashboard Information
+              </h3>
+              
+              <div className="metadata-item">
+                <FontAwesomeIcon icon={faUser} className="metadata-icon" />
+                <div className="metadata-label">Owner:</div>
+                <div className="metadata-value">{dashboard.owner}</div>
+              </div>
+              
+              {/* CHANGED: Show "Updated" instead of "Created" */}
+              <div className="metadata-item">
+                <FontAwesomeIcon icon={faCalendarAlt} className="metadata-icon" />
+                <div className="metadata-label">Updated:</div>
+                <div className="metadata-value">{updatedDate}</div>
+              </div>
+              
+              <div className="metadata-item">
+                <FontAwesomeIcon icon={faSync} className="metadata-icon" />
+                <div className="metadata-label">Updates:</div>
+                <div className="metadata-value">{dashboard.updateFrequency}</div>
+              </div>
+              
+              <div className="metadata-item">
+                <FontAwesomeIcon icon={faEye} className="metadata-icon" />
+                <div className="metadata-label">Views:</div>
+                <div className="metadata-value">{dashboard.views.toLocaleString()}</div>
+              </div>
+              
+              <div className="metadata-item">
+                <FontAwesomeIcon icon={faChartPie} className="metadata-icon" />
+                <div className="metadata-label">Dashboard Type:</div>
+                <div className="metadata-value">{dashboard.dashboardType}</div>
               </div>
             </div>
             
-            {/* Contact Information Card */}
+            {/* Data Sources */}
             <div className="metadata-card">
               <h3 className="metadata-title">
-                <FontAwesomeIcon icon={faUserTie} className="metadata-title-icon" />
+                Data Sources
+              </h3>
+              
+              <div className="metadata-item">
+                <FontAwesomeIcon icon={faDatabase} className="metadata-icon" />
+                <div className="metadata-label">Primary:</div>
+                <div className="metadata-value">{dashboard.dataSource}</div>
+              </div>
+            </div>
+            
+            {/* Contact Information */}
+            <div className="metadata-card">
+              <h3 className="metadata-title">
                 Contact Information
               </h3>
               
@@ -146,96 +198,16 @@ const DashboardDetail = ({ dashboard, relatedDashboards }) => {
                 <FontAwesomeIcon icon={faEnvelope} className="metadata-icon" />
                 <div className="metadata-label">Email:</div>
                 <div className="metadata-value">
-                  <a href={`mailto:${dashboard.contactEmail}`} className="email-link">
+                  <a href={`mailto:${dashboard.contactEmail}`}>
                     {dashboard.contactEmail}
                   </a>
                 </div>
               </div>
               
-              {dashboard.contactPhone && (
-                <div className="metadata-item">
-                  <FontAwesomeIcon icon={faPhone} className="metadata-icon" />
-                  <div className="metadata-label">Phone:</div>
-                  <div className="metadata-value">{dashboard.contactPhone}</div>
-                </div>
-              )}
-            </div>
-          </div>
-          
-          {/* Right Column - Metadata Cards */}
-          <div className="detail-right-column">
-            {/* General Information */}
-            <div className="metadata-card">
-              <h3 className="metadata-title">
-                <FontAwesomeIcon icon={faChartPie} className="metadata-title-icon" />
-                Dashboard Details
-              </h3>
-              
-              <div className="metadata-grid">
-                <div className="metadata-item">
-                  <FontAwesomeIcon icon={faUser} className="metadata-icon" />
-                  <div className="metadata-label">Owner:</div>
-                  <div className="metadata-value">{dashboard.owner}</div>
-                </div>
-                
-                <div className="metadata-item">
-                  <FontAwesomeIcon icon={faChartPie} className="metadata-icon" />
-                  <div className="metadata-label">Type:</div>
-                  <div className="metadata-value">{dashboard.dashboardType}</div>
-                </div>
-                
-                <div className="metadata-item">
-                  <FontAwesomeIcon icon={faCalendarAlt} className="metadata-icon" />
-                  <div className="metadata-label">Created:</div>
-                  <div className="metadata-value">{createdDate}</div>
-                </div>
-                
-                <div className="metadata-item">
-                  <FontAwesomeIcon icon={faSync} className="metadata-icon" />
-                  <div className="metadata-label">Updates:</div>
-                  <div className="metadata-value">{dashboard.updateFrequency}</div>
-                </div>
-                
-                <div className="metadata-item">
-                  <FontAwesomeIcon icon={faEye} className="metadata-icon" />
-                  <div className="metadata-label">Views:</div>
-                  <div className="metadata-value">{dashboard.views.toLocaleString()}</div>
-                </div>
-                
-                <div className="metadata-item">
-                  <FontAwesomeIcon icon={faDatabase} className="metadata-icon" />
-                  <div className="metadata-label">Data Source:</div>
-                  <div className="metadata-value">{dashboard.dataSource}</div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Quick Stats Card */}
-            <div className="metadata-card stats-card">
-              <h3 className="metadata-title">
-                <FontAwesomeIcon icon={faEye} className="metadata-title-icon" />
-                Usage Statistics
-              </h3>
-              
-              <div className="stats-grid">
-                <div className="stat-item">
-                  <div className="stat-number">{dashboard.views.toLocaleString()}</div>
-                  <div className="stat-label">Total Views</div>
-                </div>
-                
-                <div className="stat-item">
-                  <div className="stat-number">
-                    {Math.floor(Math.random() * 50) + 10}
-                  </div>
-                  <div className="stat-label">This Month</div>
-                </div>
-                
-                <div className="stat-item">
-                  <div className="stat-number">
-                    {Math.floor(Math.random() * 20) + 5}
-                  </div>
-                  <div className="stat-label">Active Users</div>
-                </div>
+              <div className="metadata-item">
+                <FontAwesomeIcon icon={faPhone} className="metadata-icon" />
+                <div className="metadata-label">Phone:</div>
+                <div className="metadata-value">{dashboard.contactPhone}</div>
               </div>
             </div>
           </div>

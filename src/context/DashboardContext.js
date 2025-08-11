@@ -1,6 +1,14 @@
-// src/context/DashboardContext.js - Enhanced search algorithm with ownerAbbr fix
+// src/context/DashboardContext.js - Enhanced with data source switching capability
 import React, { createContext, useState, useEffect } from 'react';
+
+// Data source imports
 import { sampleDashboards } from '../data/sampleData';
+import { realDashboards } from '../data/realData'; // Uncomment for real data
+
+// DATA SOURCE CONFIGURATION
+// Toggle between sample and real data by commenting/uncommenting the line below
+//const USE_REAL_DATA = true; // Set to true to use realData.js
+const USE_REAL_DATA = true; // Uncomment this line and comment above to use real data
 
 export const DashboardContext = createContext();
 
@@ -18,10 +26,24 @@ export const DashboardProvider = ({ children }) => {
         // Simulate API call delay
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        setDashboards(sampleDashboards);
+        // Select data source based on configuration
+        let dashboardData;
+        if (USE_REAL_DATA) {
+          // When switching to real data, uncomment the import above and this line:
+          dashboardData = realDashboards;
+          
+          // For now, fallback to sample data if real data not available
+          //dashboardData = sampleDashboards;
+          console.log('Real data source selected, but realData.js import is commented out. Using sample data as fallback.');
+        } else {
+          dashboardData = sampleDashboards;
+          console.log('Using sample data source');
+        }
+        
+        setDashboards(dashboardData);
         
         // Set the first featured dashboard
-        const featured = sampleDashboards.find(d => d.isFeatured);
+        const featured = dashboardData.find(d => d.isFeatured);
         if (featured) {
           setFeaturedDashboard(featured);
         }
@@ -73,214 +95,62 @@ export const DashboardProvider = ({ children }) => {
 
   const updateDashboard = (id, updatedData) => {
     const updatedDashboards = dashboards.map(dashboard =>
-      dashboard.id === id ? { ...dashboard, ...updatedData } : dashboard
+      dashboard.id === id 
+        ? { ...dashboard, ...updatedData, updatedAt: new Date().toISOString() }
+        : dashboard
     );
+    
     setDashboards(updatedDashboards);
+    
+    // Update featured dashboard if it was the one being updated
+    if (featuredDashboard && featuredDashboard.id === id) {
+      setFeaturedDashboard({ ...featuredDashboard, ...updatedData });
+    }
   };
 
   const deleteDashboard = (id) => {
-    setDashboards(dashboards.filter(dashboard => dashboard.id !== id));
+    const updatedDashboards = dashboards.filter(dashboard => dashboard.id !== id);
+    setDashboards(updatedDashboards);
+    
+    // Clear featured dashboard if it was deleted
+    if (featuredDashboard && featuredDashboard.id === id) {
+      setFeaturedDashboard(updatedDashboards.find(d => d.isFeatured) || null);
+    }
   };
 
   const setAsFeatured = (id) => {
-    const dashboard = getDashboardById(id);
-    if (dashboard) {
-      // First reset any currently featured dashboard
-      const updatedDashboards = dashboards.map(d => 
-        ({...d, isFeatured: d.id === id})
-      );
-      setDashboards(updatedDashboards);
-      setFeaturedDashboard(dashboard);
-    }
+    const updatedDashboards = dashboards.map(dashboard => ({
+      ...dashboard,
+      isFeatured: dashboard.id === id
+    }));
+    
+    setDashboards(updatedDashboards);
+    setFeaturedDashboard(getDashboardById(id));
   };
 
-  /**
-   * Enhanced search algorithm that searches across multiple fields with improved scoring
-   * @param {string} query - Text search query
-   * @param {object} filters - Filter object with category, organization, etc.
-   * @returns {Array} - Filtered and scored dashboard results
-   */
-  const searchDashboards = (query, filters = {}) => {
-    console.log('🔍 Search called with:', { query, filters });
-    console.log('📊 Total dashboards:', dashboards.length);
-    
-    // If no query and no filters, return all dashboards
-    if (!query && Object.keys(filters).length === 0) {
-      console.log('✅ No search/filters - returning all dashboards');
-      return dashboards;
-    }
+  // Enhanced search functionality
+  const searchDashboards = (query) => {
+    if (!query.trim()) return dashboards;
 
-    const normalizedQuery = query ? query.toLowerCase().trim() : '';
-    console.log('🔤 Normalized query:', normalizedQuery);
-    
-    const results = dashboards.filter(dashboard => {
-      // === TEXT SEARCH (Lexical Search) ===
-      let matchesQuery = true;
-      
-      if (normalizedQuery) {
-        // FIXED: Create searchable text from multiple fields INCLUDING ownerAbbr
-        const searchableFields = [
-          dashboard.title,
-          dashboard.description,
-          dashboard.dataSource,
-          dashboard.owner,
-          dashboard.ownerAbbr,     // ✅ FIXED: Added this missing field!
-          dashboard.contactName,
-          dashboard.dashboardType,
-          ...dashboard.tags
-        ].filter(Boolean); // Remove any undefined/null values
-        
-        // Split query into words for better matching
-        const queryWords = normalizedQuery.split(/\s+/).filter(word => word.length > 0);
-        console.log('🔎 Query words:', queryWords);
-        
-        // Check if ALL query words are found somewhere in the searchable fields
-        matchesQuery = queryWords.every(word => {
-          const found = searchableFields.some(field => 
-            field && field.toLowerCase().includes(word)
-          ) || 
-          // Also check individual tags for exact matches
-          dashboard.tags.some(tag => 
-            tag.toLowerCase().includes(word)
-          ) ||
-          // Check data source specifically
-          (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(word)) ||
-          // ✅ FIXED: Also explicitly check ownerAbbr
-          (dashboard.ownerAbbr && dashboard.ownerAbbr.toLowerCase().includes(word));
-          
-          if (!found) {
-            console.log(`❌ Word "${word}" not found in dashboard:`, dashboard.title);
-            console.log('   Searched in:', {
-              title: dashboard.title,
-              owner: dashboard.owner,
-              ownerAbbr: dashboard.ownerAbbr,
-              tags: dashboard.tags,
-              dataSource: dashboard.dataSource
-            });
-          } else {
-            console.log(`✅ Word "${word}" FOUND in dashboard:`, dashboard.title);
-          }
-          return found;
-        });
-        
-        // Boost relevance for exact title matches
-        const titleMatch = dashboard.title.toLowerCase().includes(normalizedQuery);
-        const tagMatch = dashboard.tags.some(tag => tag.toLowerCase().includes(normalizedQuery));
-        const dataSourceMatch = dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(normalizedQuery);
-        const ownerMatch = dashboard.owner.toLowerCase().includes(normalizedQuery);
-        const ownerAbbrMatch = dashboard.ownerAbbr && dashboard.ownerAbbr.toLowerCase().includes(normalizedQuery);
-        
-        // If we have matches in important fields, prioritize them
-        if (titleMatch || tagMatch || dataSourceMatch || ownerMatch || ownerAbbrMatch) {
-          matchesQuery = true;
-        }
-        
-        if (matchesQuery) {
-          console.log('✅ Query match for:', dashboard.title);
-        }
-      }
-
-      // === CATEGORY FILTER ===
-      const matchesCategory = !filters.category || 
-        dashboard.tags.some(tag => 
-          tag.toLowerCase() === filters.category.toLowerCase()
-        );
-      
-      if (filters.category && !matchesCategory) {
-        console.log(`❌ Category "${filters.category}" not found in dashboard:`, dashboard.title, 'Tags:', dashboard.tags);
-      }
-
-      // === ORGANIZATION FILTER ===
-      // Check both ownerAbbr and full owner name for flexibility
-      const matchesOrg = !filters.organization || 
-        dashboard.ownerAbbr === filters.organization ||
-        dashboard.owner === filters.organization ||
-        dashboard.owner.toLowerCase().includes(filters.organization.toLowerCase());
-
-      if (filters.organization && !matchesOrg) {
-        console.log(`❌ Organization "${filters.organization}" not found in dashboard:`, dashboard.title, 'Owner:', dashboard.owner, 'OwnerAbbr:', dashboard.ownerAbbr);
-      }
-
-      // === DATA SOURCE FILTER (if we add this to UI later) ===
-      const matchesDataSource = !filters.dataSource ||
-        (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(filters.dataSource.toLowerCase()));
-
-      // === DASHBOARD TYPE FILTER (if we add this to UI later) ===
-      const matchesDashboardType = !filters.dashboardType ||
-        (dashboard.dashboardType && dashboard.dashboardType.toLowerCase() === filters.dashboardType.toLowerCase());
-
-      const finalMatch = matchesQuery && matchesCategory && matchesOrg && matchesDataSource && matchesDashboardType;
-      
-      if (finalMatch) {
-        console.log('✅ Dashboard matches all criteria:', dashboard.title);
-      }
-      
-      return finalMatch;
-    }).sort((a, b) => {
-      // === RELEVANCE SCORING for search results ===
-      if (!normalizedQuery) return 0; // No sorting if no text query
-      
-      let scoreA = 0;
-      let scoreB = 0;
-      
-      // Score boost for title matches (highest priority)
-      if (a.title.toLowerCase().includes(normalizedQuery)) scoreA += 100;
-      if (b.title.toLowerCase().includes(normalizedQuery)) scoreB += 100;
-      
-      // Score boost for exact tag matches (high priority)
-      const tagMatchA = a.tags.some(tag => tag.toLowerCase() === normalizedQuery);
-      const tagMatchB = b.tags.some(tag => tag.toLowerCase() === normalizedQuery);
-      if (tagMatchA) scoreA += 75;
-      if (tagMatchB) scoreB += 75;
-      
-      // Score boost for partial tag matches (medium priority)
-      const tagPartialA = a.tags.some(tag => tag.toLowerCase().includes(normalizedQuery));
-      const tagPartialB = b.tags.some(tag => tag.toLowerCase().includes(normalizedQuery));
-      if (tagPartialA && !tagMatchA) scoreA += 50;
-      if (tagPartialB && !tagMatchB) scoreB += 50;
-      
-      // ✅ FIXED: Score boost for owner abbreviation matches (high priority)
-      if (a.ownerAbbr && a.ownerAbbr.toLowerCase().includes(normalizedQuery)) scoreA += 80;
-      if (b.ownerAbbr && b.ownerAbbr.toLowerCase().includes(normalizedQuery)) scoreB += 80;
-      
-      // Score boost for owner name matches (medium priority)
-      if (a.owner.toLowerCase().includes(normalizedQuery)) scoreA += 60;
-      if (b.owner.toLowerCase().includes(normalizedQuery)) scoreB += 60;
-      
-      // Score boost for data source matches (medium priority)
-      if (a.dataSource && a.dataSource.toLowerCase().includes(normalizedQuery)) scoreA += 40;
-      if (b.dataSource && b.dataSource.toLowerCase().includes(normalizedQuery)) scoreB += 40;
-      
-      // Score boost for description matches (lower priority)
-      if (a.description.toLowerCase().includes(normalizedQuery)) scoreA += 20;
-      if (b.description.toLowerCase().includes(normalizedQuery)) scoreB += 20;
-      
-      // Score boost for view count (popularity)
-      scoreA += Math.log10(a.views + 1);
-      scoreB += Math.log10(b.views + 1);
-      
-      // Sort by relevance score (descending)
-      return scoreB - scoreA;
-    });
-    
-    console.log('📋 Search results:', results.length, 'dashboards found');
-    console.log('📋 Result titles:', results.map(d => d.title));
-    
-    return results;
+    const searchTerm = query.toLowerCase();
+    return dashboards.filter(dashboard => 
+      dashboard.title.toLowerCase().includes(searchTerm) ||
+      dashboard.description.toLowerCase().includes(searchTerm) ||
+      dashboard.owner.toLowerCase().includes(searchTerm) ||
+      (dashboard.ownerAbbr && dashboard.ownerAbbr.toLowerCase().includes(searchTerm)) ||
+      dashboard.tags.some(tag => tag.toLowerCase().includes(searchTerm)) ||
+      (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(searchTerm))
+    );
   };
 
-  /**
-   * Advanced search for specific field targeting (future enhancement)
-   * @param {object} searchCriteria - Object with field-specific search terms
-   * @returns {Array} - Filtered dashboard results
-   */
-  const advancedSearch = (searchCriteria = {}) => {
+  // Advanced search with multiple criteria
+  const advancedSearch = (searchCriteria) => {
     return dashboards.filter(dashboard => {
       // Title search
-      const matchesTitle = !searchCriteria.title || 
+      const matchesTitle = !searchCriteria.title ||
         dashboard.title.toLowerCase().includes(searchCriteria.title.toLowerCase());
       
-      // Description search
+      // Description search  
       const matchesDescription = !searchCriteria.description ||
         dashboard.description.toLowerCase().includes(searchCriteria.description.toLowerCase());
       
@@ -327,7 +197,8 @@ export const DashboardProvider = ({ children }) => {
       deleteDashboard,
       setAsFeatured,
       searchDashboards,
-      advancedSearch
+      advancedSearch,
+      dataSource: USE_REAL_DATA ? 'real' : 'sample' // For debugging/info purposes
     }}>
       {children}
     </DashboardContext.Provider>

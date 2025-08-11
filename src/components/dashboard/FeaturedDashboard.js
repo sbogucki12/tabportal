@@ -15,6 +15,11 @@ const FeaturedDashboard = ({ dashboard }) => {
   const currentMonth = monthNames[currentDate.getMonth()];
   const currentYear = currentDate.getFullYear();
   
+  // Helper function to check if a value is not empty
+  const hasValue = (value) => {
+    return value && value.toString().trim() !== '';
+  };
+  
   return (
     <section className="featured-dashboard-section">
       <div className="featured-dashboard-container">
@@ -44,27 +49,41 @@ const FeaturedDashboard = ({ dashboard }) => {
               </p>
               
               <div className="featured-meta">
-                <div className="featured-meta-item">
-                  <FontAwesomeIcon icon={faUser} className="featured-meta-icon" />
-                  {dashboard.owner}
-                </div>
-                
-                <div className="featured-meta-item">
-                  <FontAwesomeIcon icon={faDatabase} className="featured-meta-icon" />
-                  {dashboard.dataSource}
-                </div>
-                
-                <div className="featured-meta-item">
-                  <FontAwesomeIcon icon={faCalendar} className="featured-meta-icon" />
-                  Updated {dashboard.updateFrequency}
-                </div>
-                
-                {dashboard.tags.slice(0, 2).map((tag, index) => (
-                  <div key={index} className="featured-meta-item">
-                    <FontAwesomeIcon icon={faTag} className="featured-meta-icon" />
-                    {tag}
+                {/* Only show owner if it has a value */}
+                {hasValue(dashboard.owner) && (
+                  <div className="featured-meta-item">
+                    <FontAwesomeIcon icon={faUser} className="featured-meta-icon" />
+                    {dashboard.owner}
                   </div>
-                ))}
+                )}
+                
+                {/* Only show data source if it has a value */}
+                {hasValue(dashboard.dataSource) && (
+                  <div className="featured-meta-item">
+                    <FontAwesomeIcon icon={faDatabase} className="featured-meta-icon" />
+                    {dashboard.dataSource}
+                  </div>
+                )}
+                
+                {/* Only show update frequency if it has a value */}
+                {hasValue(dashboard.updateFrequency) && (
+                  <div className="featured-meta-item">
+                    <FontAwesomeIcon icon={faCalendar} className="featured-meta-icon" />
+                    Updated {dashboard.updateFrequency}
+                  </div>
+                )}
+                
+                {/* Only show tags if they exist and are not empty */}
+                {dashboard.tags && dashboard.tags
+                  .filter(tag => hasValue(tag))  // Filter out empty tags
+                  .slice(0, 2)  // Take first 2 non-empty tags
+                  .map((tag, index) => (
+                    <div key={index} className="featured-meta-item">
+                      <FontAwesomeIcon icon={faTag} className="featured-meta-icon" />
+                      {tag}
+                    </div>
+                  ))
+                }
               </div>
             </div>
           </div>
@@ -74,4 +93,4 @@ const FeaturedDashboard = ({ dashboard }) => {
   );
 };
 
-export default FeaturedDashboard;  
+export default FeaturedDashboard;
