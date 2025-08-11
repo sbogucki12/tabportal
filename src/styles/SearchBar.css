@@ -1,5 +1,6 @@
-/* SearchBar.css - Modern Material-UI Design with DGC Search Input */
+/* SearchBar.css - Complete with all button styles */
 
+/* Default SearchBar styling for non-HomePage pages */
 .search-section-mui {
   background: var(--dgc-secondary-blue);
   padding: 3rem 0 2rem 0;
@@ -20,10 +21,10 @@
   opacity: 0.3;
 }
 
-/* HomePage SearchBar - Match FeaturedDashboard width exactly */
+/* HomePage SearchBar - Clean, minimal styling with proper spacing */
 .search-section-homepage {
   background: white !important;
-  margin-bottom: 1.5rem;
+  margin: 0 0 1.5rem 0 !important; /* Add bottom margin for spacing */
   padding: 0 !important;
 }
 
@@ -39,14 +40,14 @@
   z-index: 1;
 }
 
-/* HomePage SearchBar container - match FeaturedDashboard container exactly */
+/* HomePage SearchBar container - match FeaturedDashboard exactly */
 .search-section-homepage .search-container-mui {
-  max-width: 1200px !important;
-  margin: 0 auto !important;
+  max-width: 1200px !important; /* Match FeaturedDashboard width */
+  margin: 0 auto !important; /* Center like FeaturedDashboard */
   padding: 0 !important;
 }
 
-/* HomePage SearchBar form - style as card like FeaturedDashboard */
+/* HomePage SearchBar form */
 .search-section-homepage .search-form-mui {
   background: white !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
@@ -56,6 +57,11 @@
   margin: 0 !important;
   width: 100% !important;
   box-sizing: border-box !important;
+}
+
+/* Hide headers from HomePage SearchBar */
+.search-section-homepage .search-header {
+  display: none !important;
 }
 
 .search-header {
@@ -92,12 +98,12 @@
   box-shadow: 0px 12px 35px rgba(0, 0, 0, 0.2);
 }
 
-/* HomePage SearchBar form styling */
+/* HomePage SearchBar form hover */
 .search-section-homepage .search-form-mui:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* Main Search Input Container - Original Layout */
+/* Main Search Input Container */
 .search-input-container-mui {
   display: flex;
   align-items: stretch;
@@ -106,7 +112,7 @@
   min-height: 56px;
 }
 
-/* Search Input Wrapper - Updated with DGC styling */
+/* Search Input Wrapper */
 .search-input-wrapper {
   flex: 1;
   position: relative;
@@ -137,7 +143,7 @@
   color: #002b40;
 }
 
-/* Search Input - DGC Styling */
+/* Search Input */
 .search-input-mui {
   flex: 1;
   border: none;
@@ -174,11 +180,11 @@
 }
 
 .clear-input-button:hover {
-  background: rgba(0, 0, 0, 0.08);
-  color: #666;
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
 }
 
-/* Filter Toggle Button - Original Styling */
+/* Filter Toggle Button */
 .filter-toggle-button {
   display: inline-flex;
   align-items: center;
@@ -200,14 +206,14 @@
 }
 
 .filter-toggle-button:hover {
-  border-color: var(--dgc-primary-blue);
-  color: var(--dgc-primary-blue);
+  border-color: var(--dgc-primary-blue, #002b40);
+  color: var(--dgc-primary-blue, #002b40);
   background: rgba(0, 43, 64, 0.04);
 }
 
 .filter-toggle-button.active {
-  background: var(--dgc-primary-blue);
-  border-color: var(--dgc-primary-blue);
+  background: var(--dgc-primary-blue, #002b40);
+  border-color: var(--dgc-primary-blue, #002b40);
   color: white;
 }
 
@@ -217,18 +223,18 @@
   right: 8px;
   width: 8px;
   height: 8px;
-  background: var(--dgc-accent-gold);
+  background: var(--dgc-accent-gold, #d4b76a);
   border-radius: 50%;
   border: 2px solid white;
 }
 
-/* Search Submit Button - Original Styling */
+/* Search Submit Button */
 .search-submit-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: linear-gradient(135deg, var(--dgc-primary-blue) 0%, var(--dgc-secondary-blue) 100%);
+  background: linear-gradient(135deg, var(--dgc-primary-blue, #002b40) 0%, var(--dgc-secondary-blue, #0074ab) 100%);
   border: none;
   border-radius: 8px;
   padding: 0 24px;
@@ -244,7 +250,7 @@
 }
 
 .search-submit-button:hover {
-  background: linear-gradient(135deg, var(--dgc-secondary-blue) 0%, #004a6b 100%);
+  background: linear-gradient(135deg, var(--dgc-secondary-blue, #0074ab) 0%, #004a6b 100%);
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(0, 43, 64, 0.3);
 }
@@ -254,7 +260,7 @@
   box-shadow: 0 2px 8px rgba(0, 43, 64, 0.2);
 }
 
-/* Expandable Filters Container - REMOVED BORDER */
+/* Expandable Filters Container */
 .filters-container {
   max-height: 0;
   overflow: hidden;
@@ -268,7 +274,6 @@
   max-height: 200px;
   padding: 1.5rem;
   margin: 1rem -1.5rem 0 -1.5rem;
-  /* REMOVED: border-top: 1px solid #e0e0e0; */
 }
 
 .filters-grid {
@@ -278,7 +283,7 @@
   align-items: end;
 }
 
-/* Filter Groups - Original Styling */
+/* Filter Groups */
 .filter-group-mui {
   display: flex;
   flex-direction: column;
@@ -308,7 +313,7 @@
 }
 
 .filter-select-mui:focus {
-  border-color: var(--dgc-primary-blue);
+  border-color: var(--dgc-primary-blue, #002b40);
   box-shadow: 0 0 0 3px rgba(0, 43, 64, 0.1);
 }
 
@@ -407,69 +412,5 @@
   .filters-container.expanded {
     padding: 1rem 0.75rem;
     margin: 1rem -0.75rem 0 -0.75rem;
-  }
-}
-
-/* Legacy support - keep existing classes for backward compatibility */
-.search-section {
-  background-color: var(--light-gray);
-  padding: 2rem;
-  margin-bottom: 2rem;
-}
-
-.search-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.search-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: var(--primary-blue);
-}
-
-.search-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.search-input {
-  flex: 1;
-  min-width: 200px;
-}
-
-.search-select {
-  min-width: 200px;
-}
-
-.search-button {
-  background-color: var(--primary-blue);
-  color: var(--white);
-  border: none;
-  border-radius: 4px;
-  padding: 0.8rem 1.5rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: background-color var(--transition-speed);
-}
-
-.search-button:hover {
-  background-color: #004b82;
-}
-
-@media (max-width: 768px) {
-  .search-controls {
-    flex-direction: column;
-  }
-  
-  .search-input, 
-  .search-select, 
-  .search-button {
-    width: 100%;
   }
 }

@@ -1,4 +1,4 @@
-// src/components/common/NavigationHeader.js - Updated with Personnel page support
+// src/components/common/NavigationHeader.js - Reverted to backup style without "Dashboards" text
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../../styles/NavigationHeader.css';
@@ -16,12 +16,11 @@ const NavigationHeader = () => {
   return (
     <div className="navigation-header" data-testid="navigation-section">
       <div className="nav-container">
-        {/* Left Section - Title and Tabs */}
+        {/* Left Section - Only Tabs (removed title) */}
         <div className="nav-left-section">
           <div className="nav-title-section">
-            <span className="nav-title">Dashboards</span>
             <div className="nav-tabs">
-              <div className="nav-tabs-container" role="tablist" aria-label="Dashboards">
+              <div className="nav-tabs-container" role="tablist" aria-label="Navigation">
                 <Link 
                   to="/" 
                   className={`nav-tab ${isActive('/') ? 'active' : ''}`}
@@ -49,8 +48,6 @@ const NavigationHeader = () => {
               </div>
               <div className="nav-tab-indicator"></div>
             </div>
-            
-            {/* More Button has been removed as it was non-functional */}
           </div>
         </div>
         

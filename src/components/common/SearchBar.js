@@ -1,87 +1,43 @@
-// src/components/common/SearchBar.js - Updated with new category structure
+// src/components/common/SearchBar.js - Fixed button styling and filter toggle
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faFilter, faTimes } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/SearchBar.css';
 
-const SearchBar = ({ onSearch, initialValues = {} }) => {
+const SearchBar = ({ onSearch, initialValues = {}, placeholder = "Search dashboards, descriptions, or keywords..." }) => {
   const [searchQuery, setSearchQuery] = useState(initialValues.query || '');
   const [category, setCategory] = useState(initialValues.category || '');
   const [organization, setOrganization] = useState(initialValues.organization || '');
-  const [filtersExpanded, setFiltersExpanded] = useState(false);
-  
-  const location = useLocation();
-  const navigate = useNavigate();
+  const [filtersExpanded, setFiltersExpanded] = useState(false); // FIXED: Default to false
 
   // Check if any filters are active
   const hasActiveFilters = category !== '' || organization !== '';
 
-  // Update state when initialValues change (for URL parameters)
+  // Update internal state when initialValues change
   useEffect(() => {
     setSearchQuery(initialValues.query || '');
     setCategory(initialValues.category || '');
     setOrganization(initialValues.organization || '');
   }, [initialValues]);
 
-  // Handle category dropdown change - redirect to AllDashboards with filter
-  const handleCategoryChange = (selectedCategory) => {
-    console.log('Category selected:', selectedCategory);
-    setCategory(selectedCategory);
-    
-    if (selectedCategory) {
-      // Special handling for People - redirect to personnel page
-      if (selectedCategory === 'People') {
-        navigate('/personnel');
-        return;
-      }
-      
-      // If we're not already on AllDashboards page, navigate there with category filter
-      if (location.pathname !== '/all-dashboards') {
-        navigate(`/all-dashboards?category=${encodeURIComponent(selectedCategory)}`);
-      } else {
-        // If we're already on AllDashboards, just trigger the search
-        onSearch({
-          query: searchQuery,
-          category: selectedCategory,
-          organization: organization
-        });
-      }
-    } else {
-      // Clear category filter
-      onSearch({
-        query: searchQuery,
-        category: '',
-        organization: organization
-      });
-    }
+  const handleCategoryChange = (value) => {
+    setCategory(value);
+    // Auto-submit search when filter changes
+    onSearch({
+      query: searchQuery,
+      category: value,
+      organization: organization
+    });
   };
 
-  // Handle organization dropdown change - redirect to AllDashboards with filter  
-  const handleOrganizationChange = (selectedOrganization) => {
-    console.log('Organization selected:', selectedOrganization);
-    setOrganization(selectedOrganization);
-    
-    if (selectedOrganization) {
-      // If we're not already on AllDashboards page, navigate there with organization filter
-      if (location.pathname !== '/all-dashboards') {
-        navigate(`/all-dashboards?organization=${encodeURIComponent(selectedOrganization)}`);
-      } else {
-        // If we're already on AllDashboards, just trigger the search
-        onSearch({
-          query: searchQuery,
-          category: category,
-          organization: selectedOrganization
-        });
-      }
-    } else {
-      // Clear organization filter
-      onSearch({
-        query: searchQuery,
-        category: category,
-        organization: ''
-      });
-    }
+  const handleOrganizationChange = (value) => {
+    setOrganization(value);
+    // Auto-submit search when filter changes
+    onSearch({
+      query: searchQuery,
+      category: category,
+      organization: value
+    });
   };
   
   const handleSubmit = (e) => {
@@ -108,12 +64,12 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
       <div className="search-container-mui">
         <form onSubmit={handleSubmit} className="search-form-mui">
           <div className="search-input-container-mui">
-            {/* Search Input with Icon - RESTORED ORIGINAL STRUCTURE */}
+            {/* Search Input with Icon */}
             <div className="search-input-wrapper">
               <FontAwesomeIcon icon={faSearch} className="search-input-icon" />
               <input
                 type="text"
-                placeholder="Search dashboards, descriptions, or keywords..."
+                placeholder={placeholder}
                 className="search-input-mui"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -129,9 +85,10 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
               )}
             </div>
             
+            {/* FIXED: Filter Toggle Button with proper class names */}
             <button
               type="button"
-              className={`filter-toggle-button ${filtersExpanded ? 'active' : ''} ${hasActiveFilters ? 'active' : ''}`}
+              className={`filter-toggle-button ${filtersExpanded ? 'active' : ''}`}
               onClick={() => setFiltersExpanded(!filtersExpanded)}
             >
               <FontAwesomeIcon icon={faFilter} />
@@ -139,6 +96,7 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
               {hasActiveFilters && <span className="filter-badge"></span>}
             </button>
             
+            {/* FIXED: Search Submit Button with proper class names */}
             <button
               type="submit"
               className="search-submit-button"
@@ -148,6 +106,7 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
             </button>
           </div>
           
+          {/* FIXED: Filters container - only show when expanded */}
           <div className={`filters-container ${filtersExpanded ? 'expanded' : ''}`}>
             <div className="filters-grid">
               <div className="filter-group-mui">
@@ -161,19 +120,19 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
                   onChange={(e) => handleCategoryChange(e.target.value)}
                 >
                   <option value="">All Categories</option>
-                  <option value="Aeronautical">Aeronautical</option>
-                  <option value="Aircraft">Aircraft</option>
-                  <option value="Airport">Airport</option>
-                  <option value="Airspace">Airspace</option>
-                  <option value="Facilities">Facilities</option>
-                  <option value="Finance">Finance</option>
-                  <option value="Flight">Flight</option>
-                  <option value="Geospatial">Geospatial</option>
-                  <option value="Information Technology">Information Technology</option>
-                  <option value="International">International</option>
+                  <option value="Operational Analytics">Operational Analytics</option>
                   <option value="People">People</option>
-                  <option value="Safety">Safety</option>
-                  <option value="Weather">Weather</option>
+                  <option value="Aviation Operations">Aviation Operations</option>
+                  <option value="Safety & Compliance">Safety & Compliance</option>
+                  <option value="Weather & Environment">Weather & Environment</option>
+                  <option value="NextGen Technology">NextGen Technology</option>
+                  <option value="Regulatory & Legal">Regulatory & Legal</option>
+                  <option value="International Affairs">International Affairs</option>
+                  <option value="Financial Management">Financial Management</option>
+                  <option value="Infrastructure & Systems">Infrastructure & Systems</option>
+                  <option value="Security">Security</option>
+                  <option value="Maintenance & Engineering">Maintenance & Engineering</option>
+                  <option value="Executive & Strategic">Executive & Strategic</option>
                 </select>
               </div>
               
