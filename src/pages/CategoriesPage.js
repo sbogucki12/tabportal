@@ -1,21 +1,25 @@
-// src/pages/CategoriesPage.js - Updated with Personnel page navigation
+// src/pages/CategoriesPage.js - Updated with new category structure
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
 import NavigationHeader from '../components/common/NavigationHeader';
 import Footer from '../components/common/Footer';
 import { DashboardContext } from '../context/DashboardContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
-  faShieldAlt,
-  faUsers,
-  faMoneyBillWave,
-  faChartLine,
-  faLaptopCode,
-  faClipboardCheck,
   faPlane,
+  faFighterJet,
   faCity,
-  faCloud,
+  faGlobe,
+  faBuilding,
+  faMoneyBillWave,
+  faPlaneDeparture,
   faMap,
+  faLaptopCode,
+  faFlag,
+  faUsers,
+  faShieldAlt,
+  faCloud,
   faArrowRight
 } from '@fortawesome/free-solid-svg-icons';
 import '../styles/HomePage.css'; // Use HomePage styles for consistent layout
@@ -23,39 +27,37 @@ import '../styles/CategoriesPage.css'; // Additional styles for categories and h
 
 const CategoriesPage = () => {
   const { loading, error } = useContext(DashboardContext);
+  const navigate = useNavigate();
   
-  // Use the same standard categories as HomePage
+  // Use the new standard categories
   const standardCategories = [
-    { name: 'Aviation Safety', icon: faShieldAlt, color: 'aviation-safety' },
-    { name: 'Personnel / HR', icon: faUsers, color: 'personnel-hr' },
+    { name: 'Aeronautical', icon: faPlane, color: 'aeronautical' },
+    { name: 'Aircraft', icon: faFighterJet, color: 'aircraft' },
+    { name: 'Airport', icon: faCity, color: 'airport' },
+    { name: 'Airspace', icon: faGlobe, color: 'airspace' },
+    { name: 'Facilities', icon: faBuilding, color: 'facilities' },
     { name: 'Finance', icon: faMoneyBillWave, color: 'finance' },
-    { name: 'Aviation Operations', icon: faChartLine, color: 'aviation-operations' },
-    { name: 'IT', icon: faLaptopCode, color: 'it' },
-    { name: 'Oversight / Compliance & Enforcement', icon: faClipboardCheck, color: 'oversight-compliance' },
-    { name: 'Air Traffic', icon: faPlane, color: 'air-traffic' },
-    { name: 'Airports', icon: faCity, color: 'airports' },
-    { name: 'Weather', icon: faCloud, color: 'weather' },
-    { name: 'Geospatial / Maps / Charts', icon: faMap, color: 'geospatial' }
+    { name: 'Flight', icon: faPlaneDeparture, color: 'flight' },
+    { name: 'Geospatial', icon: faMap, color: 'geospatial' },
+    { name: 'Information Technology', icon: faLaptopCode, color: 'information-technology' },
+    { name: 'International', icon: faFlag, color: 'international' },
+    { name: 'People', icon: faUsers, color: 'people' },
+    { name: 'Safety', icon: faShieldAlt, color: 'safety' },
+    { name: 'Weather', icon: faCloud, color: 'weather' }
   ];
   
-  // Handle category selection - Special handling for Personnel / HR
+  // Handle category clicks - redirect to appropriate page
   const handleCategoryClick = (categoryName) => {
-    // Special case: Personnel / HR goes to dedicated Personnel page
-    if (categoryName === 'Personnel / HR') {
-      window.location.href = '/personnel';
+    console.log('Category clicked:', categoryName);
+    
+    // Special handling for People - navigate to dedicated personnel page
+    if (categoryName === 'People') {
+      navigate('/personnel');
       return;
     }
     
-    // For all other categories, navigate to All Dashboards with filter
-    // Store the category name in both localStorage and sessionStorage
-    localStorage.setItem('selectedCategory', categoryName);
-    sessionStorage.setItem('selectedCategory', categoryName);
-    
-    // Add a timestamp to identify this navigation
-    localStorage.setItem('categoryNavigationTime', new Date().getTime());
-    
-    // Use the most direct navigation approach
-    window.location.href = `/all-dashboards?category=${encodeURIComponent(categoryName)}`;
+    // For all other categories, navigate to AllDashboards with category filter
+    navigate(`/all-dashboards?category=${encodeURIComponent(categoryName)}`);
   };
   
   if (loading) {
@@ -74,10 +76,11 @@ const CategoriesPage = () => {
             </div>
           </div>
         </main>
+        <Footer />
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="home-page">
@@ -88,65 +91,40 @@ const CategoriesPage = () => {
             <div className="content-card-inner">
               <div className="content-inner-card">
                 <div className="loading-container">
-                  <div className="error-text">Error loading categories: {error}</div>
+                  <div className="error-text">{error}</div>
                 </div>
               </div>
             </div>
           </div>
         </main>
+        <Footer />
       </div>
     );
   }
-  
+
   return (
     <div className="home-page">
       <Header />
       <NavigationHeader />
       
-      {/* Main Content with White Card - Same structure as HomePage */}
       <main className="home-main">
         <div className="content-card">
           <div className="content-card-inner">
-            {/* Light Gray Content Card - wraps ALL content */}
             <div className="content-inner-card">
-              {/* EIM Header Section */}
-              <div className="page-header-section">
-                <div className="header-first">
-                  <div className="logo">
-                    <div className="logo-text">EIM</div>
-                  </div>
-                  <div className="vl"></div>
-                  <div className="header-content">
-                    <h1 className="header-main-title">Enterprise Information Management</h1>
-                    <h4 className="header-subtitle">All Categories</h4>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Categories Content */}
-              <section className="categories-container">
-                <div className="categories-grid">
+              {/* Browse by Information Domain Section */}
+              <section className="category-navigation-section">
+                <h2 className="section-title">Browse by Information Domain</h2>
+                <div className="category-cards-grid">
                   {standardCategories.map((category, index) => (
-                    <div
-                      key={index}
-                      className={`category-card category-${category.color}`}
+                    <div 
+                      key={index} 
+                      className={`category-nav-card category-${category.color}`}
                       onClick={() => handleCategoryClick(category.name)}
                     >
-                      {/* Category Background Overlay - like dashboard overlay */}
-                      <div className="category-background"></div>
-                      
-                      {/* Category Icon */}
-                      <div className="category-icon">
-                        <FontAwesomeIcon icon={category.icon} />
-                      </div>
-                      
-                      {/* Category Title */}
-                      <h3 className="category-title">{category.name}</h3>
-                      
-                      {/* Category Arrow - matches dashboard arrow positioning */}
-                      <div className="category-arrow">
-                        <FontAwesomeIcon icon={faArrowRight} />
-                      </div>
+                      <div className="category-nav-background"></div>
+                      <FontAwesomeIcon icon={category.icon} className="category-nav-icon" />
+                      <h3 className="category-nav-title">{category.name}</h3>
+                      <FontAwesomeIcon icon={faArrowRight} className="category-nav-arrow" />
                     </div>
                   ))}
                 </div>

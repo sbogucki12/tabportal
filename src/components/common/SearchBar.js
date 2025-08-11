@@ -1,60 +1,28 @@
-// src/components/common/SearchBar.js - Improved with proper category filtering
+// src/components/common/SearchBar.js - Updated with new category structure
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faTimes, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faFilter, faTimes } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/SearchBar.css';
 
 const SearchBar = ({ onSearch, initialValues = {} }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [category, setCategory] = useState('');
-  const [organization, setOrganization] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialValues.query || '');
+  const [category, setCategory] = useState(initialValues.category || '');
+  const [organization, setOrganization] = useState(initialValues.organization || '');
   const [filtersExpanded, setFiltersExpanded] = useState(false);
-  const navigate = useNavigate();
+  
   const location = useLocation();
-  
-  const hasActiveFilters = category || organization;
-  
-  const handleClearFilters = () => {
-    setCategory('');
-    setOrganization('');
-    setSearchQuery('');
-    onSearch({
-      query: '',
-      category: '',
-      organization: ''
-    });
-  };
-  
-  // Effect to handle initial values
+  const navigate = useNavigate();
+
+  // Check if any filters are active
+  const hasActiveFilters = category !== '' || organization !== '';
+
+  // Update state when initialValues change (for URL parameters)
   useEffect(() => {
-    if (initialValues.category) {
-      setCategory(initialValues.category);
-    }
-    if (initialValues.organization) {
-      setOrganization(initialValues.organization);
-    }
-    if (initialValues.query) {
-      setSearchQuery(initialValues.query);
-    }
+    setSearchQuery(initialValues.query || '');
+    setCategory(initialValues.category || '');
+    setOrganization(initialValues.organization || '');
   }, [initialValues]);
-  
-  // Effect to handle session storage
-  useEffect(() => {
-    const selectedCategory = sessionStorage.getItem('selectedCategory');
-    if (selectedCategory) {
-      setCategory(selectedCategory);
-      
-      // Trigger search with category from session storage
-      onSearch({
-        query: searchQuery,
-        category: selectedCategory,
-        organization: organization
-      });
-      
-      // Don't remove session storage here - the AllDashboardsPage will handle that
-    }
-  }, [onSearch, searchQuery, organization]);
 
   // Handle category dropdown change - redirect to AllDashboards with filter
   const handleCategoryChange = (selectedCategory) => {
@@ -62,6 +30,12 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
     setCategory(selectedCategory);
     
     if (selectedCategory) {
+      // Special handling for People - redirect to personnel page
+      if (selectedCategory === 'People') {
+        navigate('/personnel');
+        return;
+      }
+      
       // If we're not already on AllDashboards page, navigate there with category filter
       if (location.pathname !== '/all-dashboards') {
         navigate(`/all-dashboards?category=${encodeURIComponent(selectedCategory)}`);
@@ -112,32 +86,29 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // If we have search terms or filters, redirect to AllDashboards with all parameters
-    if (searchQuery || category || organization) {
-      const params = new URLSearchParams();
-      if (searchQuery) params.set('query', searchQuery);
-      if (category) params.set('category', category);
-      if (organization) params.set('organization', organization);
-      
-      if (location.pathname !== '/all-dashboards') {
-        navigate(`/all-dashboards?${params.toString()}`);
-      } else {
-        // If we're already on AllDashboards, just trigger the search
-        onSearch({
-          query: searchQuery,
-          category,
-          organization
-        });
-      }
-    }
+    onSearch({
+      query: searchQuery,
+      category: category,
+      organization: organization
+    });
   };
-    
+
+  const handleClearFilters = () => {
+    setCategory('');
+    setOrganization('');
+    onSearch({
+      query: searchQuery,
+      category: '',
+      organization: ''
+    });
+  };
+
   return (
     <section className="search-section-mui search-section-homepage">
       <div className="search-container-mui">
         <form onSubmit={handleSubmit} className="search-form-mui">
           <div className="search-input-container-mui">
+            {/* Search Input with Icon - RESTORED ORIGINAL STRUCTURE */}
             <div className="search-input-wrapper">
               <FontAwesomeIcon icon={faSearch} className="search-input-icon" />
               <input
@@ -160,7 +131,7 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
             
             <button
               type="button"
-              className={`filter-toggle-button ${hasActiveFilters ? 'active' : ''}`}
+              className={`filter-toggle-button ${filtersExpanded ? 'active' : ''} ${hasActiveFilters ? 'active' : ''}`}
               onClick={() => setFiltersExpanded(!filtersExpanded)}
             >
               <FontAwesomeIcon icon={faFilter} />
@@ -190,16 +161,19 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
                   onChange={(e) => handleCategoryChange(e.target.value)}
                 >
                   <option value="">All Categories</option>
-                  <option value="Aviation Safety">Aviation Safety</option>
-                  <option value="Personnel / HR">Personnel / HR</option>
+                  <option value="Aeronautical">Aeronautical</option>
+                  <option value="Aircraft">Aircraft</option>
+                  <option value="Airport">Airport</option>
+                  <option value="Airspace">Airspace</option>
+                  <option value="Facilities">Facilities</option>
                   <option value="Finance">Finance</option>
-                  <option value="Aviation Operations">Aviation Operations</option>
-                  <option value="IT">IT</option>
-                  <option value="Oversight / Compliance & Enforcement">Oversight / Compliance & Enforcement</option>
-                  <option value="Air Traffic">Air Traffic</option>
-                  <option value="Airports">Airports</option>
+                  <option value="Flight">Flight</option>
+                  <option value="Geospatial">Geospatial</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="International">International</option>
+                  <option value="People">People</option>
+                  <option value="Safety">Safety</option>
                   <option value="Weather">Weather</option>
-                  <option value="Geospatial / Maps / Charts">Geospatial / Maps / Charts</option>
                 </select>
               </div>
               
@@ -218,9 +192,10 @@ const SearchBar = ({ onSearch, initialValues = {} }) => {
                   <option value="ATO">Air Traffic Organization (ATO)</option>
                   <option value="ARP">Airports (ARP)</option>
                   <option value="AST">Commercial Space Transportation (AST)</option>
-                  <option value="AFN">NextGen (AFN)</option>
+                  <option value="ANG">NextGen (ANG)</option>
                   <option value="AGC">General Counsel (AGC)</option>
-                  <option value="ANG">Government and Industry Affairs (ANG)</option>
+                  <option value="AGI">Government and Industry Affairs (AGI)</option>
+                  <option value="AFN">Finance and Management (AFN)</option>
                   <option value="APL">Policy, International Affairs and Environment (APL)</option>
                   <option value="AIT">Information and Technology (AIT)</option>
                   <option value="ASH">Security and Hazardous Materials Safety (ASH)</option>
