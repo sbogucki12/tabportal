@@ -1,91 +1,69 @@
+/* HomePage.css - Updated with new category styling */
+
+/* HomePage specific styles */
 .home-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  position: relative;
+  font-family: "Open Sans", sans-serif;
 }
 
-/* Fixed Search Banner - Remove this as search moves inside */
-.search-banner-fixed {
-  display: none; /* Hide the fixed search banner */
-}
-
-/* Main content area - simplified for new layout */
 .home-main {
   flex-grow: 1;
-  padding: 20px;
-  margin-top: 0;
-  min-height: calc(100vh - 64px); /* Subtract header height */
-  position: relative;
 }
 
-/* White card - now fixed in position as scroll container, much wider */
 .content-card {
   background-color: white;
-  border-radius: 12px;
-  padding: 6px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  top: calc(64px + 60px + 20px); /* Header + Navigation Header + padding */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 97%; /* Expand to take up almost full screen width */
-  height: calc(100vh - 64px - 60px - 40px); /* Full height minus both headers and padding */
-  z-index: 50;
-  overflow-y: auto; /* Enable vertical scrolling on the white card */
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-}
-
-/* Inner blue border - now part of scrolling content, much wider */
-.content-card-inner {
-  border: 2px solid var(--primary-blue, #005ea2);
+  margin: 20px;
   border-radius: 8px;
-  padding: 50px;
-  min-height: 100%; /* Allow content to be taller than container */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - 180px);
   display: flex;
   flex-direction: column;
-  margin: 10px; /* Smaller margin for more content space */
-  width: calc(100% - 20px); /* Account for the margin */
 }
 
-/* Add light gray card inside blue card for content */
-.content-inner-card {
-  background-color: white; /* Changed from gray to white */
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 50px 60px;
-  margin-top: 0; /* Start at the very top */
+.content-card-inner {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
 }
 
-/* Page Header Section - DGC style banner */
+.content-inner-card {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* EIM Header Section */
 .page-header-section {
-  margin-bottom: 40px;
-  padding: 30px 40px;
+  padding: 1.5rem 0;
+  border-bottom: 2px solid var(--dgc-border-gray, #eff2f3);
+  margin-bottom: 1rem;
 }
 
 .header-first {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 16px;
-  margin: 4px 0px;
-  padding-left: 6px;
-  padding-top: 4px;
-  width: 100%;
-  justify-content: flex-start; /* Align to the far left */
-  font-family: "Open Sans", sans-serif;
 }
 
 .logo {
+  width: 80px;
+  height: 80px;
+  background-color: var(--dgc-primary-blue, #005ea2);
+  border-radius: 8px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  flex-shrink: 0;
 }
 
 .logo-text {
-  font-size: 2.1rem;
+  color: white;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: var(--primary-blue, #005ea2);
   font-family: "Open Sans", sans-serif;
   letter-spacing: 0.02em;
   margin: 0;
@@ -95,7 +73,7 @@
 .vl {
   width: 3px;
   height: 50px;
-  background-color: var(--accent-brown, #d4b76a); /* Gold vertical line */
+  background-color: var(--accent-brown, #d4b76a);
   margin: 0 12px;
   flex-shrink: 0;
 }
@@ -130,11 +108,6 @@
   margin-bottom: 50px;
   padding: 30px 40px;
   background: white !important;
-}
-
-/* Completely hide all SearchBar text elements */
-.search-section-custom * {
-  /* Target all children */
 }
 
 .search-section-custom .search-section-mui {
@@ -183,7 +156,7 @@
 
 /* Ensure content can scroll properly */
 .content-card-inner > * {
-  flex-shrink: 0; /* Prevent flex items from shrinking */
+  flex-shrink: 0;
 }
 
 /* Loading and error states */
@@ -203,144 +176,6 @@
   color: var(--error-red, #d83933);
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .home-main {
-    padding: 5px;
-  }
-  
-  .content-card {
-    border-radius: 8px;
-    padding: 4px;
-    width: 97%; /* Maintain 99% width on mobile */
-    top: calc(56px + 5px); /* Smaller header on mobile */
-    height: calc(100vh - 56px - 10px);
-  }
-  
-  .content-card-inner {
-    padding: 30px;
-    border-radius: 6px;
-    margin: 8px; /* Adjust margin for mobile */
-    width: calc(100% - 16px);
-  }
-  
-  .content-inner-card {
-    padding: 30px 40px;
-    margin-top: 0;
-  }
-  
-  /* DGC Header responsive */
-  .header-first {
-    gap: 15px;
-    padding-left: 15px;
-    padding-top: 15px;
-  }
-  
-  .logo-text {
-    font-size: 2rem;
-  }
-  
-  .vl {
-    height: 50px;
-    margin: 0 10px;
-  }
-  
-  .header-main-title {
-    font-size: 1.5rem;
-  }
-  
-  .header-subtitle {
-    font-size: 0.9rem;
-  }
-  
-  .page-header-section {
-    margin-bottom: 30px;
-    padding: 25px 30px 15px 30px;
-  }
-  
-  .search-section {
-    margin-bottom: 40px;
-    padding: 25px 30px;
-  }
-}
-
-@media (max-width: 480px) {
-  .content-card {
-    top: calc(56px + 5px);
-    height: calc(100vh - 56px - 10px);
-    width: 97%; /* Maintain 99% width on small mobile */
-  }
-  
-  .content-card-inner {
-    padding: 20px;
-    margin: 5px; /* Smaller margin for very small screens */
-    width: calc(100% - 10px);
-  }
-  
-  .content-inner-card {
-    padding: 25px 30px;
-    margin-top: 0;
-  }
-  
-  /* DGC Header mobile */
-  .header-first {
-    gap: 12px;
-    padding-left: 10px;
-    padding-top: 10px;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .logo-text {
-    font-size: 1.8rem;
-  }
-  
-  .vl {
-    width: 60px;
-    height: 3px;
-    margin: 5px 0;
-  }
-  
-  .header-main-title {
-    font-size: 1.3rem;
-  }
-  
-  .header-subtitle {
-    font-size: 0.85rem;
-  }
-  
-  .page-header-section {
-    margin-bottom: 25px;
-    padding: 20px 25px 10px 25px;
-  }
-  
-  .search-section {
-    margin-bottom: 35px;
-    padding: 20px 25px;
-  }
-}
-
-/* Custom scrollbar styling for the white card */
-.content-card::-webkit-scrollbar {
-  width: 8px;
-}
-
-.content-card::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.content-card::-webkit-scrollbar-thumb {
-  background: var(--primary-blue, #005ea2);
-  border-radius: 4px;
-}
-
-.content-card::-webkit-scrollbar-thumb:hover {
-  background: #004b82;
-}
-
-/* HomePage Category Navigation - Add to HomePage.css */
-
 /* Category Navigation Section */
 .category-navigation-section {
   margin: 2rem 0;
@@ -354,6 +189,15 @@
   color: var(--dgc-primary-blue, #002b40);
   margin-bottom: 1.5rem;
   text-align: center;
+}
+
+.section-subtitle {
+  font-family: "Open Sans", sans-serif;
+  font-size: 1rem;
+  color: var(--dark-gray, #525252);
+  margin-bottom: 2rem;
+  text-align: center;
+  line-height: 1.5;
 }
 
 /* Category Cards Grid */
@@ -445,17 +289,66 @@
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-/* Category-specific background colors - New Categories */
+/* NEW CATEGORY-SPECIFIC BACKGROUND COLORS */
+.category-aeronautical .category-nav-background {
+  background: linear-gradient(135deg, rgba(0, 43, 64, 0.85), rgba(0, 74, 107, 0.7));
+}
+
+.category-aircraft .category-nav-background {
+  background: linear-gradient(135deg, rgba(0, 74, 107, 0.8), rgba(0, 43, 64, 0.6));
+}
+
+.category-airport .category-nav-background {
+  background: linear-gradient(135deg, rgba(0, 43, 64, 0.75), rgba(0, 74, 107, 0.8));
+}
+
+.category-airspace .category-nav-background {
+  background: linear-gradient(135deg, rgba(0, 74, 107, 0.85), rgba(0, 43, 64, 0.7));
+}
+
+.category-facilities .category-nav-background {
+  background: linear-gradient(135deg, rgba(0, 43, 64, 0.8), rgba(0, 74, 107, 0.75));
+}
+
+.category-finance .category-nav-background {
+  background: linear-gradient(135deg, rgba(0, 74, 107, 0.75), rgba(0, 43, 64, 0.85));
+}
+
+.category-flight .category-nav-background {
+  background: linear-gradient(135deg, rgba(0, 43, 64, 0.9), rgba(0, 74, 107, 0.7));
+}
+
+.category-geospatial .category-nav-background {
+  background: linear-gradient(135deg, rgba(0, 74, 107, 0.85), rgba(0, 43, 64, 0.8));
+}
+
+.category-information-technology .category-nav-background {
+  background: linear-gradient(135deg, rgba(0, 43, 64, 0.8), rgba(0, 74, 107, 0.9));
+}
+
+.category-international .category-nav-background {
+  background: linear-gradient(135deg, rgba(0, 74, 107, 0.9), rgba(0, 43, 64, 0.75));
+}
+
+.category-people .category-nav-background {
+  background: linear-gradient(135deg, rgba(0, 74, 107, 0.8), rgba(0, 43, 64, 0.6));
+}
+
+.category-safety .category-nav-background {
+  background: linear-gradient(135deg, rgba(0, 43, 64, 0.85), rgba(0, 74, 107, 0.7));
+}
+
+.category-weather .category-nav-background {
+  background: linear-gradient(135deg, rgba(0, 43, 64, 0.8), rgba(0, 74, 107, 0.9));
+}
+
+/* LEGACY CATEGORY SUPPORT - Keep existing styles */
 .category-aviation-safety .category-nav-background {
   background: linear-gradient(135deg, rgba(0, 43, 64, 0.85), rgba(0, 74, 107, 0.7));
 }
 
 .category-personnel-hr .category-nav-background {
   background: linear-gradient(135deg, rgba(0, 74, 107, 0.8), rgba(0, 43, 64, 0.6));
-}
-
-.category-finance .category-nav-background {
-  background: linear-gradient(135deg, rgba(0, 43, 64, 0.75), rgba(0, 74, 107, 0.8));
 }
 
 .category-aviation-operations .category-nav-background {
@@ -476,14 +369,6 @@
 
 .category-airports .category-nav-background {
   background: linear-gradient(135deg, rgba(0, 74, 107, 0.85), rgba(0, 43, 64, 0.8));
-}
-
-.category-weather .category-nav-background {
-  background: linear-gradient(135deg, rgba(0, 43, 64, 0.8), rgba(0, 74, 107, 0.9));
-}
-
-.category-geospatial .category-nav-background {
-  background: linear-gradient(135deg, rgba(0, 74, 107, 0.9), rgba(0, 43, 64, 0.75));
 }
 
 /* Responsive Design */
@@ -553,89 +438,67 @@
   }
 }
 
-/* Organization Cards CSS - Add to HomePage.css */
-
-/* Organization Full Name styling */
-.organization-full-name {
-  position: absolute;
-  bottom: 35px;
-  left: 15px;
-  right: 50px;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 1.2;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
-  z-index: 10;
-  margin: 0;
-  word-wrap: break-word;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-}
-
-/* Adjust category title position for organization cards */
-.category-nav-card .organization-full-name + .category-nav-title {
-  bottom: 45px;
-}
-
-/* Organization-specific background colors - DGC Theme */
-.category-org-avs .category-nav-background {
-  background: linear-gradient(135deg, rgba(0, 43, 64, 0.85), rgba(0, 74, 107, 0.7));
-}
-
-.category-org-ato .category-nav-background {
-  background: linear-gradient(135deg, rgba(0, 74, 107, 0.8), rgba(0, 43, 64, 0.6));
-}
-
-.category-org-arp .category-nav-background {
-  background: linear-gradient(135deg, rgba(0, 43, 64, 0.75), rgba(0, 74, 107, 0.8));
-}
-
-.category-org-ast .category-nav-background {
-  background: linear-gradient(135deg, rgba(0, 74, 107, 0.85), rgba(0, 43, 64, 0.7));
-}
-
-.category-org-afn .category-nav-background {
-  background: linear-gradient(135deg, rgba(0, 43, 64, 0.8), rgba(0, 74, 107, 0.75));
-}
-
-.category-org-agc .category-nav-background {
-  background: linear-gradient(135deg, rgba(0, 74, 107, 0.75), rgba(0, 43, 64, 0.85));
-}
-
-.category-org-ang .category-nav-background {
-  background: linear-gradient(135deg, rgba(0, 43, 64, 0.9), rgba(0, 74, 107, 0.7));
-}
-
-.category-org-apl .category-nav-background {
-  background: linear-gradient(135deg, rgba(0, 74, 107, 0.85), rgba(0, 43, 64, 0.8));
-}
-
-.category-org-ait .category-nav-background {
-  background: linear-gradient(135deg, rgba(0, 43, 64, 0.8), rgba(0, 74, 107, 0.9));
-}
-
-.category-org-ash .category-nav-background {
-  background: linear-gradient(135deg, rgba(0, 74, 107, 0.9), rgba(0, 43, 64, 0.75));
-}
-
-/* Responsive adjustments for organization cards */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .organization-full-name {
-    font-size: 10px;
-    bottom: 30px;
-    left: 12px;
-    right: 40px;
+  .header-first {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .logo {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .logo-text {
+    font-size: 1.4rem;
+  }
+  
+  .vl {
+    display: none;
+  }
+  
+  .header-main-title {
+    font-size: 1.4rem;
+  }
+  
+  .header-subtitle {
+    font-size: 0.8rem;
+  }
+  
+  .search-section-custom {
+    padding: 20px;
   }
 }
 
 @media (max-width: 480px) {
-  .organization-full-name {
-    font-size: 9px;
-    bottom: 28px;
-    left: 10px;
-    right: 35px;
+  .content-card {
+    margin: 10px;
+  }
+  
+  .content-card-inner {
+    padding: 15px;
+  }
+  
+  .page-header-section {
+    padding: 1rem 0;
+  }
+  
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .logo-text {
+    font-size: 1.2rem;
+  }
+  
+  .header-main-title {
+    font-size: 1.2rem;
+  }
+  
+  .header-subtitle {
+    font-size: 0.75rem;
   }
 }

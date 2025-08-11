@@ -1,4 +1,4 @@
-// src/pages/HomePage.js - Fixed to keep homepage clean, redirect search to AllDashboards
+// src/pages/HomePage.js - Updated with new category structure
 import React, { useContext, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
@@ -9,16 +9,19 @@ import FeaturedDashboard from '../components/dashboard/FeaturedDashboard';
 import { DashboardContext } from '../context/DashboardContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
-  faShieldAlt,
-  faUsers,
-  faMoneyBillWave,
-  faChartLine,
-  faLaptopCode,
-  faClipboardCheck,
   faPlane,
+  faFighterJet,
   faCity,
-  faCloud,
+  faGlobe,
+  faBuilding,
+  faMoneyBillWave,
+  faPlaneDeparture,
   faMap,
+  faLaptopCode,
+  faFlag,
+  faUsers,
+  faShieldAlt,
+  faCloud,
   faArrowRight
 } from '@fortawesome/free-solid-svg-icons';
 import '../styles/HomePage.css';
@@ -28,18 +31,21 @@ const HomePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Define the new standard categories with icons - MOVED TO TOP TO ENSURE DEFINITION
+  // Define the new standard categories with icons - UPDATED CATEGORIES
   const standardCategories = [
-    { name: 'Aviation Safety', icon: faShieldAlt, color: 'aviation-safety' },
-    { name: 'Personnel / HR', icon: faUsers, color: 'personnel-hr' },
+    { name: 'Aeronautical', icon: faPlane, color: 'aeronautical' },
+    { name: 'Aircraft', icon: faFighterJet, color: 'aircraft' },
+    { name: 'Airport', icon: faCity, color: 'airport' },
+    { name: 'Airspace', icon: faGlobe, color: 'airspace' },
+    { name: 'Facilities', icon: faBuilding, color: 'facilities' },
     { name: 'Finance', icon: faMoneyBillWave, color: 'finance' },
-    { name: 'Aviation Operations', icon: faChartLine, color: 'aviation-operations' },
-    { name: 'IT', icon: faLaptopCode, color: 'it' },
-    { name: 'Oversight / Compliance & Enforcement', icon: faClipboardCheck, color: 'oversight-compliance' },
-    { name: 'Air Traffic', icon: faPlane, color: 'air-traffic' },
-    { name: 'Airports', icon: faCity, color: 'airports' },
-    { name: 'Weather', icon: faCloud, color: 'weather' },
-    { name: 'Geospatial / Maps / Charts', icon: faMap, color: 'geospatial' }
+    { name: 'Flight', icon: faPlaneDeparture, color: 'flight' },
+    { name: 'Geospatial', icon: faMap, color: 'geospatial' },
+    { name: 'Information Technology', icon: faLaptopCode, color: 'information-technology' },
+    { name: 'International', icon: faFlag, color: 'international' },
+    { name: 'People', icon: faUsers, color: 'people' },
+    { name: 'Safety', icon: faShieldAlt, color: 'safety' },
+    { name: 'Weather', icon: faCloud, color: 'weather' }
   ];
   
   // Check for URL parameters and redirect to AllDashboards if search params exist
@@ -57,8 +63,8 @@ const HomePage = () => {
   const handleCategoryClick = useCallback((categoryName) => {
     console.log('Category clicked:', categoryName);
     
-    // Special handling for Personnel / HR - navigate to dedicated page
-    if (categoryName === 'Personnel / HR') {
+    // Special handling for People - navigate to dedicated personnel page
+    if (categoryName === 'People') {
       navigate('/personnel');
       return;
     }
@@ -103,6 +109,7 @@ const HomePage = () => {
                     </div>
                   </div>
                 </div>
+                
                 <div className="loading-container">
                   <div className="loading-text">Loading dashboards...</div>
                 </div>
@@ -110,6 +117,7 @@ const HomePage = () => {
             </div>
           </div>
         </main>
+        <Footer />
       </div>
     );
   }
@@ -136,6 +144,7 @@ const HomePage = () => {
                     </div>
                   </div>
                 </div>
+                
                 <div className="loading-container">
                   <div className="error-text">{error}</div>
                 </div>
@@ -143,6 +152,7 @@ const HomePage = () => {
             </div>
           </div>
         </main>
+        <Footer />
       </div>
     );
   }
@@ -152,13 +162,10 @@ const HomePage = () => {
       <Header />
       <NavigationHeader />
       
-      {/* Main Content with White Card - Same structure as other pages */}
       <main className="home-main">
         <div className="content-card">
           <div className="content-card-inner">
-            {/* Light Gray Content Card - wraps ALL content */}
             <div className="content-inner-card">
-              
               {/* EIM Header Section */}
               <div className="page-header-section">
                 <div className="header-first">
@@ -173,47 +180,34 @@ const HomePage = () => {
                 </div>
               </div>
               
-              {/* Search Bar - redirect to AllDashboards on use */}
-              <div className="search-section search-section-homepage">
-                <SearchBar 
-                  onSearch={handleSearch} 
-                  placeholder="Search dashboards..." 
-                  initialValues={{
-                    query: '',
-                    category: '',
-                    organization: ''
-                  }} 
-                />
+              {/* Search Section - Custom styling to hide headers and make it compact */}
+              <div className="search-section-custom">
+                <SearchBar onSearch={handleSearch} />
               </div>
               
-              {/* Featured Dashboard - Always show if available */}
+              {/* Featured Dashboard */}
               {featuredDashboard && (
                 <FeaturedDashboard dashboard={featuredDashboard} />
               )}
               
-              {/* Category Navigation - Always show */}
-              <section className="category-section">
+              {/* Browse by Information Domain Section */}
+              <section className="category-navigation-section">
                 <h2 className="section-title">Browse by Information Domain</h2>
                 <div className="category-cards-grid">
                   {standardCategories.map((category, index) => (
-                    <div
-                      key={index}
+                    <div 
+                      key={index} 
                       className={`category-nav-card category-${category.color}`}
                       onClick={() => handleCategoryClick(category.name)}
                     >
                       <div className="category-nav-background"></div>
-                      <div className="category-nav-icon">
-                        <FontAwesomeIcon icon={category.icon} />
-                      </div>
+                      <FontAwesomeIcon icon={category.icon} className="category-nav-icon" />
                       <h3 className="category-nav-title">{category.name}</h3>
-                      <div className="category-nav-arrow">
-                        <FontAwesomeIcon icon={faArrowRight} />
-                      </div>
+                      <FontAwesomeIcon icon={faArrowRight} className="category-nav-arrow" />
                     </div>
                   ))}
                 </div>
               </section>
-              
             </div>
           </div>
         </div>

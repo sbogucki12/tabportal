@@ -1,3 +1,4 @@
+// src/components/admin/AddDashboardForm.js - Updated with new category structure
 import React, { useState, useContext } from 'react';
 import { DashboardContext } from '../../context/DashboardContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -32,19 +33,37 @@ const AddDashboardForm = () => {
     isVideo: false
   });
 
-  // Organization abbreviation mapping
+  // Organization abbreviation mapping - UPDATED VALUES
   const organizationMapping = {
     'AVS': 'AVS',
     'ATO': 'ATO', 
     'ARP': 'ARP',
     'AST': 'AST',
-    'AFN': 'AFN',
+    'ANG': 'ANG',  // NextGen (was AFN)
     'AGC': 'AGC',
-    'ANG': 'ANG',
+    'AGI': 'AGI',  // Government and Industry Affairs (was ANG)
+    'AFN': 'AFN',  // Finance and Management (new)
     'APL': 'APL',
     'AIT': 'AIT',
     'ASH': 'ASH'
   };
+
+  // NEW CATEGORIES - Available category options
+  const availableCategories = [
+    'Aeronautical',
+    'Aircraft', 
+    'Airport',
+    'Airspace',
+    'Facilities',
+    'Finance',
+    'Flight',
+    'Geospatial',
+    'Information Technology',
+    'International',
+    'People',
+    'Safety',
+    'Weather'
+  ];
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -98,6 +117,16 @@ const AddDashboardForm = () => {
     }));
   };
 
+  // Add category from dropdown
+  const addCategoryTag = (categoryName) => {
+    if (categoryName && !formData.tags.includes(categoryName)) {
+      setFormData(prev => ({
+        ...prev,
+        tags: [...prev.tags, categoryName]
+      }));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -113,19 +142,8 @@ const AddDashboardForm = () => {
     }
 
     try {
-      // Create dashboard object
-      const newDashboard = {
-        ...formData,
-        id: `dash-${Date.now()}`,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        views: 0,
-        isFeatured: false,
-        imageUrl: formData.thumbnailUrl || '/media/default-dashboard.jpg'
-      };
-
-      // Add to context
-      addDashboard(newDashboard);
+      // Add the dashboard
+      addDashboard(formData);
       
       setSubmitMessage({
         text: 'Dashboard added successfully!',
@@ -154,7 +172,6 @@ const AddDashboardForm = () => {
       setTagInput('');
       
     } catch (error) {
-      console.error('Error adding dashboard:', error);
       setSubmitMessage({
         text: 'Error adding dashboard. Please try again.',
         type: 'error'
@@ -213,9 +230,10 @@ const AddDashboardForm = () => {
                 <option value="ATO">ATO</option>
                 <option value="ARP">ARP</option>
                 <option value="AST">AST</option>
-                <option value="AFN">AFN</option>
-                <option value="AGC">AGC</option>
                 <option value="ANG">ANG</option>
+                <option value="AGC">AGC</option>
+                <option value="AGI">AGI</option>
+                <option value="AFN">AFN</option>
                 <option value="APL">APL</option>
                 <option value="AIT">AIT</option>
                 <option value="ASH">ASH</option>
@@ -231,45 +249,94 @@ const AddDashboardForm = () => {
               id="description"
               name="description"
               className="form-textarea"
-              placeholder="Provide a detailed description of the dashboard and its purpose"
+              placeholder="Enter detailed description of the dashboard"
+              rows="4"
               value={formData.description}
               onChange={handleChange}
-            ></textarea>
+            />
           </div>
+        </div>
+        
+        {/* Tags & Categories Section - UPDATED */}
+        <div className="form-section">
+          <h3 className="form-section-title">
+            Tags & Categories
+          </h3>
           
           <div className="form-grid form-grid-2">
             <div className="form-group">
-              <label htmlFor="tags">
-                Category Tags <span className="required-field">*</span>
+              <label htmlFor="categorySelect">
+                Add Category
               </label>
-              <div className="tags-container">
-                {formData.tags.map((tag, index) => (
-                  <div key={index} className="tag-item">
-                    {tag}
-                    <span 
-                      className="tag-remove"
-                      onClick={() => removeTag(tag)}
-                    >
-                      <FontAwesomeIcon icon={faTimes} />
-                    </span>
-                  </div>
+              <select
+                id="categorySelect"
+                className="form-select"
+                onChange={(e) => {
+                  if (e.target.value) {
+                    addCategoryTag(e.target.value);
+                    e.target.value = ''; // Reset dropdown
+                  }
+                }}
+              >
+                <option value="">Select a category to add</option>
+                {availableCategories.map((category, index) => (
+                  <option key={index} value={category}>
+                    {category}
+                  </option>
                 ))}
+              </select>
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="tags">
+                Custom Tags <span className="required-field">*</span>
+              </label>
+              <div className="tag-input-container">
                 <input
                   type="text"
-                  className="tag-input"
-                  placeholder="Add tags..."
+                  id="tags"
+                  className="form-input"
+                  placeholder="Type a tag and press Enter"
                   value={tagInput}
                   onChange={handleTagInputChange}
                   onKeyDown={handleTagInputKeyDown}
-                  onBlur={addTag}
                 />
+                <button
+                  type="button"
+                  className="add-tag-button"
+                  onClick={addTag}
+                >
+                  Add Tag
+                </button>
               </div>
-              <span className="form-hint">
-                Use categories: Aviation Safety, Personnel / HR, Finance, Aviation Operations, IT, 
-                Oversight / Compliance & Enforcement, Air Traffic, Airports, Weather, Geospatial / Maps / Charts
-              </span>
             </div>
-            
+          </div>
+          
+          {formData.tags.length > 0 && (
+            <div className="tags-display">
+              {formData.tags.map((tag, index) => (
+                <span key={index} className="tag-item">
+                  {tag}
+                  <button
+                    type="button"
+                    className="remove-tag-button"
+                    onClick={() => removeTag(tag)}
+                  >
+                    <FontAwesomeIcon icon={faTimes} />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+        
+        {/* Dashboard Information */}
+        <div className="form-section">
+          <h3 className="form-section-title">
+            Dashboard Information
+          </h3>
+          
+          <div className="form-grid form-grid-2">
             <div className="form-group">
               <label htmlFor="dashboardType">
                 Dashboard Type <span className="required-field">*</span>
@@ -287,6 +354,23 @@ const AddDashboardForm = () => {
                 <option value="AWS QuickSight">AWS QuickSight</option>
                 <option value="Google Looker">Google Looker</option>
                 <option value="Other">Other</option>
+              </select>
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="accessLevel">
+                Access Level
+              </label>
+              <select
+                id="accessLevel"
+                name="accessLevel"
+                className="form-select"
+                value={formData.accessLevel}
+                onChange={handleChange}
+              >
+                <option value="Public">Public</option>
+                <option value="Restricted">Restricted</option>
+                <option value="Internal">Internal</option>
               </select>
             </div>
           </div>
@@ -345,27 +429,54 @@ const AddDashboardForm = () => {
                 id="dashboardUrl"
                 name="dashboardUrl"
                 className="form-input"
-                placeholder="Enter the URL to access the dashboard"
+                placeholder="https://example.com/dashboard"
                 value={formData.dashboardUrl}
                 onChange={handleChange}
               />
             </div>
             
             <div className="form-group">
-              <label htmlFor="accessLevel">
-                Access Level
+              <label htmlFor="thumbnailUrl">
+                Thumbnail Image URL
               </label>
-              <select
-                id="accessLevel"
-                name="accessLevel"
-                className="form-select"
-                value={formData.accessLevel}
+              <input
+                type="url"
+                id="thumbnailUrl"
+                name="thumbnailUrl"
+                className="form-input"
+                placeholder="/media/thumbnail.jpg"
+                value={formData.thumbnailUrl}
                 onChange={handleChange}
-              >
-                <option value="Public">Public (All FAA)</option>
-                <option value="Restricted">Restricted (Specific LOBs)</option>
-                <option value="Private">Private (By Request Only)</option>
-              </select>
+              />
+            </div>
+          </div>
+          
+          <div className="form-grid form-grid-2">
+            <div className="form-group">
+              <label htmlFor="imageUrl">
+                Full Image/Video URL
+              </label>
+              <input
+                type="url"
+                id="imageUrl"
+                name="imageUrl"
+                className="form-input"
+                placeholder="/media/full-image.jpg"
+                value={formData.imageUrl}
+                onChange={handleChange}
+              />
+            </div>
+            
+            <div className="form-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="isVideo"
+                  checked={formData.isVideo}
+                  onChange={handleChange}
+                />
+                <span className="checkbox-text">This is a video file</span>
+              </label>
             </div>
           </div>
         </div>
@@ -386,7 +497,7 @@ const AddDashboardForm = () => {
                 id="contactName"
                 name="contactName"
                 className="form-input"
-                placeholder="Enter contact person's name"
+                placeholder="Enter contact name"
                 value={formData.contactName}
                 onChange={handleChange}
               />
@@ -401,7 +512,7 @@ const AddDashboardForm = () => {
                 id="contactEmail"
                 name="contactEmail"
                 className="form-input"
-                placeholder="Enter contact email address"
+                placeholder="contact@faa.gov"
                 value={formData.contactEmail}
                 onChange={handleChange}
               />
@@ -416,7 +527,7 @@ const AddDashboardForm = () => {
                 id="contactPhone"
                 name="contactPhone"
                 className="form-input"
-                placeholder="Enter contact phone number"
+                placeholder="(202) 555-1234"
                 value={formData.contactPhone}
                 onChange={handleChange}
               />
@@ -424,47 +535,8 @@ const AddDashboardForm = () => {
           </div>
         </div>
         
-        {/* Media Information */}
+        {/* Submit Button */}
         <div className="form-section">
-          <h3 className="form-section-title">
-            Media & Preview
-          </h3>
-          
-          <div className="form-grid form-grid-2">
-            <div className="form-group">
-              <label htmlFor="thumbnailUrl">
-                Screenshot/Thumbnail URL
-              </label>
-              <input
-                type="url"
-                id="thumbnailUrl"
-                name="thumbnailUrl"
-                className="form-input"
-                placeholder="Enter URL for dashboard screenshot"
-                value={formData.thumbnailUrl}
-                onChange={handleChange}
-              />
-              <span className="form-hint">Upload image to media folder and enter relative path (e.g., /media/dashboard-screenshot.jpg)</span>
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="isVideo">
-                <input
-                  type="checkbox"
-                  id="isVideo"
-                  name="isVideo"
-                  checked={formData.isVideo}
-                  onChange={handleChange}
-                  style={{ marginRight: '0.5rem' }}
-                />
-                Media is a video file
-              </label>
-              <span className="form-hint">Check if the media file is a video (MP4, etc.)</span>
-            </div>
-          </div>
-        </div>
-        
-        <div className="form-actions">
           <button type="submit" className="submit-button">
             <FontAwesomeIcon icon={faUpload} style={{ marginRight: '0.5rem' }} />
             Add Dashboard
