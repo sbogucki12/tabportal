@@ -1,227 +1,202 @@
+/* FeaturedDashboard.css - Reverted to backup style */
+
 .featured-dashboard-section {
-    margin-bottom: 3rem;
-  }
-  
-  .featured-dashboard-container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .featured-dashboard {
-    background-color: var(--white);
-    border: 1px solid var(--dgc-border-gray);
-    border-radius: var(--dgc-border-radius-large);
-    overflow: hidden;
-    box-shadow: var(--dgc-shadow);
-    transition: var(--dgc-transition);
-  }
-  
-  .featured-dashboard:hover {
-    box-shadow: var(--dgc-shadow-hover);
-    transform: translateY(-2px);
-  }
-  
-  /* Enhanced featured-header with DGC styling elements */
-  .featured-header {
-    background: linear-gradient(135deg, var(--dgc-primary-blue) 0%, var(--dgc-secondary-blue) 100%);
-    color: var(--white);
-    padding: 16px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  /* Add subtle DGC pattern overlay */
-  .featured-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: linear-gradient(45deg, rgba(212, 183, 106, 0.08) 25%, transparent 25%),
-                      linear-gradient(-45deg, rgba(212, 183, 106, 0.08) 25%, transparent 25%);
-    background-size: 20px 20px;
-    opacity: 0.6;
-    pointer-events: none;
-  }
-  
-  /* Featured badge - inspired by DGC buttons but contextually appropriate */
-  .featured-badge {
-    display: inline-flex;
-    align-items: center;
-    background: var(--dgc-light-gray);
-    color: var(--dgc-text-primary);
-    padding: 6px 16px;
-    border-radius: 32px;
-    font-family: "Open Sans", sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
-    position: relative;
-    z-index: 1;
-  }
-  
-  .featured-badge::before {
-    content: "★";
-    margin-right: 6px;
-    color: var(--dgc-accent-gold);
-    font-size: 14px;
-  }
-  
-  .featured-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--white);
-    font-family: "Open Sans", sans-serif;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    z-index: 1;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  }
-  
+  margin-bottom: 3rem;
+}
+
+.featured-dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featured-dashboard {
+  background-color: var(--white);
+  border: 3px solid var(--primary-blue, #005ea2); /* Prominent blue border */
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.featured-dashboard:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.featured-header {
+  background: linear-gradient(135deg, var(--primary-blue, #005ea2) 0%, var(--secondary-blue, #0074ab) 100%);
+  color: var(--white);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add subtle pattern overlay */
+.featured-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(45deg, rgba(212, 183, 106, 0.08) 25%, transparent 25%),
+                    linear-gradient(-45deg, rgba(212, 183, 106, 0.08) 25%, transparent 25%);
+  background-size: 20px 20px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.featured-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* EIM Banner Badge */
+.featured-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--primary-blue, #005ea2);
+  padding: 6px 16px;
+  border-radius: 24px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 1;
+}
+
+.featured-badge::before {
+  content: "★";
+  margin-right: 6px;
+  color: var(--accent-brown, #d4b76a);
+  font-size: 14px;
+}
+
+.featured-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.featured-image {
+  margin-bottom: 1.5rem;
+}
+
+.featured-image img {
+  width: 100%;
+  border: 1px solid var(--light-gray);
+  border-radius: 4px;
+}
+
+.featured-details h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--primary-blue);
+}
+
+.featured-details p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.featured-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.featured-meta-item {
+  background-color: var(--light-gray);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.featured-meta-item:hover {
+  background: var(--white);
+  border-color: var(--accent-brown, #d4b76a);
+  transform: translateY(-1px);
+  box-shadow: 0px 4px 8px rgba(108, 108, 108, 0.2);
+}
+
+.featured-meta-icon {
+  margin-right: 0.5rem;
+  color: var(--primary-blue);
+}
+
+@media (min-width: 768px) {
   .featured-content {
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    background: var(--white);
+    flex-direction: row;
   }
   
   .featured-image {
-    margin-bottom: 1.5rem;
+    flex: 1;
+    margin-right: 2rem;
+    margin-bottom: 0;
   }
   
-  .featured-image img {
-    width: 100%;
-    border: 2px solid var(--dgc-border-gray);
-    border-radius: var(--dgc-border-radius);
-    transition: var(--dgc-transition);
+  .featured-details {
+    flex: 1;
   }
-  
-  .featured-image img:hover {
-    border-color: var(--dgc-accent-gold);
-  }
-  
-  .featured-details h3 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    color: var(--dgc-text-secondary);
-    font-family: "Open Sans", sans-serif;
-    font-weight: 600;
-  }
-  
-  .featured-details p {
-    margin-bottom: 1rem;
-    color: var(--dgc-text-secondary);
-    line-height: 1.6;
-  }
-  
-  /* Enhanced meta items with DGC button-inspired styling */
-  .featured-meta {
-    display: flex;
-    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .featured-header {
+    padding: 14px 20px;
+    flex-direction: column;
     gap: 12px;
-    margin-top: 2rem;
+    text-align: center;
+  }
+  
+  .featured-title {
+    font-size: 1.2rem;
+    order: 1;
+  }
+  
+  .featured-badge {
+    order: 2;
+    font-size: 11px;
+    padding: 5px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .featured-header {
+    padding: 12px 16px;
+  }
+  
+  .featured-title {
+    font-size: 1.1rem;
+  }
+  
+  .featured-badge {
+    font-size: 10px;
+    padding: 4px 12px;
+  }
+  
+  .featured-content {
+    padding: 1.5rem;
   }
   
   .featured-meta-item {
-    display: flex;
-    align-items: center;
-    background: var(--dgc-light-gray);
-    color: var(--dgc-text-primary);
-    padding: 8px 16px;
-    border-radius: 24px;
-    font-size: 13px;
-    font-weight: 500;
-    font-family: "Open Sans", sans-serif;
-    box-shadow: 0px 2px 4px rgba(108, 108, 108, 0.15);
-    transition: var(--dgc-transition);
-    border: 1px solid transparent;
+    font-size: 12px;
+    padding: 6px 12px;
   }
-  
-  .featured-meta-item:hover {
-    background: var(--white);
-    border-color: var(--dgc-accent-gold);
-    transform: translateY(-1px);
-    box-shadow: 0px 4px 8px rgba(108, 108, 108, 0.2);
-  }
-  
-  .featured-meta-icon {
-    margin-right: 8px;
-    color: var(--dgc-primary-blue);
-    font-size: 14px;
-  }
-  
-  @media (min-width: 768px) {
-    .featured-content {
-      flex-direction: row;
-    }
-    
-    .featured-image {
-      flex: 1;
-      margin-right: 2rem;
-      margin-bottom: 0;
-    }
-    
-    .featured-details {
-      flex: 1;
-    }
-    
-    .featured-header {
-      padding: 20px 32px;
-    }
-    
-    .featured-title {
-      font-size: 1.6rem;
-    }
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .featured-header {
-      padding: 14px 20px;
-      flex-direction: column;
-      gap: 12px;
-      text-align: center;
-    }
-    
-    .featured-title {
-      font-size: 1.2rem;
-      order: 1;
-    }
-    
-    .featured-badge {
-      order: 2;
-      font-size: 11px;
-      padding: 5px 14px;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .featured-header {
-      padding: 12px 16px;
-    }
-    
-    .featured-title {
-      font-size: 1.1rem;
-    }
-    
-    .featured-badge {
-      font-size: 10px;
-      padding: 4px 12px;
-    }
-    
-    .featured-content {
-      padding: 1.5rem;
-    }
-    
-    .featured-meta-item {
-      font-size: 12px;
-      padding: 6px 12px;
-    }
-  }
+}

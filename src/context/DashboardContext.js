@@ -3,12 +3,12 @@ import React, { createContext, useState, useEffect } from 'react';
 
 // Data source imports
 import { sampleDashboards } from '../data/sampleData';
-import { realDashboards } from '../data/realData'; // Uncomment for real data
+//import { realDashboards } from '../data/realData'; // Uncomment for real data
 
 // DATA SOURCE CONFIGURATION
 // Toggle between sample and real data by commenting/uncommenting the line below
 //const USE_REAL_DATA = true; // Set to true to use realData.js
-const USE_REAL_DATA = true; // Uncomment this line and comment above to use real data
+const USE_REAL_DATA = false // Uncomment this line and comment above to use real data
 
 export const DashboardContext = createContext();
 
@@ -30,10 +30,10 @@ export const DashboardProvider = ({ children }) => {
         let dashboardData;
         if (USE_REAL_DATA) {
           // When switching to real data, uncomment the import above and this line:
-          dashboardData = realDashboards;
+          //dashboardData = realDashboards;
           
           // For now, fallback to sample data if real data not available
-          //dashboardData = sampleDashboards;
+          dashboardData = sampleDashboards;
           console.log('Real data source selected, but realData.js import is commented out. Using sample data as fallback.');
         } else {
           dashboardData = sampleDashboards;

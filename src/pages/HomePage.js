@@ -1,91 +1,127 @@
-// src/pages/HomePage.js - Updated with new category structure
-import React, { useContext, useEffect, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+// src/pages/HomePage.js - Reverted to backup style with new categories
+import React, { useContext, useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Header from '../components/common/Header';
 import NavigationHeader from '../components/common/NavigationHeader';
 import Footer from '../components/common/Footer';
 import SearchBar from '../components/common/SearchBar';
 import FeaturedDashboard from '../components/dashboard/FeaturedDashboard';
+import DashboardGrid from '../components/dashboard/DashboardGrid';
 import { DashboardContext } from '../context/DashboardContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
-  faPlane,
-  faFighterJet,
-  faCity,
-  faGlobe,
-  faBuilding,
-  faMoneyBillWave,
-  faPlaneDeparture,
-  faMap,
-  faLaptopCode,
-  faFlag,
+  faArrowRight,
+  faChartLine,
   faUsers,
-  faShieldAlt,
+  faPlane,
+  faShield,
   faCloud,
-  faArrowRight
+  faRocket,
+  faBalanceScale,
+  faGlobe,
+  faDollarSign,
+  faNetworkWired,
+  faLock,
+  faCogs,
+  faUserTie
 } from '@fortawesome/free-solid-svg-icons';
 import '../styles/HomePage.css';
 
 const HomePage = () => {
-  const { featuredDashboard, loading, error } = useContext(DashboardContext);
+  const { dashboards, loading, error, featuredDashboard, searchDashboards } = useContext(DashboardContext);
+  const [filteredDashboards, setFilteredDashboards] = useState([]);
+  const [searchApplied, setSearchApplied] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
   
-  // Define the new standard categories with icons - UPDATED CATEGORIES
+  // NEW: Updated categories with modern information domains
   const standardCategories = [
-    { name: 'Aeronautical', icon: faPlane, color: 'aeronautical' },
-    { name: 'Aircraft', icon: faFighterJet, color: 'aircraft' },
-    { name: 'Airport', icon: faCity, color: 'airport' },
-    { name: 'Airspace', icon: faGlobe, color: 'airspace' },
-    { name: 'Facilities', icon: faBuilding, color: 'facilities' },
-    { name: 'Finance', icon: faMoneyBillWave, color: 'finance' },
-    { name: 'Flight', icon: faPlaneDeparture, color: 'flight' },
-    { name: 'Geospatial', icon: faMap, color: 'geospatial' },
-    { name: 'Information Technology', icon: faLaptopCode, color: 'information-technology' },
-    { name: 'International', icon: faFlag, color: 'international' },
-    { name: 'People', icon: faUsers, color: 'people' },
-    { name: 'Safety', icon: faShieldAlt, color: 'safety' },
-    { name: 'Weather', icon: faCloud, color: 'weather' }
+    { name: 'Operational Analytics', icon: faChartLine, color: 'blue' },
+    { name: 'People', icon: faUsers, color: 'green' },
+    { name: 'Aviation Operations', icon: faPlane, color: 'blue' },
+    { name: 'Safety & Compliance', icon: faShield, color: 'red' },
+    { name: 'Weather & Environment', icon: faCloud, color: 'cyan' },
+    { name: 'NextGen Technology', icon: faRocket, color: 'purple' },
+    { name: 'Regulatory & Legal', icon: faBalanceScale, color: 'yellow' },
+    { name: 'International Affairs', icon: faGlobe, color: 'green' },
+    { name: 'Financial Management', icon: faDollarSign, color: 'yellow' },
+    { name: 'Infrastructure & Systems', icon: faNetworkWired, color: 'gray' },
+    { name: 'Security', icon: faLock, color: 'red' },
+    { name: 'Maintenance & Engineering', icon: faCogs, color: 'gray' },
+    { name: 'Executive & Strategic', icon: faUserTie, color: 'purple' }
   ];
   
-  // Check for URL parameters and redirect to AllDashboards if search params exist
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const hasSearchParams = queryParams.has('query') || queryParams.has('category') || queryParams.has('organization');
+    // Get category from session storage if available
+    const selectedCategory = sessionStorage.getItem('selectedCategory');
     
-    if (hasSearchParams) {
-      // Redirect to AllDashboards page with all search parameters intact
-      navigate(`/all-dashboards${location.search}`, { replace: true });
+    if (dashboards.length > 0) {
+      // If category stored in session, filter by it
+      if (selectedCategory) {
+        const results = searchDashboards(
+          '', // No text query
+          {
+            category: selectedCategory,
+            organization: ''
+          }
+        );
+        setFilteredDashboards(results);
+        setSearchApplied(true);
+        
+        // Clear session storage after using it
+        sessionStorage.removeItem('selectedCategory');
+      } 
+      // Check for query parameters from URL as fallback
+      else {
+        const queryParams = new URLSearchParams(location.search);
+        const categoryParam = queryParams.get('category');
+        const organizationParam = queryParams.get('organization');
+        
+        if (categoryParam || organizationParam) {
+          // If URL parameters exist, filter by them
+          const results = searchDashboards(
+            '', // No text query
+            {
+              category: categoryParam || '',
+              organization: organizationParam || ''
+            }
+          );
+          setFilteredDashboards(results);
+          setSearchApplied(true);
+        } else if (featuredDashboard) {
+          // Otherwise show default dashboards (excluding featured)
+          const defaultResults = dashboards.filter(d => d.id !== featuredDashboard.id);
+          setFilteredDashboards(defaultResults);
+          setSearchApplied(false);
+        } else {
+          // Show all dashboards if no featured dashboard
+          setFilteredDashboards(dashboards);
+          setSearchApplied(false);
+        }
+      }
     }
-  }, [location, navigate]);
-  
-  // Handle category clicks - redirect to AllDashboards with category filter
-  const handleCategoryClick = useCallback((categoryName) => {
-    console.log('Category clicked:', categoryName);
-    
-    // Special handling for People - navigate to dedicated personnel page
+  }, [dashboards, featuredDashboard, location.search, searchDashboards]);
+
+  const handleSearch = (searchData) => {
+    const results = searchDashboards(searchData.query, {
+      category: searchData.category,
+      organization: searchData.organization
+    });
+    setFilteredDashboards(results);
+    setSearchApplied(true);
+  };
+
+  const handleCategoryClick = (categoryName) => {
+    // Special case: People should go to /personnel page
     if (categoryName === 'People') {
-      navigate('/personnel');
+      window.location.href = '/personnel';
       return;
     }
     
-    // For all other categories, navigate to AllDashboards with category filter
-    navigate(`/all-dashboards?category=${encodeURIComponent(categoryName)}`);
-  }, [navigate]);
-
-  // Handle search - redirect to AllDashboards page
-  const handleSearch = useCallback((searchTerms) => {
-    console.log('Search initiated from HomePage:', searchTerms);
-    
-    // Build search URL parameters
-    const params = new URLSearchParams();
-    if (searchTerms.query) params.set('query', searchTerms.query);
-    if (searchTerms.category) params.set('category', searchTerms.category);
-    if (searchTerms.organization) params.set('organization', searchTerms.organization);
-    
-    // Redirect to AllDashboards page with search parameters
-    navigate(`/all-dashboards?${params.toString()}`);
-  }, [navigate]);
+    // Store category in session storage for transfer to next page
+    sessionStorage.setItem('selectedCategory', categoryName);
+    // Navigate to all dashboards page
+    window.location.href = '/all-dashboards';
+  };
 
   if (loading) {
     return (
@@ -180,8 +216,8 @@ const HomePage = () => {
                 </div>
               </div>
               
-              {/* Search Section - Custom styling to hide headers and make it compact */}
-              <div className="search-section-custom">
+              {/* Search Section */}
+              <div className="search-section-homepage">
                 <SearchBar onSearch={handleSearch} />
               </div>
               
@@ -208,6 +244,14 @@ const HomePage = () => {
                   ))}
                 </div>
               </section>
+              
+              {/* Dashboard Grid */}
+              {filteredDashboards.length > 0 && (
+                <DashboardGrid 
+                  dashboards={filteredDashboards} 
+                  title={searchApplied ? "Search Results" : "Recent Dashboards"} 
+                />
+              )}
             </div>
           </div>
         </div>

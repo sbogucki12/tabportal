@@ -1,16 +1,17 @@
-/* NavigationHeader.css - DGC Style Navigation */
+/* NavigationHeader.css - FIXED: Layout without "Dashboards" title */
 
 .navigation-header {
     position: fixed;
     top: 0;
     left: 0;
-    padding: 4px 24px 12px;
+    padding: 8px 24px 12px;
     color: rgb(255, 255, 255);
     fill: rgb(255, 255, 255);
     z-index: 2;
-    background-color: #011E33; /* Updated to medium-dark background */
-    margin-top: 64px; /* Account for fixed header */
+    background-color: #011E33;
+    margin-top: 64px;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .nav-container {
@@ -21,7 +22,7 @@
   max-width: 100%;
 }
 
-/* Left Section */
+/* Left Section - FIXED: Only tabs, no title */
 .nav-left-section {
   display: flex;
   flex-direction: column;
@@ -34,14 +35,7 @@
   gap: 16px;
 }
 
-.nav-title {
-  font-family: "Inter Variable", "Open Sans Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: 600;
-  font-size: 1.5rem;
-  line-height: 1.2;
-  color: white;
-  margin: 0;
-}
+/* REMOVED: .nav-title styles since we removed the title */
 
 /* Navigation Tabs */
 .nav-tabs {
@@ -108,37 +102,34 @@
   width: 0;
 }
 
-/* Calculate tab widths dynamically for proper alignment */
+/* FIXED: Calculate tab widths dynamically for proper alignment without title */
 .nav-tab:nth-child(1) {
-  width: 160px; /* Visualization Showcase - shorter than Aviation Intelligence Hub */
+  width: 180px; /* Visualization Showcase */
 }
 
 .nav-tab:nth-child(2) {
-  width: 130px; /* All Dashboards */
+  width: 140px; /* All Dashboards */
 }
 
 .nav-tab:nth-child(3) {
-  width: 160px; /* Browse by Category */
+  width: 180px; /* Browse by Category */
 }
 
-/* Improved indicator positioning - properly centered under each tab */
+/* FIXED: Improved indicator positioning - starts from left edge */
 .nav-tabs-container:has(.nav-tab:nth-child(1).active) ~ .nav-tab-indicator {
-  left: 20px; /* Center within first tab */
-  width: 120px; /* Visualization Showcase - text width */
+  left: 10px;
+  width: 160px; /* Visualization Showcase - text width */
 }
 
 .nav-tabs-container:has(.nav-tab:nth-child(2).active) ~ .nav-tab-indicator {
-  left: 185px; /* Adjusted left - move slightly left (160 + 25 for centering) */
-  width: 90px; /* All Dashboards - text width */
+  left: 200px; /* 180 + 20 for centering */
+  width: 100px; /* All Dashboards - text width */
 }
 
 .nav-tabs-container:has(.nav-tab:nth-child(3).active) ~ .nav-tab-indicator {
-  left: 325px; /* Adjusted left - move slightly left (160 + 130 + 35 for centering) */
-  width: 120px; /* Browse by Category - text width */
+  left: 360px; /* 180 + 140 + 40 for centering */
+  width: 140px; /* Browse by Category - text width */
 }
-
-/* More Button - REMOVED */
-/* Button functionality has been removed as it was non-functional */
 
 /* Right Section */
 .nav-right-section {
@@ -175,7 +166,7 @@
 @media (max-width: 768px) {
   .navigation-header {
     padding: 4px 16px 8px;
-    margin-top: 56px; /* Account for smaller mobile header */
+    margin-top: 56px;
   }
   
   .nav-container {
@@ -183,20 +174,11 @@
     gap: 12px;
   }
   
-  .nav-title {
-    font-size: 1.25rem;
-  }
-  
   .nav-tab {
     padding: 8px 12px;
     font-size: 0.8rem;
     min-width: 70px;
     min-height: 40px;
-  }
-  
-  .nav-more-button {
-    font-size: 0.8rem;
-    padding: 4px 6px;
   }
   
   .page-title {
@@ -219,10 +201,6 @@
     gap: 8px;
   }
   
-  .nav-title {
-    font-size: 1.1rem;
-  }
-  
   .nav-tab {
     padding: 6px 10px;
     font-size: 0.75rem;
@@ -230,11 +208,11 @@
     min-height: 36px;
   }
   
-  /* Adjust indicator widths for mobile - maintaining DGC blue color and proportional spacing */
+  /* FIXED: Adjust indicator widths for mobile */
   .nav-tab:nth-child(1),
   .nav-tab:nth-child(2), 
   .nav-tab:nth-child(3) {
-    width: auto; /* Reset fixed widths for mobile */
+    width: auto;
   }
   
   .nav-tabs-container:has(.nav-tab:nth-child(1).active) ~ .nav-tab-indicator {
