@@ -42,7 +42,7 @@ yarn-error.log*
 .env*.local
 
 # Real data file - exclude from git but deploy to FAA server
-# src/data/realData.js
+src/data/realData.js
 
 .ssh/
 

@@ -52,14 +52,14 @@ const PersonnelPage = () => {
   ];
   
   // Handle category selection - navigate to All Dashboards with People category filter
-  const handleCategoryClick = (categoryName) => {
+/*   const handleCategoryClick = (categoryName) => {
     // Store the People category and specific subcategory
     sessionStorage.setItem('selectedCategory', 'People');
     sessionStorage.setItem('selectedSubcategory', categoryName);
     
     // Navigate to all dashboards with People category filter
     window.location.href = `/all-dashboards?category=${encodeURIComponent('People')}&subcategory=${encodeURIComponent(categoryName)}`;
-  };
+  }; */
   
   if (loading) {
     return (
@@ -79,7 +79,7 @@ const PersonnelPage = () => {
                     <div className="vl"></div>
                     <div className="header-content">
                       <h1 className="header-main-title">Enterprise Information Management</h1>
-                      <h4 className="header-subtitle">Personnel / HR Analytics</h4>
+                      <h4 className="header-subtitle">People Data Factory</h4>
                     </div>
                   </div>
                 </div>
@@ -114,7 +114,7 @@ const PersonnelPage = () => {
                     <div className="vl"></div>
                     <div className="header-content">
                       <h1 className="header-main-title">Enterprise Information Management</h1>
-                      <h4 className="header-subtitle">Personnel / HR Analytics</h4>
+                      <h4 className="header-subtitle">People Data Factory</h4>
                     </div>
                   </div>
                 </div>
@@ -150,20 +150,21 @@ const PersonnelPage = () => {
                   <div className="vl"></div>
                   <div className="header-content">
                     <h1 className="header-main-title">Enterprise Information Management</h1>
-                    <h4 className="header-subtitle">Personnel / HR Analytics</h4>
+                    <h4 className="header-subtitle">People Data Factory</h4>
                   </div>
                 </div>
               </div>
               
               {/* Personnel Categories Section */}
               <section className="category-navigation-section">
-                <h2 className="section-title">Personnel / HR Analytics Categories</h2>
+                <h2 className="section-title">People Data Factory</h2>
                 <div className="category-cards-grid">
                   {personnelCategories.map((category, index) => (
                     <div 
                       key={index} 
                       className={`category-nav-card category-${category.color}`}
-                      onClick={() => handleCategoryClick(category.name)}
+                      //onClick={() => handleCategoryClick(category.name)}  
+                      onClick={() => window.location.href = '/coming-soon'}                     
                     >
                       <div className="category-nav-background"></div>
                       <FontAwesomeIcon icon={category.icon} className="category-nav-icon" />

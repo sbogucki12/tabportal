@@ -120,19 +120,19 @@ const SearchBar = ({ onSearch, initialValues = {}, placeholder = "Search dashboa
                   onChange={(e) => handleCategoryChange(e.target.value)}
                 >
                   <option value="">All Categories</option>
-                  <option value="Operational Analytics">Operational Analytics</option>
+                  <option value="Aeronautical">Aeronautical</option>
+                  <option value="Aircraft">Aircraft</option>
+                  <option value="Airport">Airport</option>
+                  <option value="Airspace">Airspace</option>
+                  <option value="Facilities">Facilities</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Flight">Flight</option>
+                  <option value="Geospatial">Geospatial</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="International">International</option>
                   <option value="People">People</option>
-                  <option value="Aviation Operations">Aviation Operations</option>
-                  <option value="Safety & Compliance">Safety & Compliance</option>
-                  <option value="Weather & Environment">Weather & Environment</option>
-                  <option value="NextGen Technology">NextGen Technology</option>
-                  <option value="Regulatory & Legal">Regulatory & Legal</option>
-                  <option value="International Affairs">International Affairs</option>
-                  <option value="Financial Management">Financial Management</option>
-                  <option value="Infrastructure & Systems">Infrastructure & Systems</option>
-                  <option value="Security">Security</option>
-                  <option value="Maintenance & Engineering">Maintenance & Engineering</option>
-                  <option value="Executive & Strategic">Executive & Strategic</option>
+                  <option value="Safety">Safety</option>
+                  <option value="Weather">Weather</option>
                 </select>
               </div>
               

@@ -35,19 +35,20 @@ const HomePage = () => {
   
   // NEW: Updated categories with modern information domains
   const standardCategories = [
-    { name: 'Operational Analytics', icon: faChartLine, color: 'blue' },
+    { name: 'Aeronautical', icon: faChartLine, color: 'blue' },
     { name: 'People', icon: faUsers, color: 'green' },
-    { name: 'Aviation Operations', icon: faPlane, color: 'blue' },
-    { name: 'Safety & Compliance', icon: faShield, color: 'red' },
-    { name: 'Weather & Environment', icon: faCloud, color: 'cyan' },
-    { name: 'NextGen Technology', icon: faRocket, color: 'purple' },
-    { name: 'Regulatory & Legal', icon: faBalanceScale, color: 'yellow' },
-    { name: 'International Affairs', icon: faGlobe, color: 'green' },
-    { name: 'Financial Management', icon: faDollarSign, color: 'yellow' },
-    { name: 'Infrastructure & Systems', icon: faNetworkWired, color: 'gray' },
-    { name: 'Security', icon: faLock, color: 'red' },
-    { name: 'Maintenance & Engineering', icon: faCogs, color: 'gray' },
-    { name: 'Executive & Strategic', icon: faUserTie, color: 'purple' }
+    { name: 'Aircraft', icon: faPlane, color: 'blue' },
+    { name: 'Airport', icon: faShield, color: 'red' },
+    { name: 'Airspace', icon: faCloud, color: 'cyan' },
+    { name: 'Facilities', icon: faRocket, color: 'purple' },
+    { name: 'Finance', icon: faBalanceScale, color: 'yellow' },
+    { name: 'Flight', icon: faGlobe, color: 'green' },
+    { name: 'Geospatial', icon: faDollarSign, color: 'yellow' },
+    { name: 'Information Technology', icon: faNetworkWired, color: 'gray' },
+    { name: 'International', icon: faLock, color: 'red' },
+    { name: 'People', icon: faCogs, color: 'gray' },
+    { name: 'Safety', icon: faUserTie, color: 'purple' },
+    { name: 'Weather', icon: faUserTie, color: 'blue' }
   ];
   
   useEffect(() => {
