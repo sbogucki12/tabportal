@@ -405,3 +405,48 @@
     right: 8px;
   }
 }
+
+/* Add this CSS to your HomePage.css file after the existing .logo and .logo-text styles */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Space between logo image and EIM text */
+}
+
+.logo-image {
+  height: 32px; /* Adjust size as needed */
+  width: auto;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--primary-blue, #005ea2);
+  font-family: "Open Sans", sans-serif;
+  letter-spacing: 0.02em;
+  margin: 0;
+  padding: 0;
+}
+
+/* Responsive adjustments for logo */
+@media (max-width: 768px) {
+  .logo-image {
+    height: 28px; /* Smaller on tablets */
+  }
+  
+  .logo {
+    gap: 8px; /* Reduced gap on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-image {
+    height: 24px; /* Even smaller on mobile */
+  }
+  
+  .logo {
+    gap: 6px; /* Further reduced gap on mobile */
+  }
+}

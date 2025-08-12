@@ -1,5 +1,6 @@
 // src/pages/PersonnelPage.js - Updated with proper layout and styling
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
 import NavigationHeader from '../components/common/NavigationHeader';
 import Footer from '../components/common/Footer';
@@ -29,6 +30,7 @@ import '../styles/CategoriesPage.css'; // Use Categories page styles for cards
 import '../styles/PersonnelPage.css'; // Personnel-specific styles
 
 const PersonnelPage = () => {
+  const navigate = useNavigate();
   const { loading, error } = useContext(DashboardContext);
   
   // Define the Personnel/HR subcategories with relevant icons
@@ -58,7 +60,7 @@ const PersonnelPage = () => {
     sessionStorage.setItem('selectedSubcategory', categoryName);
     
     // Navigate to all dashboards with People category filter
-    window.location.href = `/all-dashboards?category=${encodeURIComponent('People')}&subcategory=${encodeURIComponent(categoryName)}`;
+    navigate(`/all-dashboards?category=${encodeURIComponent('People')}&subcategory=${encodeURIComponent(categoryName)}`);
   }; */
   
   if (loading) {
@@ -74,6 +76,11 @@ const PersonnelPage = () => {
                 <div className="page-header-section">
                   <div className="header-first">
                     <div className="logo">
+                      <img 
+                        src="/media/logo_small.png" 
+                        alt="EIM Logo" 
+                        className="logo-image"
+                      />
                       <div className="logo-text">EIM</div>
                     </div>
                     <div className="vl"></div>
@@ -109,6 +116,11 @@ const PersonnelPage = () => {
                 <div className="page-header-section">
                   <div className="header-first">
                     <div className="logo">
+                      <img 
+                        src="/media/logo_small.png" 
+                        alt="EIM Logo" 
+                        className="logo-image"
+                      />
                       <div className="logo-text">EIM</div>
                     </div>
                     <div className="vl"></div>
@@ -145,7 +157,12 @@ const PersonnelPage = () => {
               <div className="page-header-section">
                 <div className="header-first">
                   <div className="logo">
-                    <div className="logo-text">EIM</div>
+                      <img 
+                        src="/media/logo_small.png" 
+                        alt="EIM Logo" 
+                        className="logo-image"
+                      />
+                      <div className="logo-text">EIM</div>
                   </div>
                   <div className="vl"></div>
                   <div className="header-content">
@@ -162,9 +179,9 @@ const PersonnelPage = () => {
                   {personnelCategories.map((category, index) => (
                     <div 
                       key={index} 
-                      className={`category-nav-card category-${category.color}`}
+                      className={`category-nav-card category-${'blue'}`}
                       //onClick={() => handleCategoryClick(category.name)}  
-                      onClick={() => window.location.href = '/coming-soon'}                     
+                      onClick={() => navigate('/coming-soon')}                     
                     >
                       <div className="category-nav-background"></div>
                       <FontAwesomeIcon icon={category.icon} className="category-nav-icon" />

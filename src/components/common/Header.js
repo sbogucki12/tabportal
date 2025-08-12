@@ -1,4 +1,4 @@
-// src/components/common/Header.js - Updated with admin password protection
+// src/components/common/Header.js - Updated with admin password protection and HashRouter compatibility
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,8 +6,6 @@ import {
   faUser,
   faQuestionCircle,
   faShoppingBasket,
-  faChartLine,
-  faTasks,
   faPlus,
   faThLarge,
   faEye,
@@ -69,35 +67,28 @@ const Header = () => {
               <FontAwesomeIcon icon={faPlus} />
             </button>
             
-            <Link to="/coming-soon" className="nav-icon-button" aria-label="Tasks">
-              <FontAwesomeIcon icon={faTasks} />
-            </Link>
-            
-            <Link to="/coming-soon" className="nav-icon-button" aria-label="Activities">
-              <FontAwesomeIcon icon={faChartLine} />
-            </Link>
-            
-            <Link to="/coming-soon" className="nav-icon-button" aria-label="Shopping Basket">
-              <FontAwesomeIcon icon={faShoppingBasket} />
+            <Link to="/coming-soon" className="nav-icon-button" aria-label="User Account">
+              <FontAwesomeIcon icon={faUser} />
             </Link>
             
             <Link to="/coming-soon" className="nav-icon-button" aria-label="Help">
               <FontAwesomeIcon icon={faQuestionCircle} />
             </Link>
             
-            <Link to="/coming-soon" className="nav-icon-button" aria-label="User Profile">
-              <FontAwesomeIcon icon={faUser} />
+            <Link to="/coming-soon" className="nav-icon-button" aria-label="Shopping Cart">
+              <FontAwesomeIcon icon={faShoppingBasket} />
             </Link>
           </div>
         </div>
       </header>
 
       {/* Admin Password Modal */}
-      <AdminPasswordModal
-        isOpen={showAdminModal}
-        onClose={() => setShowAdminModal(false)}
-        onAuthenticate={handleAdminAuthenticate}
-      />
+      {showAdminModal && (
+        <AdminPasswordModal
+          onAuthenticate={handleAdminAuthenticate}
+          onClose={() => setShowAdminModal(false)}
+        />
+      )}
     </>
   );
 };

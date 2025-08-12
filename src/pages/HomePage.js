@@ -1,6 +1,6 @@
-// src/pages/HomePage.js - Reverted to backup style with new categories
+// src/pages/HomePage.js - Updated with proper layout and styling fixes
 import React, { useContext, useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '../components/common/Header';
 import NavigationHeader from '../components/common/NavigationHeader';
 import Footer from '../components/common/Footer';
@@ -10,94 +10,61 @@ import DashboardGrid from '../components/dashboard/DashboardGrid';
 import { DashboardContext } from '../context/DashboardContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
-  faArrowRight,
-  faChartLine,
-  faUsers,
   faPlane,
-  faShield,
-  faCloud,
-  faRocket,
-  faBalanceScale,
+  faFighterJet,
+  faCity,
   faGlobe,
-  faDollarSign,
-  faNetworkWired,
-  faLock,
-  faCogs,
-  faUserTie
+  faBuilding,
+  faMoneyBillWave,
+  faPlaneDeparture,
+  faMap,
+  faLaptopCode,
+  faFlag,
+  faUsers,
+  faShieldAlt,
+  faCloud,
+  faArrowRight
 } from '@fortawesome/free-solid-svg-icons';
 import '../styles/HomePage.css';
 
 const HomePage = () => {
-  const { dashboards, loading, error, featuredDashboard, searchDashboards } = useContext(DashboardContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { dashboards, featuredDashboard, loading, error, searchDashboards } = useContext(DashboardContext);
   const [filteredDashboards, setFilteredDashboards] = useState([]);
   const [searchApplied, setSearchApplied] = useState(false);
-  const location = useLocation();
   
-  // NEW: Updated categories with modern information domains
+  // Define the 13 standard information domain categories matching AllDashboards dropdown
   const standardCategories = [
-    { name: 'Aeronautical', icon: faChartLine, color: 'blue' },
-    { name: 'People', icon: faUsers, color: 'green' },
-    { name: 'Aircraft', icon: faPlane, color: 'blue' },
-    { name: 'Airport', icon: faShield, color: 'red' },
-    { name: 'Airspace', icon: faCloud, color: 'cyan' },
-    { name: 'Facilities', icon: faRocket, color: 'purple' },
-    { name: 'Finance', icon: faBalanceScale, color: 'yellow' },
-    { name: 'Flight', icon: faGlobe, color: 'green' },
-    { name: 'Geospatial', icon: faDollarSign, color: 'yellow' },
-    { name: 'Information Technology', icon: faNetworkWired, color: 'gray' },
-    { name: 'International', icon: faLock, color: 'red' },
-    { name: 'People', icon: faCogs, color: 'gray' },
-    { name: 'Safety', icon: faUserTie, color: 'purple' },
-    { name: 'Weather', icon: faUserTie, color: 'blue' }
+    { name: 'Aeronautical', icon: faPlane, color: 'aeronautical' },
+    { name: 'Aircraft', icon: faFighterJet, color: 'aircraft' },
+    { name: 'Airport', icon: faCity, color: 'airport' },
+    { name: 'Airspace', icon: faGlobe, color: 'airspace' },
+    { name: 'Facilities', icon: faBuilding, color: 'facilities' },
+    { name: 'Finance', icon: faMoneyBillWave, color: 'finance' },
+    { name: 'Flight', icon: faPlaneDeparture, color: 'flight' },
+    { name: 'Geospatial', icon: faMap, color: 'geospatial' },
+    { name: 'Information Technology', icon: faLaptopCode, color: 'information-technology' },
+    { name: 'International', icon: faFlag, color: 'international' },
+    { name: 'People', icon: faUsers, color: 'people' },
+    { name: 'Safety', icon: faShieldAlt, color: 'safety' },
+    { name: 'Weather', icon: faCloud, color: 'weather' }
   ];
-  
+
   useEffect(() => {
-    // Get category from session storage if available
-    const selectedCategory = sessionStorage.getItem('selectedCategory');
-    
     if (dashboards.length > 0) {
-      // If category stored in session, filter by it
-      if (selectedCategory) {
-        const results = searchDashboards(
-          '', // No text query
-          {
-            category: selectedCategory,
-            organization: ''
-          }
+      if (featuredDashboard) {
+        // Filter out the featured dashboard from the grid and show only first 6
+        setFilteredDashboards(
+          dashboards
+            .filter(dash => dash.id !== featuredDashboard.id)
+            .slice(0, 6)  // Show only first 6 dashboards on homepage
         );
-        setFilteredDashboards(results);
-        setSearchApplied(true);
-        
-        // Clear session storage after using it
-        sessionStorage.removeItem('selectedCategory');
-      } 
-      // Check for query parameters from URL as fallback
-      else {
-        const queryParams = new URLSearchParams(location.search);
-        const categoryParam = queryParams.get('category');
-        const organizationParam = queryParams.get('organization');
-        
-        if (categoryParam || organizationParam) {
-          // If URL parameters exist, filter by them
-          const results = searchDashboards(
-            '', // No text query
-            {
-              category: categoryParam || '',
-              organization: organizationParam || ''
-            }
-          );
-          setFilteredDashboards(results);
-          setSearchApplied(true);
-        } else if (featuredDashboard) {
-          // Otherwise show default dashboards (excluding featured)
-          const defaultResults = dashboards.filter(d => d.id !== featuredDashboard.id);
-          setFilteredDashboards(defaultResults);
-          setSearchApplied(false);
-        } else {
-          // Show all dashboards if no featured dashboard
-          setFilteredDashboards(dashboards);
-          setSearchApplied(false);
-        }
+        setSearchApplied(false);
+      } else {
+        // If no featured dashboard, show all dashboards
+        setFilteredDashboards(dashboards);
+        setSearchApplied(false);
       }
     }
   }, [dashboards, featuredDashboard, location.search, searchDashboards]);
@@ -114,14 +81,14 @@ const HomePage = () => {
   const handleCategoryClick = (categoryName) => {
     // Special case: People should go to /personnel page
     if (categoryName === 'People') {
-      window.location.href = '/personnel';
+      navigate('/personnel');
       return;
     }
     
     // Store category in session storage for transfer to next page
     sessionStorage.setItem('selectedCategory', categoryName);
     // Navigate to all dashboards page
-    window.location.href = '/all-dashboards';
+    navigate('/all-dashboards');
   };
 
   if (loading) {
@@ -137,6 +104,11 @@ const HomePage = () => {
                 <div className="page-header-section">
                   <div className="header-first">
                     <div className="logo">
+                      <img 
+                        src="/media/logo_small.png" 
+                        alt="EIM Logo" 
+                        className="logo-image"
+                      />
                       <div className="logo-text">EIM</div>
                     </div>
                     <div className="vl"></div>
@@ -172,6 +144,11 @@ const HomePage = () => {
                 <div className="page-header-section">
                   <div className="header-first">
                     <div className="logo">
+                      <img 
+                        src="/media/logo_small.png" 
+                        alt="EIM Logo" 
+                        className="logo-image"
+                      />
                       <div className="logo-text">EIM</div>
                     </div>
                     <div className="vl"></div>
@@ -183,7 +160,7 @@ const HomePage = () => {
                 </div>
                 
                 <div className="loading-container">
-                  <div className="error-text">{error}</div>
+                  <div className="error-text">Error loading dashboards: {error}</div>
                 </div>
               </div>
             </div>
@@ -199,15 +176,22 @@ const HomePage = () => {
       <Header />
       <NavigationHeader />
       
+      {/* Main Content with White Card - Same structure as other pages */}
       <main className="home-main">
         <div className="content-card">
           <div className="content-card-inner">
+            {/* Light Gray Content Card - wraps ALL content */}
             <div className="content-inner-card">
               {/* EIM Header Section */}
               <div className="page-header-section">
                 <div className="header-first">
                   <div className="logo">
-                    <div className="logo-text">EIM</div>
+                      <img 
+                        src="/media/logo_small.png" 
+                        alt="EIM Logo" 
+                        className="logo-image"
+                      />
+                      <div className="logo-text">EIM</div>
                   </div>
                   <div className="vl"></div>
                   <div className="header-content">
@@ -216,17 +200,13 @@ const HomePage = () => {
                   </div>
                 </div>
               </div>
-              
-              {/* Search Section */}
-              <div className="search-section-homepage">
-                <SearchBar onSearch={handleSearch} />
-              </div>
-              
+
+              {/* SearchBar Component */}
+              <SearchBar onSearch={handleSearch} />
+
               {/* Featured Dashboard */}
-              {featuredDashboard && (
-                <FeaturedDashboard dashboard={featuredDashboard} />
-              )}
-              
+              <FeaturedDashboard dashboard={featuredDashboard} />
+
               {/* Browse by Information Domain Section */}
               <section className="category-navigation-section">
                 <h2 className="section-title">Browse by Information Domain</h2>
@@ -245,14 +225,12 @@ const HomePage = () => {
                   ))}
                 </div>
               </section>
-              
+
               {/* Dashboard Grid */}
-              {filteredDashboards.length > 0 && (
-                <DashboardGrid 
-                  dashboards={filteredDashboards} 
-                  title={searchApplied ? "Search Results" : "Recent Dashboards"} 
-                />
-              )}
+              <DashboardGrid 
+                dashboards={filteredDashboards} 
+                title={searchApplied ? <h2 className="section-title">Search Results</h2> : <h2 className="section-title">Recently Added Dashboards</h2>} 
+              />
             </div>
           </div>
         </div>

@@ -27,7 +27,12 @@ const ComingSoonPage = () => {
               <div className="page-header-section">
                 <div className="header-first">
                   <div className="logo">
-                    <div className="logo-text">EIM</div>
+                      <img 
+                        src="/media/logo_small.png" 
+                        alt="EIM Logo" 
+                        className="logo-image"
+                      />
+                      <div className="logo-text">EIM</div>
                   </div>
                   <div className="vl"></div>
                   <div className="header-content">

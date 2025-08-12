@@ -1,6 +1,6 @@
 // src/pages/AllDashboardsPage.js - Removed Quick Navigation, kept Clear Filters and Back to Home buttons
 import React, { useContext, useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
 import NavigationHeader from '../components/common/NavigationHeader';
 import Footer from '../components/common/Footer';
@@ -15,6 +15,7 @@ const AllDashboardsPage = () => {
   const [filteredDashboards, setFilteredDashboards] = useState([]);
   const [searchApplied, setSearchApplied] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   
   // Effect to clear URL parameters when component unmounts
   useEffect(() => {
@@ -44,7 +45,7 @@ const AllDashboardsPage = () => {
   
   // Function to go back to home
   const escapeToHome = () => {
-    window.location.href = '/';
+    navigate('/');
   };
   
   // FIXED: Main useEffect to handle all search parameters including query
@@ -165,6 +166,11 @@ const AllDashboardsPage = () => {
                 <div className="page-header-section">
                   <div className="header-first">
                     <div className="logo">
+                      <img 
+                        src="/media/logo_small.png" 
+                        alt="EIM Logo" 
+                        className="logo-image"
+                      />
                       <div className="logo-text">EIM</div>
                     </div>
                     <div className="vl"></div>
@@ -198,6 +204,11 @@ const AllDashboardsPage = () => {
                 <div className="page-header-section">
                   <div className="header-first">
                     <div className="logo">
+                      <img 
+                        src="/media/logo_small.png" 
+                        alt="EIM Logo" 
+                        className="logo-image"
+                      />
                       <div className="logo-text">EIM</div>
                     </div>
                     <div className="vl"></div>
@@ -234,6 +245,25 @@ const AllDashboardsPage = () => {
         <div className="content-card">
           <div className="content-card-inner">
             <div className="content-inner-card">
+              
+              {/* EIM Header Section - ADDED THIS! */}
+              <div className="page-header-section">
+                <div className="header-first">
+                  <div className="logo">
+                    <img 
+                      src="/media/logo_small.png" 
+                      alt="EIM Logo" 
+                      className="logo-image"
+                    />
+                    <div className="logo-text">EIM</div>
+                  </div>
+                  <div className="vl"></div>
+                  <div className="header-content">
+                    <h1 className="header-main-title">Enterprise Information Management</h1>
+                    <h4 className="header-subtitle">All Dashboards</h4>
+                  </div>
+                </div>
+              </div>
               
               {/* Only show Clear All Filters and Back to Home buttons when search applied */}
               {searchApplied && (

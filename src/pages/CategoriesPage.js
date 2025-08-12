@@ -1,4 +1,4 @@
-// src/pages/CategoriesPage.js - Updated with new category structure
+// src/pages/CategoriesPage.js - Updated with new category structure and proper EIM banner
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
@@ -69,6 +69,25 @@ const CategoriesPage = () => {
           <div className="content-card">
             <div className="content-card-inner">
               <div className="content-inner-card">
+                {/* EIM Header Section */}
+                <div className="page-header-section">
+                  <div className="header-first">
+                    <div className="logo">
+                      <img 
+                        src="/media/logo_small.png" 
+                        alt="EIM Logo" 
+                        className="logo-image"
+                      />
+                      <div className="logo-text">EIM</div>
+                    </div>
+                    <div className="vl"></div>
+                    <div className="header-content">
+                      <h1 className="header-main-title">Enterprise Information Management</h1>
+                      <h4 className="header-subtitle">Browse by Category</h4>
+                    </div>
+                  </div>
+                </div>
+                
                 <div className="loading-container">
                   <div className="loading-text">Loading categories...</div>
                 </div>
@@ -90,6 +109,25 @@ const CategoriesPage = () => {
           <div className="content-card">
             <div className="content-card-inner">
               <div className="content-inner-card">
+                {/* EIM Header Section */}
+                <div className="page-header-section">
+                  <div className="header-first">
+                    <div className="logo">
+                      <img 
+                        src="/media/logo_small.png" 
+                        alt="EIM Logo" 
+                        className="logo-image"
+                      />
+                      <div className="logo-text">EIM</div>
+                    </div>
+                    <div className="vl"></div>
+                    <div className="header-content">
+                      <h1 className="header-main-title">Enterprise Information Management</h1>
+                      <h4 className="header-subtitle">Browse by Category</h4>
+                    </div>
+                  </div>
+                </div>
+                
                 <div className="loading-container">
                   <div className="error-text">{error}</div>
                 </div>
@@ -111,6 +149,25 @@ const CategoriesPage = () => {
         <div className="content-card">
           <div className="content-card-inner">
             <div className="content-inner-card">
+              {/* EIM Header Section */}
+              <div className="page-header-section">
+                <div className="header-first">
+                  <div className="logo">
+                    <img 
+                      src="/media/logo_small.png" 
+                      alt="EIM Logo" 
+                      className="logo-image"
+                    />
+                    <div className="logo-text">EIM</div>
+                  </div>
+                  <div className="vl"></div>
+                  <div className="header-content">
+                    <h1 className="header-main-title">Enterprise Information Management</h1>
+                    <h4 className="header-subtitle">Browse by Category</h4>
+                  </div>
+                </div>
+              </div>
+
               {/* Browse by Information Domain Section */}
               <section className="category-navigation-section">
                 <h2 className="section-title">Browse by Information Domain</h2>
