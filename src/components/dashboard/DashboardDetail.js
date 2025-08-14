@@ -1,11 +1,9 @@
 // src/components/dashboard/DashboardDetail.js - Updated to show "Updated" instead of "Created"
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faArrowLeft,
   faDownload, 
-  faExpand, 
   faExternalLinkAlt, 
   faUser, 
   faCalendarAlt,
@@ -23,7 +21,8 @@ import {
 import '../../styles/DashboardDetail.css';
 
 const DashboardDetail = ({ dashboard, relatedDashboards }) => {
-  const [imageEnlarged, setImageEnlarged] = useState(false);
+  //const [imageEnlarged, setImageEnlarged] = useState(false);
+  const navigate = useNavigate();
   
   if (!dashboard) {
     return <div>Dashboard not found</div>;
@@ -38,16 +37,25 @@ const DashboardDetail = ({ dashboard, relatedDashboards }) => {
   
   // CHANGED: Use updatedAt instead of createdAt
   const updatedDate = formatDate(dashboard.updatedAt);
+
+  // Handle back navigation - go to previous page in history
+  const handleBackClick = () => {
+    navigate(-1);
+  };
   
   return (
     <div className="dashboard-detail">
       {/* Featured-style header matching "Intelligence Visualization of the Month" */}
       <div className="detail-header-featured">
         <h2 className="detail-title-featured">Dashboard Details</h2>
-        <Link to="/" className="back-link-featured">
-          <FontAwesomeIcon icon={faArrowLeft} className="back-icon" />
-          Back to Dashboards
-        </Link>
+          <button 
+            onClick={handleBackClick}
+            className="back-link-featured"
+            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+          >
+            <FontAwesomeIcon icon={faArrowLeft} className="back-icon" />
+            Back
+          </button>
       </div>
       
       <div className="detail-content">
@@ -55,7 +63,7 @@ const DashboardDetail = ({ dashboard, relatedDashboards }) => {
         <div className="dashboard-image-container">
           {dashboard.isVideo ? (
             <video 
-              src={imageEnlarged ? dashboard.imageUrl : dashboard.thumbnailUrl} 
+              src={dashboard.thumbnailUrl} 
               className="dashboard-image"
               controls
               autoPlay
@@ -65,7 +73,7 @@ const DashboardDetail = ({ dashboard, relatedDashboards }) => {
             />
           ) : (
             <img 
-              src={imageEnlarged ? dashboard.imageUrl : dashboard.thumbnailUrl} 
+              src={dashboard.thumbnailUrl} 
               alt={dashboard.title} 
               className="dashboard-image"
             />
@@ -73,21 +81,6 @@ const DashboardDetail = ({ dashboard, relatedDashboards }) => {
           <div className="media-type-indicator">
             <FontAwesomeIcon icon={dashboard.isVideo ? faVideo : faImage} />
             {dashboard.isVideo ? 'Video Dashboard' : 'Dashboard Screenshot'}
-          </div>
-          <div className="image-controls">
-            <button 
-              className="image-control-button"
-              onClick={() => setImageEnlarged(!imageEnlarged)}
-              title={imageEnlarged ? 'Show Thumbnail' : 'Show Full Size'}
-            >
-              <FontAwesomeIcon icon={faExpand} />
-            </button>
-            <button 
-              className="image-control-button"
-              title="Download Image"
-            >
-              <FontAwesomeIcon icon={faDownload} />
-            </button>
           </div>
         </div>
         
@@ -124,6 +117,15 @@ const DashboardDetail = ({ dashboard, relatedDashboards }) => {
                 >
                   <FontAwesomeIcon icon={faExternalLinkAlt} style={{marginRight: '0.5rem'}} />
                   Access Dashboard
+                </a>
+                <a 
+                  href="http://dgc.eim.faa.gov/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn btn-secondary"
+                >
+                  <FontAwesomeIcon icon={faDownload} style={{ marginRight: '0.5rem' }} />
+                  Export Data
                 </a>
               </div>
             </div>

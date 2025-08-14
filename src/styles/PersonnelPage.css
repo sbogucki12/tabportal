@@ -1,4 +1,4 @@
-/* PersonnelPage.css - Personnel/HR Subcategory Styling with Colorful Gradients */
+/* PersonnelPage.css - Personnel/HR Subcategory Styling with Colorful Gradients and Inactive States */
 
 /* Personnel Category-specific background colors and gradients */
 .category-personnel-hiring .category-nav-background {
@@ -65,67 +65,97 @@
   background: linear-gradient(135deg, rgba(255, 69, 0, 0.8), rgba(255, 140, 0, 0.6));
 }
 
-/* Hover effects for personnel categories */
-.category-personnel-hiring:hover .category-nav-background {
+/* Hover effects for personnel categories - only for active cards */
+.category-personnel-hiring:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(34, 139, 34, 0.9), rgba(50, 205, 50, 0.7));
 }
 
-.category-personnel-attrition:hover .category-nav-background {
+.category-personnel-attrition:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(220, 20, 60, 0.9), rgba(255, 69, 0, 0.7));
 }
 
-.category-personnel-telework:hover .category-nav-background {
+.category-personnel-telework:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(70, 130, 180, 0.9), rgba(135, 206, 235, 0.7));
 }
 
-.category-personnel-diversity:hover .category-nav-background {
+.category-personnel-diversity:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(138, 43, 226, 0.9), rgba(186, 85, 211, 0.7));
 }
 
-.category-personnel-composition:hover .category-nav-background {
+.category-personnel-composition:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(255, 140, 0, 0.9), rgba(255, 165, 0, 0.7));
 }
 
-.category-personnel-engagement:hover .category-nav-background {
+.category-personnel-engagement:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(255, 20, 147, 0.9), rgba(255, 105, 180, 0.7));
 }
 
-.category-personnel-performance:hover .category-nav-background {
+.category-personnel-performance:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(0, 100, 0, 0.9), rgba(34, 139, 34, 0.7));
 }
 
-.category-personnel-training:hover .category-nav-background {
+.category-personnel-training:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(25, 25, 112, 0.9), rgba(65, 105, 225, 0.7));
 }
 
-.category-personnel-planning:hover .category-nav-background {
+.category-personnel-planning:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(128, 0, 128, 0.9), rgba(147, 112, 219, 0.7));
 }
 
-.category-personnel-succession:hover .category-nav-background {
+.category-personnel-succession:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(184, 134, 11, 0.9), rgba(218, 165, 32, 0.7));
 }
 
-.category-personnel-attendance:hover .category-nav-background {
+.category-personnel-attendance:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(0, 128, 128, 0.9), rgba(72, 209, 204, 0.7));
 }
 
-.category-personnel-benefits:hover .category-nav-background {
+.category-personnel-benefits:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(0, 128, 0, 0.9), rgba(50, 205, 50, 0.7));
 }
 
-.category-personnel-onboarding:hover .category-nav-background {
+.category-personnel-onboarding:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(30, 144, 255, 0.9), rgba(135, 206, 250, 0.7));
 }
 
-.category-personnel-relations:hover .category-nav-background {
+.category-personnel-relations:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(255, 99, 71, 0.9), rgba(255, 127, 80, 0.7));
 }
 
-.category-personnel-mobility:hover .category-nav-background {
+.category-personnel-mobility:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(72, 61, 139, 0.9), rgba(123, 104, 238, 0.7));
 }
 
-.category-personnel-safety:hover .category-nav-background {
+.category-personnel-safety:not(.category-inactive):hover .category-nav-background {
   background: linear-gradient(135deg, rgba(255, 69, 0, 0.9), rgba(255, 140, 0, 0.7));
+}
+
+/* INACTIVE CARD STYLING */
+.category-inactive .category-nav-background {
+  background: linear-gradient(135deg, rgba(128, 128, 128, 0.4), rgba(169, 169, 169, 0.3)) !important;
+}
+
+.category-inactive:hover .category-nav-background {
+  background: linear-gradient(135deg, rgba(128, 128, 128, 0.5), rgba(169, 169, 169, 0.4)) !important;
+}
+
+.category-inactive {
+  opacity: 0.7;
+}
+
+.category-inactive .category-nav-icon {
+  color: #888 !important;
+}
+
+.category-inactive .category-nav-title {
+  color: #666 !important;
+}
+
+.category-inactive .category-nav-arrow {
+  color: #888 !important;
+}
+
+.category-inactive:hover {
+  opacity: 0.8;
+  transform: translateY(-2px) !important;
 }
