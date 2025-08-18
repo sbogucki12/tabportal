@@ -1,14 +1,22 @@
-// src/context/DashboardContext.js - Enhanced with data source switching capability
-import React, { createContext, useState, useEffect } from 'react';
+// src/context/DashboardContext.js - Enhanced with CSV data source support
+import React, { createContext, useState, useEffect, useCallback } from 'react';
+//import Papa from 'papaparse'; // Uncomment when papaparse is installed
+// import { validateDashboardData, logValidationResults, cleanCSVData } from '../utils/csvDataValidator'; // Uncomment when file is created
 
 // Data source imports
 import { sampleDashboards } from '../data/sampleData';
-//import { realDashboards } from '../data/realData'; // Uncomment for real data
+//import { realDashboards } from '../data/realData'; // Uncomment for realData.js
 
 // DATA SOURCE CONFIGURATION
-// Toggle between sample and real data by commenting/uncommenting the line below
-//const USE_REAL_DATA = true; // Set to true to use realData.js
-const USE_REAL_DATA = false // Uncomment this line and comment above to use real data
+// Toggle between data sources by changing the DATA_SOURCE value:
+// Options: 'sample', 'csv', 'real'
+
+//const DATA_SOURCE = 'sample'; // Change to 'csv' for production, 'real' for realData.js
+
+// Alternative: Use comment-based switching (comment/uncomment the lines below)
+// const DATA_SOURCE = 'sample';  // Development
+const DATA_SOURCE = 'csv';     // Production
+// const DATA_SOURCE = 'real';    // Real data
 
 export const DashboardContext = createContext();
 
@@ -17,6 +25,133 @@ export const DashboardProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [featuredDashboard, setFeaturedDashboard] = useState(null);
+
+  // Function to transform CSV data to match sampleData.js schema
+  const transformCSVData = (csvData) => {
+    return csvData.map(row => {
+      // Handle tags - convert from string to array if needed
+      let tags = [];
+      if (row.tags) {
+        if (typeof row.tags === 'string') {
+          // If tags are comma-separated string, split them
+          tags = row.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+        } else if (Array.isArray(row.tags)) {
+          tags = row.tags;
+        }
+      }
+
+      // Ensure boolean fields are properly converted
+      const isRestricted = row.isRestricted === true || row.isRestricted === 'true' || row.isRestricted === '1';
+      const isVideo = row.isVideo === true || row.isVideo === 'true' || row.isVideo === '1';
+      const isFeatured = row.isFeatured === true || row.isFeatured === 'true' || row.isFeatured === '1';
+
+      // Ensure numeric fields are properly converted
+      const views = parseInt(row.views) || 0;
+
+      // Transform the data to match sampleData.js schema
+      return {
+        id: row.id || `dash-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        title: row.title || '',
+        description: row.description || '',
+        owner: row.owner || '',
+        ownerAbbr: row.ownerAbbr || '',
+        category: row.category || '',
+        tags: tags,
+        dataSource: row.datasource || row.dataSource || '', // Handle both field names
+        updateFrequency: row.updateFrequency || 'Unknown', // This field is not in CSV headers but exists in schema
+        createdAt: row.createdAt || new Date().toISOString(),
+        updatedAt: row.updatedAt || new Date().toISOString(),
+        contactName: row.contactName || '',
+        contactEmail: row.contactEmail || '',
+        contactPhone: row.contactPhone || '',
+        dashboardType: row.dashboardType || '',
+        accessLevel: row.accessLevel || 'Public',
+        dashboardUrl: row.dashboardUrl || '',
+        thumbnailUrl: row.thumbnailUrl || '',
+        imageUrl: row.imageUrl || '',
+        isVideo: isVideo,
+        views: views,
+        isFeatured: isFeatured,
+        isRestricted: isRestricted // Additional field from CSV
+      };
+    });
+  };
+
+  // Function to load CSV data
+  const loadCSVData = useCallback(async () => {
+    try {
+      // Check if papaparse is available
+      const Papa = await import('papaparse').catch(() => null);
+      if (!Papa) {
+        throw new Error('Papaparse is not installed. Please run: npm install papaparse');
+      }
+
+      const response = await fetch('/market.csv');
+      if (!response.ok) {
+        throw new Error(`Failed to fetch CSV: ${response.status}`);
+      }
+      const csvText = await response.text();
+      
+      return new Promise((resolve, reject) => {
+        Papa.default.parse(csvText, {
+          header: true,
+          dynamicTyping: true,
+          skipEmptyLines: true,
+          delimitersToGuess: [',', '\t', '|', ';'],
+          complete: (results) => {
+            if (results.errors.length > 0) {
+              console.warn('CSV parsing warnings:', results.errors);
+            }
+            
+            // Clean and validate the data (use basic transformation)
+            let cleanedData = results.data;
+            let transformedData;
+            
+            // Basic data cleaning - remove empty rows and trim strings
+            cleanedData = cleanedData.filter(row => row && Object.keys(row).length > 0).map(row => {
+              const cleaned = {};
+              Object.keys(row).forEach(key => {
+                const cleanKey = key.trim();
+                let value = row[key];
+                
+                if (typeof value === 'string') {
+                  value = value.trim();
+                  
+                  // Handle boolean conversions
+                  if (['isVideo', 'isFeatured', 'isRestricted'].includes(cleanKey)) {
+                    if (value === 'true' || value === '1' || value === 'TRUE' || value === 'True') {
+                      value = true;
+                    } else if (value === 'false' || value === '0' || value === 'FALSE' || value === 'False' || value === '') {
+                      value = false;
+                    }
+                  }
+                  
+                  // Handle tags field
+                  if (cleanKey === 'tags' && value && typeof value === 'string') {
+                    value = value.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+                  }
+                }
+                
+                cleaned[cleanKey] = value;
+              });
+              return cleaned;
+            });
+            
+            transformedData = transformCSVData(cleanedData);
+            console.log('CSV data loaded and transformed successfully:', transformedData.length, 'dashboards');
+            
+            resolve(transformedData);
+          },
+          error: (error) => {
+            reject(error);
+          }
+        });
+      });
+    } catch (error) {
+      console.error('Error loading CSV:', error);
+      throw error;
+    }
+  }, []);
 
   useEffect(() => {
     const loadDashboards = async () => {
@@ -28,16 +163,31 @@ export const DashboardProvider = ({ children }) => {
         
         // Select data source based on configuration
         let dashboardData;
-        if (USE_REAL_DATA) {
+        
+        if (DATA_SOURCE === 'sample') {
+          // Development mode - use sample data
+          dashboardData = sampleDashboards;
+          console.log('Using sample data source');
+        } 
+        else if (DATA_SOURCE === 'csv') {
+          // Production mode - use CSV data
+          console.log('Loading data from market.csv...');
+          dashboardData = await loadCSVData();
+          console.log('Successfully loaded CSV data:', dashboardData.length, 'dashboards');
+        }
+        else if (DATA_SOURCE === 'real') {
+          // Real data mode - use realData.js (if available)
           // When switching to real data, uncomment the import above and this line:
           //dashboardData = realDashboards;
           
           // For now, fallback to sample data if real data not available
           dashboardData = sampleDashboards;
           console.log('Real data source selected, but realData.js import is commented out. Using sample data as fallback.');
-        } else {
+        }
+        else {
+          // Fallback to sample data
           dashboardData = sampleDashboards;
-          console.log('Using sample data source');
+          console.log('Invalid DATA_SOURCE specified, using sample data as fallback');
         }
         
         setDashboards(dashboardData);
@@ -50,15 +200,22 @@ export const DashboardProvider = ({ children }) => {
         
         setError(null);
       } catch (err) {
-        setError('Failed to load dashboards');
+        setError('Failed to load dashboards: ' + err.message);
         console.error('Error loading dashboards:', err);
+        
+        // Fallback to sample data on error
+        setDashboards(sampleDashboards);
+        const featured = sampleDashboards.find(d => d.isFeatured);
+        if (featured) {
+          setFeaturedDashboard(featured);
+        }
       } finally {
         setLoading(false);
       }
     };
 
     loadDashboards();
-  }, []);
+  }, [loadCSVData]);
 
   const getDashboardById = (id) => {
     return dashboards.find(dashboard => dashboard.id === id);
@@ -184,6 +341,11 @@ export const DashboardProvider = ({ children }) => {
     });
   };
 
+  // Determine current data source for debugging
+  const getCurrentDataSource = () => {
+    return DATA_SOURCE;
+  };
+
   return (
     <DashboardContext.Provider value={{
       dashboards,
@@ -198,7 +360,7 @@ export const DashboardProvider = ({ children }) => {
       setAsFeatured,
       searchDashboards,
       advancedSearch,
-      dataSource: USE_REAL_DATA ? 'real' : 'sample' // For debugging/info purposes
+      dataSource: getCurrentDataSource() // For debugging/info purposes
     }}>
       {children}
     </DashboardContext.Provider>
