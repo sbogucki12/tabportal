@@ -120,6 +120,7 @@ const SearchBar = ({ onSearch, initialValues = {}, placeholder = "Search dashboa
                   onChange={(e) => handleCategoryChange(e.target.value)}
                 >
                   <option value="">All Categories</option>
+<<<<<<< HEAD
                   <option value="Aeronautical">Aeronautical</option>
                   <option value="Aircraft">Aircraft</option>
                   <option value="Airport">Airport</option>
@@ -133,6 +134,21 @@ const SearchBar = ({ onSearch, initialValues = {}, placeholder = "Search dashboa
                   <option value="People">People</option>
                   <option value="Safety">Safety</option>
                   <option value="Weather">Weather</option>
+=======
+                  <option value="Operational Analytics">Operational Analytics</option>
+                  <option value="People">People</option>
+                  <option value="Aviation Operations">Aviation Operations</option>
+                  <option value="Safety & Compliance">Safety & Compliance</option>
+                  <option value="Weather & Environment">Weather & Environment</option>
+                  <option value="NextGen Technology">NextGen Technology</option>
+                  <option value="Regulatory & Legal">Regulatory & Legal</option>
+                  <option value="International Affairs">International Affairs</option>
+                  <option value="Financial Management">Financial Management</option>
+                  <option value="Infrastructure & Systems">Infrastructure & Systems</option>
+                  <option value="Security">Security</option>
+                  <option value="Maintenance & Engineering">Maintenance & Engineering</option>
+                  <option value="Executive & Strategic">Executive & Strategic</option>
+>>>>>>> 6ccb58903ad4d6b7ecccd4a6ae002c197a439b15
                 </select>
               </div>
               

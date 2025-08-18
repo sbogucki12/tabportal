@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 // src/pages/PersonnelPage.js - Updated with dummy dashboards for Hiring and Attrition
 import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+=======
+// src/pages/PersonnelPage.js - Updated with proper layout and styling
+import React, { useContext } from 'react';
+>>>>>>> 6ccb58903ad4d6b7ecccd4a6ae002c197a439b15
 import Header from '../components/common/Header';
 import NavigationHeader from '../components/common/NavigationHeader';
 import Footer from '../components/common/Footer';
@@ -122,12 +127,93 @@ const PersonnelPage = () => {
     { name: 'Workplace Safety', icon: faHardHat, color: 'personnel-safety', isActive: false }
   ];
   
+<<<<<<< HEAD
   if (loading) {
     return <div className="loading-container"><p className="loading-text">Loading...</p></div>;
   }
   
   if (error) {
     return <div className="loading-container"><p className="error-text">Error: {error}</p></div>;
+=======
+  // Handle category selection - navigate to All Dashboards with People category filter
+  const handleCategoryClick = (categoryName) => {
+    // Store the People category and specific subcategory
+    sessionStorage.setItem('selectedCategory', 'People');
+    sessionStorage.setItem('selectedSubcategory', categoryName);
+    
+    // Navigate to all dashboards with People category filter
+    window.location.href = `/all-dashboards?category=${encodeURIComponent('People')}&subcategory=${encodeURIComponent(categoryName)}`;
+  };
+  
+  if (loading) {
+    return (
+      <div className="home-page">
+        <Header />
+        <NavigationHeader />
+        <main className="home-main">
+          <div className="content-card">
+            <div className="content-card-inner">
+              <div className="content-inner-card">
+                {/* EIM Header Section */}
+                <div className="page-header-section">
+                  <div className="header-first">
+                    <div className="logo">
+                      <div className="logo-text">EIM</div>
+                    </div>
+                    <div className="vl"></div>
+                    <div className="header-content">
+                      <h1 className="header-main-title">Enterprise Information Management</h1>
+                      <h4 className="header-subtitle">Personnel / HR Analytics</h4>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="loading-container">
+                  <div className="loading-text">Loading personnel categories...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="home-page">
+        <Header />
+        <NavigationHeader />
+        <main className="home-main">
+          <div className="content-card">
+            <div className="content-card-inner">
+              <div className="content-inner-card">
+                {/* EIM Header Section */}
+                <div className="page-header-section">
+                  <div className="header-first">
+                    <div className="logo">
+                      <div className="logo-text">EIM</div>
+                    </div>
+                    <div className="vl"></div>
+                    <div className="header-content">
+                      <h1 className="header-main-title">Enterprise Information Management</h1>
+                      <h4 className="header-subtitle">Personnel / HR Analytics</h4>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="loading-container">
+                  <div className="error-text">Error loading personnel categories: {error}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+>>>>>>> 6ccb58903ad4d6b7ecccd4a6ae002c197a439b15
   }
 
   return (
@@ -135,6 +221,10 @@ const PersonnelPage = () => {
       <Header />
       <NavigationHeader />
       
+<<<<<<< HEAD
+=======
+      {/* Main Content with White Card - Same structure as HomePage */}
+>>>>>>> 6ccb58903ad4d6b7ecccd4a6ae002c197a439b15
       <main className="home-main">
         <div className="content-card">
           <div className="content-card-inner">
@@ -160,13 +250,22 @@ const PersonnelPage = () => {
               
               {/* Personnel Categories Section */}
               <section className="category-navigation-section">
+<<<<<<< HEAD
                 <h2 className="section-title">People Data Factory</h2>
+=======
+                <h2 className="section-title">Personnel / HR Analytics Categories</h2>
+>>>>>>> 6ccb58903ad4d6b7ecccd4a6ae002c197a439b15
                 <div className="category-cards-grid">
                   {personnelCategories.map((category, index) => (
                     <div 
                       key={index} 
+<<<<<<< HEAD
                       className={`category-nav-card category-${'blue'} ${!category.isActive ? 'category-inactive' : ''}`}
                       onClick={() => handleCardClick(category)}                     
+=======
+                      className={`category-nav-card category-${category.color}`}
+                      onClick={() => handleCategoryClick(category.name)}
+>>>>>>> 6ccb58903ad4d6b7ecccd4a6ae002c197a439b15
                     >
                       <div className="category-nav-background"></div>
                       <FontAwesomeIcon icon={category.icon} className="category-nav-icon" />

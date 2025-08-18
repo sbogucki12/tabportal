@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // src/pages/CategoriesPage.js - Updated with new category structure and proper EIM banner
+=======
+// src/pages/CategoriesPage.js - Updated with new category structure
+>>>>>>> 6ccb58903ad4d6b7ecccd4a6ae002c197a439b15
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
@@ -149,6 +153,7 @@ const CategoriesPage = () => {
         <div className="content-card">
           <div className="content-card-inner">
             <div className="content-inner-card">
+<<<<<<< HEAD
               {/* EIM Header Section */}
               <div className="page-header-section">
                 <div className="header-first">
@@ -168,6 +173,8 @@ const CategoriesPage = () => {
                 </div>
               </div>
 
+=======
+>>>>>>> 6ccb58903ad4d6b7ecccd4a6ae002c197a439b15
               {/* Browse by Information Domain Section */}
               <section className="category-navigation-section">
                 <h2 className="section-title">Browse by Information Domain</h2>
