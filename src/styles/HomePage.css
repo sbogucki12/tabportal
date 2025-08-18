@@ -404,7 +404,6 @@
     bottom: 8px;
     right: 8px;
   }
-<<<<<<< HEAD
 }
 
 /* Add this CSS to your HomePage.css file after the existing .logo and .logo-text styles */
@@ -450,6 +449,4 @@
   .logo {
     gap: 6px; /* Further reduced gap on mobile */
   }
-=======
->>>>>>> 6ccb58903ad4d6b7ecccd4a6ae002c197a439b15
 }

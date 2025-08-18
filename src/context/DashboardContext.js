@@ -4,7 +4,6 @@ import React, { createContext, useState, useEffect, useCallback } from 'react';
 // import { validateDashboardData, logValidationResults, cleanCSVData } from '../utils/csvDataValidator'; // Uncomment when file is created
 
 // Data source imports
-<<<<<<< HEAD
 import { sampleDashboards } from '../data/sampleData';
 //import { realDashboards } from '../data/realData'; // Uncomment for realData.js
 
@@ -18,15 +17,6 @@ import { sampleDashboards } from '../data/sampleData';
 // const DATA_SOURCE = 'sample';  // Development
 const DATA_SOURCE = 'csv';     // Production
 // const DATA_SOURCE = 'real';    // Real data
-=======
-//import { sampleDashboards } from '../data/sampleData';
-import { realDashboards } from '../data/realData'; // Uncomment for real data
-
-// DATA SOURCE CONFIGURATION
-// Toggle between sample and real data by commenting/uncommenting the line below
-const USE_REAL_DATA = true; // Set to true to use realData.js
-//const USE_REAL_DATA = false // Uncomment this line and comment above to use real data
->>>>>>> 6ccb58903ad4d6b7ecccd4a6ae002c197a439b15
 
 export const DashboardContext = createContext();
 
@@ -173,22 +163,10 @@ export const DashboardProvider = ({ children }) => {
         
         // Select data source based on configuration
         let dashboardData;
-<<<<<<< HEAD
         
         if (DATA_SOURCE === 'sample') {
           // Development mode - use sample data
           dashboardData = sampleDashboards;
-=======
-        if (USE_REAL_DATA) {
-          // When switching to real data, uncomment the import above and this line:
-          dashboardData = realDashboards;
-          
-          // For now, fallback to sample data if real data not available
-          //dashboardData = sampleDashboards;
-          console.log('Real data source selected, but realData.js import is commented out. Using sample data as fallback.');
-        } else {
-          //dashboardData = sampleDashboards;
->>>>>>> 6ccb58903ad4d6b7ecccd4a6ae002c197a439b15
           console.log('Using sample data source');
         } 
         else if (DATA_SOURCE === 'csv') {
