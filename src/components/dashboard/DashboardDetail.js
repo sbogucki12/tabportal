@@ -125,7 +125,7 @@ const DashboardDetail = ({ dashboard, relatedDashboards }) => {
                   className="btn btn-secondary"
                 >
                   <FontAwesomeIcon icon={faDownload} style={{ marginRight: '0.5rem' }} />
-                  Export Data
+                  Discover Data
                 </a>
               </div>
             </div>
