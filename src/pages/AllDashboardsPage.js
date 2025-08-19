@@ -32,16 +32,23 @@ const AllDashboardsPage = () => {
   
   // Function to clear all filters and URL parameters
   const clearAllFilters = () => {
-    // First clear URL parameters
-    window.history.replaceState({}, '', window.location.pathname);
-    
-    // Reset internal state
-    setFilteredDashboards(dashboards);
-    setSearchApplied(false);
-    
-    // Force a complete page reload - most reliable solution
-    window.location.reload();
-  };
+  console.log('🧹 Clearing all filters...');
+  
+  // Clear URL parameters
+  window.history.replaceState({}, '', window.location.pathname);
+  
+  // Clear session storage
+  sessionStorage.removeItem('selectedCategory');
+  
+  // Reset to show all dashboards WITHOUT page reload
+  setFilteredDashboards(dashboards);
+  setSearchApplied(false);
+  
+  console.log('✅ Filters cleared, showing all dashboards:', dashboards.length);
+  
+  // Note: We're NOT calling window.location.reload() anymore
+  // This prevents the redirect to home page issue
+};
   
   // Function to go back to home
   const escapeToHome = () => {

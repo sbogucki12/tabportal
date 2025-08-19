@@ -1,4 +1,4 @@
-// src/context/DashboardContext.js - Enhanced with CSV data source support
+// src/context/DashboardContext.js - Enhanced with CSV data source support - FIXED CSV PARSING
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 //import Papa from 'papaparse'; // Uncomment when papaparse is installed
 // import { validateDashboardData, logValidationResults, cleanCSVData } from '../utils/csvDataValidator'; // Uncomment when file is created
@@ -14,8 +14,8 @@ import { sampleDashboards } from '../data/sampleData';
 // const DATA_SOURCE = 'sample'; // Change to 'csv' for production, 'real' for realData.js
 
 // Alternative: Use comment-based switching (comment/uncomment the lines below)
- const DATA_SOURCE = 'sample';  // Development
-// const DATA_SOURCE = 'csv';     // Production
+// const DATA_SOURCE = 'sample';  // Development
+   const DATA_SOURCE = 'csv';     // Production
 // const DATA_SOURCE = 'real';    // Real data
 
 export const DashboardContext = createContext();
@@ -103,12 +103,25 @@ export const DashboardProvider = ({ children }) => {
               console.warn('CSV parsing warnings:', results.errors);
             }
             
-            // Clean and validate the data (use basic transformation)
-            let cleanedData = results.data;
-            let transformedData;
+            console.log('Raw CSV parse results:', results.data.length, 'rows');
             
-            // Basic data cleaning - remove empty rows and trim strings
-            cleanedData = cleanedData.filter(row => row && Object.keys(row).length > 0).map(row => {
+            // FIXED: More targeted filtering - only remove rows that are completely empty or missing required fields
+            let cleanedData = results.data.filter(row => {
+              // Check if row exists and has at least an ID or title (required fields)
+              if (!row) return false;
+              
+              // Get the trimmed values of key fields
+              const id = typeof row.id === 'string' ? row.id.trim() : row.id;
+              const title = typeof row.title === 'string' ? row.title.trim() : row.title;
+              
+              // Keep row if it has either an ID or a title (both are essential)
+              return (id && id !== '') || (title && title !== '');
+            });
+            
+            console.log('After filtering empty rows:', cleanedData.length, 'rows');
+            
+            // Clean individual field values
+            cleanedData = cleanedData.map(row => {
               const cleaned = {};
               Object.keys(row).forEach(key => {
                 const cleanKey = key.trim();
@@ -137,8 +150,13 @@ export const DashboardProvider = ({ children }) => {
               return cleaned;
             });
             
-            transformedData = transformCSVData(cleanedData);
+            // Transform the cleaned data
+            const transformedData = transformCSVData(cleanedData);
             console.log('CSV data loaded and transformed successfully:', transformedData.length, 'dashboards');
+            
+            // Log the first few transformed items for debugging
+            console.log('First 3 transformed dashboards:', transformedData.slice(0, 3));
+            console.log('Last 3 transformed dashboards:', transformedData.slice(-3));
             
             resolve(transformedData);
           },
@@ -285,9 +303,6 @@ export const DashboardProvider = ({ children }) => {
     setFeaturedDashboard(getDashboardById(id));
   };
 
-// REPLACE THIS ENTIRE FUNCTION in your DashboardContext.js:
-  // Find the existing searchDashboards function and replace it with this:
-  
   const searchDashboards = (query, filters = {}) => {
     console.log('🔍 DashboardContext searchDashboards called with:', { query, filters });
     console.log('📊 Total dashboards available:', dashboards.length);
@@ -299,57 +314,75 @@ export const DashboardProvider = ({ children }) => {
     }
 
     const results = dashboards.filter(dashboard => {
-      // Search by text query (same as before)
+      
+      // Search by text query
       const matchesQuery = !query || 
         dashboard.title.toLowerCase().includes(query.toLowerCase()) ||
         dashboard.description.toLowerCase().includes(query.toLowerCase()) ||
         dashboard.owner.toLowerCase().includes(query.toLowerCase()) ||
         (dashboard.ownerAbbr && dashboard.ownerAbbr.toLowerCase().includes(query.toLowerCase())) ||
         dashboard.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase())) ||
-        (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(query.toLowerCase()));
-
-      // ADDED: Filter by category - check dashboard.category directly
-      const matchesCategory = !filters.category || 
-        (dashboard.category && dashboard.category.toLowerCase() === filters.category.toLowerCase());
-
-      // ADDED: Filter by organization (check both owner and ownerAbbr)
-      const matchesOrg = !filters.organization || 
-        dashboard.owner.toLowerCase() === filters.organization.toLowerCase() ||
-        (dashboard.ownerAbbr && dashboard.ownerAbbr.toLowerCase() === filters.organization.toLowerCase());
-
-      const matches = matchesQuery && matchesCategory && matchesOrg;
+        (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(query.toLowerCase())) ||
+        (dashboard.category && dashboard.category.toLowerCase().includes(query.toLowerCase()));
       
-      // Debug logging for category filtering
-      if (filters.category) {
-        console.log(`🎯 Dashboard "${dashboard.title}":`, {
-          category: dashboard.category,
-          filterCategory: filters.category,
-          matchesCategory,
-          matches
-        });
-      }
-
-      return matches;
+      // Category search (exact match)
+      const matchesCategory = !filters.category ||
+        dashboard.category.toLowerCase() === filters.category.toLowerCase();
+      
+      // Tags search (exact match)
+      const matchesTags = !filters.tags || 
+        filters.tags.every(tag => 
+          dashboard.tags.some(dashTag => 
+            dashTag.toLowerCase() === tag.toLowerCase()
+          )
+        );
+      
+      // Data source search
+      const matchesDataSource = !filters.dataSource ||
+        (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(filters.dataSource.toLowerCase()));
+      
+      // Owner/Organization search (handles both filters.owner and filters.organization)
+      const matchesOwner = (!filters.owner && !filters.organization) ||
+        (filters.owner && (
+          dashboard.owner.toLowerCase().includes(filters.owner.toLowerCase()) ||
+          (dashboard.ownerAbbr && dashboard.ownerAbbr.toLowerCase().includes(filters.owner.toLowerCase()))
+        )) ||
+        (filters.organization && (
+          dashboard.owner.toLowerCase().includes(filters.organization.toLowerCase()) ||
+          (dashboard.ownerAbbr && dashboard.ownerAbbr.toLowerCase().includes(filters.organization.toLowerCase()))
+        ));
+      
+      // Dashboard type search
+      const matchesDashboardType = !filters.dashboardType ||
+        (dashboard.dashboardType && dashboard.dashboardType.toLowerCase() === filters.dashboardType.toLowerCase());
+      
+      // Access level search
+      const matchesAccessLevel = !filters.accessLevel ||
+        dashboard.accessLevel.toLowerCase() === filters.accessLevel.toLowerCase();
+      
+      return matchesQuery && matchesCategory && matchesTags && 
+             matchesDataSource && matchesOwner && matchesDashboardType && matchesAccessLevel;
     });
 
-    console.log(`📋 Search results: ${results.length} dashboards found`);
-    console.log('📋 Result titles:', results.map(d => `"${d.title}" (${d.category})`));
-    
+    console.log('📋 Search results:', results.length);
     return results;
   };
 
-  // Advanced search with multiple criteria
   const advancedSearch = (searchCriteria) => {
     return dashboards.filter(dashboard => {
-      // Title search
-      const matchesTitle = !searchCriteria.title ||
+      // Title search (contains match)
+      const matchesTitle = !searchCriteria.title || 
         dashboard.title.toLowerCase().includes(searchCriteria.title.toLowerCase());
       
-      // Description search  
+      // Description search (contains match)
       const matchesDescription = !searchCriteria.description ||
         dashboard.description.toLowerCase().includes(searchCriteria.description.toLowerCase());
       
-      // Tag search (exact match)
+      // Category search (exact match)
+      const matchesCategory = !searchCriteria.category ||
+        dashboard.category.toLowerCase() === searchCriteria.category.toLowerCase();
+      
+      // Tags search (exact match)
       const matchesTags = !searchCriteria.tags || 
         searchCriteria.tags.every(tag => 
           dashboard.tags.some(dashTag => 
@@ -375,7 +408,7 @@ export const DashboardProvider = ({ children }) => {
         dashboard.accessLevel.toLowerCase() === searchCriteria.accessLevel.toLowerCase();
       
       return matchesTitle && matchesDescription && matchesTags && 
-             matchesDataSource && matchesOwner && matchesDashboardType && matchesAccessLevel;
+             matchesDataSource && matchesOwner && matchesDashboardType && matchesAccessLevel && matchesCategory;
     });
   };
 

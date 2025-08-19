@@ -14,11 +14,24 @@ const SearchBar = ({ onSearch, initialValues = {}, placeholder = "Search dashboa
   const hasActiveFilters = category !== '' || organization !== '';
 
   // Update internal state when initialValues change
-  useEffect(() => {
+  /* useEffect(() => {
     setSearchQuery(initialValues.query || '');
     setCategory(initialValues.category || '');
     setOrganization(initialValues.organization || '');
-  }, [initialValues]);
+  }, [initialValues]); */
+
+useEffect(() => {
+  // Only update if there's actually a meaningful initial value from URL
+  if (initialValues.query) {
+    setSearchQuery(initialValues.query);
+  }
+  if (initialValues.category) {
+    setCategory(initialValues.category);
+  }
+  if (initialValues.organization) {
+    setOrganization(initialValues.organization);
+  }
+}, [initialValues.query, initialValues.category, initialValues.organization]);
 
   const handleCategoryChange = (value) => {
     setCategory(value);
@@ -40,16 +53,17 @@ const SearchBar = ({ onSearch, initialValues = {}, placeholder = "Search dashboa
     });
   };
   
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSearch({
-      query: searchQuery,
-      category: category,
-      organization: organization
-    });
-  };
+const handleSubmit = (e) => {
+  e.preventDefault();
+  console.log('🔍 Search submitted with query:', searchQuery);
+  onSearch({
+    query: searchQuery,
+    category: category,
+    organization: organization
+  });
+};
 
-  const handleClearFilters = () => {
+/*   const handleClearFilters = () => {
     setCategory('');
     setOrganization('');
     onSearch({
@@ -57,8 +71,8 @@ const SearchBar = ({ onSearch, initialValues = {}, placeholder = "Search dashboa
       category: '',
       organization: ''
     });
-  };
-
+  }; */
+  console.log('SearchBar render - searchQuery value:', searchQuery);
   return (
     <section className="search-section-mui search-section-homepage">
       <div className="search-container-mui">
@@ -72,7 +86,17 @@ const SearchBar = ({ onSearch, initialValues = {}, placeholder = "Search dashboa
                 placeholder={placeholder}
                 className="search-input-mui"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  console.log('🔍 Typing:', newValue);
+                  setSearchQuery(newValue);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSubmit(e);
+                  }
+                }}
               />
               {searchQuery && (
                 <button
@@ -161,7 +185,7 @@ const SearchBar = ({ onSearch, initialValues = {}, placeholder = "Search dashboa
                 </select>
               </div>
               
-              {hasActiveFilters && (
+{/*               {hasActiveFilters && (
                 <div className="filter-actions">
                   <button
                     type="button"
@@ -172,7 +196,7 @@ const SearchBar = ({ onSearch, initialValues = {}, placeholder = "Search dashboa
                     Clear All
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </form>
