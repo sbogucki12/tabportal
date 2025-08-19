@@ -11,11 +11,11 @@ import { sampleDashboards } from '../data/sampleData';
 // Toggle between data sources by changing the DATA_SOURCE value:
 // Options: 'sample', 'csv', 'real'
 
-//const DATA_SOURCE = 'sample'; // Change to 'csv' for production, 'real' for realData.js
+const DATA_SOURCE = 'sample'; // Change to 'csv' for production, 'real' for realData.js
 
 // Alternative: Use comment-based switching (comment/uncomment the lines below)
 // const DATA_SOURCE = 'sample';  // Development
-const DATA_SOURCE = 'csv';     // Production
+// const DATA_SOURCE = 'csv';     // Production
 // const DATA_SOURCE = 'real';    // Real data
 
 export const DashboardContext = createContext();

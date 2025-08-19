@@ -41,23 +41,17 @@ yarn-error.log*
 # Optional: if you're using a local environment file that shouldn't be in git
 .env*.local
 
-<<<<<<< HEAD
-=======
-# Real data file - exclude from git but deploy to FAA server
-# src/data/realData.js
-
->>>>>>> 6ccb58903ad4d6b7ecccd4a6ae002c197a439b15
 .ssh/
 
 # Comment these lines when deploying to FAA
 # Do not comment when deploying to GitHub
-# src/data/realData.js
-# /src/data/realData.js
-# nginx.conf
-# .htaccess
-# web.config 
-# src/data/market.csv
-# /src/data/market.csv
-# public/market
-# public/market.csv
-# /public/market.csv 
+src/data/realData.js
+/src/data/realData.js
+nginx.conf
+.htaccess
+web.config 
+src/data/market.csv
+/src/data/market.csv
+public/market
+public/market.csv
+/public/market.csv 
