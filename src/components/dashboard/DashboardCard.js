@@ -1,4 +1,6 @@
+// src/components/dashboard/DashboardCard.js - FIXED: Replace href with React Router navigation
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faArrowRight, 
@@ -19,6 +21,13 @@ import {
 import '../../styles/DashboardCard.css';
 
 const DashboardCard = ({ dashboard }) => {
+  const navigate = useNavigate();
+  
+  // ADDED: Handle click navigation to detail page
+  const handleCardClick = () => {
+    console.log('🎯 DashboardCard clicked:', dashboard.title, 'ID:', dashboard.id);
+    navigate(`/dashboard/${dashboard.id}`);
+  };
   
   // Map categories to appropriate FontAwesome icons
   const getCategoryIcon = (category) => {
@@ -48,7 +57,11 @@ const DashboardCard = ({ dashboard }) => {
   const categoryIcon = getCategoryIcon(primaryCategory);
 
   return (
-    <div className={`dashboard-card ${dashboard.featured ? 'featured' : ''}`}>
+    <div 
+      className={`dashboard-card ${dashboard.featured ? 'featured' : ''}`}
+      onClick={handleCardClick}
+      style={{ cursor: 'pointer' }}
+    >
       {/* Full background thumbnail */}
       {dashboard.thumbnailUrl && (
         dashboard.isVideo ? (
@@ -75,15 +88,13 @@ const DashboardCard = ({ dashboard }) => {
       {/* Icon - top left */}
       <FontAwesomeIcon icon={categoryIcon} className="dashboard-icon" />
       
-      {/* Title - bottom left */}
-      <a href={`/dashboard/${dashboard.id}`} className="dashboard-title">
+      {/* Title - bottom left - FIXED: Removed href, using onClick instead */}
+      <div className="dashboard-title">
         {dashboard.title}
-      </a>
+      </div>
       
-      {/* Arrow - bottom right */}
-      <a href={`/dashboard/${dashboard.id}`}>
-        <FontAwesomeIcon icon={faArrowRight} className="dashboard-arrow" />
-      </a>
+      {/* Arrow - bottom right - FIXED: Removed href, using onClick instead */}
+      <FontAwesomeIcon icon={faArrowRight} className="dashboard-arrow" />
     </div>
   );
 };

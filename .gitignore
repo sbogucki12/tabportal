@@ -45,13 +45,13 @@ yarn-error.log*
 
 # Comment these lines when deploying to FAA
 # Do not comment when deploying to GitHub
-src/data/realData.js
-/src/data/realData.js
-nginx.conf
-.htaccess
-web.config 
-src/data/market.csv
-/src/data/market.csv
-public/market
-public/market.csv
-/public/market.csv 
+# src/data/realData.js
+# /src/data/realData.js
+# nginx.conf
+# .htaccess
+# web.config 
+# src/data/market.csv
+# /src/data/market.csv
+# public/market
+# public/market.csv
+# /public/market.csv 

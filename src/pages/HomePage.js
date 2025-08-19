@@ -1,4 +1,4 @@
-// src/pages/HomePage.js - Updated with proper layout and styling fixes
+// src/pages/HomePage.js - Updated to redirect to AllDashboards when using SearchBar filters
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '../components/common/Header';
@@ -69,7 +69,41 @@ const HomePage = () => {
     }
   }, [dashboards, featuredDashboard, location.search, searchDashboards]);
 
+  // UPDATED: Handle search from SearchBar - redirect to AllDashboards for any filtering
   const handleSearch = (searchData) => {
+    console.log('🏠 HomePage handleSearch called with:', searchData);
+    
+    // Special case: People category should go to /personnel page
+    if (searchData.category === 'People') {
+      console.log('🏠 Redirecting to Personnel page for People category');
+      navigate('/personnel');
+      return;
+    }
+    
+    // If user applied ANY filters (category, organization, or search query), redirect to AllDashboards
+    if (searchData.category || searchData.organization || (searchData.query && searchData.query.trim())) {
+      console.log('🏠 Redirecting to AllDashboards with filters:', searchData);
+      
+      // Build URL with parameters
+      const params = new URLSearchParams();
+      if (searchData.query && searchData.query.trim()) {
+        params.set('query', searchData.query.trim());
+      }
+      if (searchData.category) {
+        params.set('category', searchData.category);
+      }
+      if (searchData.organization) {
+        params.set('organization', searchData.organization);
+      }
+      
+      // Navigate to AllDashboards with the search parameters
+      const queryString = params.toString();
+      navigate(`/all-dashboards${queryString ? '?' + queryString : ''}`);
+      return;
+    }
+    
+    // If no filters applied, do local search on homepage (existing behavior)
+    console.log('🏠 No filters applied, doing local search on homepage');
     const results = searchDashboards(searchData.query, {
       category: searchData.category,
       organization: searchData.organization
@@ -78,17 +112,18 @@ const HomePage = () => {
     setSearchApplied(true);
   };
 
+  // Category card click handler (unchanged)
   const handleCategoryClick = (categoryName) => {
+    console.log('🏠 HomePage: Category clicked:', categoryName);
+    
     // Special case: People should go to /personnel page
     if (categoryName === 'People') {
       navigate('/personnel');
       return;
     }
     
-    // Store category in session storage for transfer to next page
-    sessionStorage.setItem('selectedCategory', categoryName);
-    // Navigate to all dashboards page
-    navigate('/all-dashboards');
+    // For all other categories, navigate to AllDashboards with category filter in URL
+    navigate(`/all-dashboards?category=${encodeURIComponent(categoryName)}`);
   };
 
   if (loading) {
@@ -126,7 +161,6 @@ const HomePage = () => {
             </div>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -159,14 +193,13 @@ const HomePage = () => {
                   </div>
                 </div>
                 
-                <div className="loading-container">
-                  <div className="error-text">Error loading dashboards: {error}</div>
+                <div className="error-container">
+                  <div className="error-text">{error}</div>
                 </div>
               </div>
             </div>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }

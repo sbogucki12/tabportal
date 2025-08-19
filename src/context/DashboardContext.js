@@ -11,11 +11,11 @@ import { sampleDashboards } from '../data/sampleData';
 // Toggle between data sources by changing the DATA_SOURCE value:
 // Options: 'sample', 'csv', 'real'
 
-const DATA_SOURCE = 'sample'; // Change to 'csv' for production, 'real' for realData.js
+// const DATA_SOURCE = 'sample'; // Change to 'csv' for production, 'real' for realData.js
 
 // Alternative: Use comment-based switching (comment/uncomment the lines below)
 // const DATA_SOURCE = 'sample';  // Development
-// const DATA_SOURCE = 'csv';     // Production
+   const DATA_SOURCE = 'csv';     // Production
 // const DATA_SOURCE = 'real';    // Real data
 
 export const DashboardContext = createContext();
@@ -285,19 +285,57 @@ export const DashboardProvider = ({ children }) => {
     setFeaturedDashboard(getDashboardById(id));
   };
 
-  // Enhanced search functionality
-  const searchDashboards = (query) => {
-    if (!query.trim()) return dashboards;
+// REPLACE THIS ENTIRE FUNCTION in your DashboardContext.js:
+  // Find the existing searchDashboards function and replace it with this:
+  
+  const searchDashboards = (query, filters = {}) => {
+    console.log('🔍 DashboardContext searchDashboards called with:', { query, filters });
+    console.log('📊 Total dashboards available:', dashboards.length);
+    
+    // If no query and no filters, return all dashboards
+    if (!query && Object.keys(filters).length === 0) {
+      console.log('📋 No filters applied, returning all dashboards');
+      return dashboards;
+    }
 
-    const searchTerm = query.toLowerCase();
-    return dashboards.filter(dashboard => 
-      dashboard.title.toLowerCase().includes(searchTerm) ||
-      dashboard.description.toLowerCase().includes(searchTerm) ||
-      dashboard.owner.toLowerCase().includes(searchTerm) ||
-      (dashboard.ownerAbbr && dashboard.ownerAbbr.toLowerCase().includes(searchTerm)) ||
-      dashboard.tags.some(tag => tag.toLowerCase().includes(searchTerm)) ||
-      (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(searchTerm))
-    );
+    const results = dashboards.filter(dashboard => {
+      // Search by text query (same as before)
+      const matchesQuery = !query || 
+        dashboard.title.toLowerCase().includes(query.toLowerCase()) ||
+        dashboard.description.toLowerCase().includes(query.toLowerCase()) ||
+        dashboard.owner.toLowerCase().includes(query.toLowerCase()) ||
+        (dashboard.ownerAbbr && dashboard.ownerAbbr.toLowerCase().includes(query.toLowerCase())) ||
+        dashboard.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase())) ||
+        (dashboard.dataSource && dashboard.dataSource.toLowerCase().includes(query.toLowerCase()));
+
+      // ADDED: Filter by category - check dashboard.category directly
+      const matchesCategory = !filters.category || 
+        (dashboard.category && dashboard.category.toLowerCase() === filters.category.toLowerCase());
+
+      // ADDED: Filter by organization (check both owner and ownerAbbr)
+      const matchesOrg = !filters.organization || 
+        dashboard.owner.toLowerCase() === filters.organization.toLowerCase() ||
+        (dashboard.ownerAbbr && dashboard.ownerAbbr.toLowerCase() === filters.organization.toLowerCase());
+
+      const matches = matchesQuery && matchesCategory && matchesOrg;
+      
+      // Debug logging for category filtering
+      if (filters.category) {
+        console.log(`🎯 Dashboard "${dashboard.title}":`, {
+          category: dashboard.category,
+          filterCategory: filters.category,
+          matchesCategory,
+          matches
+        });
+      }
+
+      return matches;
+    });
+
+    console.log(`📋 Search results: ${results.length} dashboards found`);
+    console.log('📋 Result titles:', results.map(d => `"${d.title}" (${d.category})`));
+    
+    return results;
   };
 
   // Advanced search with multiple criteria
